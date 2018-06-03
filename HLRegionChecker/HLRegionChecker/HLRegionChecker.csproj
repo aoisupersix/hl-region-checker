@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="GoogleService-Info.plist" />
     <None Remove="Resources\Icon_AppIcon.png" />
     <None Remove="Resources\Icon_IdentifierSelection.png" />
     <None Remove="Resources\Icon_SelfUpdate.png" />

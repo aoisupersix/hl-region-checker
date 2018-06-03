@@ -25,7 +25,7 @@
 	<key>CFBundleDisplayName</key>
 	<string>HLRegionChecker</string>
 	<key>CFBundleIdentifier</key>
-	<string>tokyo.aoisupersix.hlregionchecker</string>
+	<string>jp.primethory.hlregionchecker2</string>
 	<key>CFBundleVersion</key>
 	<string>0.1</string>
 	<key>CFBundleIconFiles</key>

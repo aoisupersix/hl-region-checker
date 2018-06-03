@@ -1,4 +1,5 @@
 ﻿using Foundation;
+using HLRegionChecker.iOS.Manager;
 using Prism;
 using Prism.Ioc;
 using System;
@@ -31,7 +32,7 @@ namespace HLRegionChecker.iOS
             {
                 var alertsAllowed = (settings.AlertSetting == UNNotificationSetting.Enabled);
             });
-            //UNUserNotificationCenter.Current.Delegate = new Delegates.UserNotificationCenterDelegate();
+            UNUserNotificationCenter.Current.Delegate = new Notification.UserNotificationCenterDelegate();
         }
 
         public override bool WillFinishLaunching(UIApplication uiApplication, NSDictionary launchOptions)
@@ -55,7 +56,7 @@ namespace HLRegionChecker.iOS
             LoadApplication(new App(new iOSInitializer()));
 
             //位置情報利用の許可
-            //LocationManager.GetInstance().RequestAlwaysAuthorization();
+            LocationManager.GetInstance().RequestAlwaysAuthorization();
             //プッシュ通知の許可
             RegisterForNotifications();
 
