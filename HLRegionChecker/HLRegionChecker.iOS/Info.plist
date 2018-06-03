@@ -46,6 +46,10 @@
 		<string>Icon-Small@2x</string>
 		<string>Icon-Small@3x</string>
 	</array>
+  <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>領域の判定に利用します。</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>領域の判定に利用します。</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>XSLaunchImageAssets</key>
