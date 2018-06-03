@@ -26,7 +26,7 @@ namespace HLRegionChecker.ViewModels
         /// <summary>
         /// メニューを表示しているか？
         /// </summary>
-        public ReactiveProperty<bool> IsPresented { get; set; }
+        public ReactiveProperty<bool> IsPresented { get; set; } = new ReactiveProperty<bool>(false);
         /// <summary>
         /// Masterのメニューアイテム
         /// </summary>

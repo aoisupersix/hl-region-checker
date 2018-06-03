@@ -5,7 +5,7 @@
                   xmlns:b="clr-namespace:HLRegionChecker.Behaviors"
                   prism:ViewModelLocator.AutowireViewModel="True"
                   x:Class="HLRegionChecker.Views.MainMasterPage"
-                  IsPresented="{Binding IsPresented, Mode=TwoWay}">
+                  IsPresented="{Binding IsPresented.Value, Mode=TwoWay}">
 
     <MasterDetailPage.Master>
         <ContentPage Title="Menu">

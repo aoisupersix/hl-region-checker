@@ -3,6 +3,61 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
-             x:Class="HLRegionChecker.Views.IdentifierSelectPage">
-  
+             x:Class="HLRegionChecker.Views.IdentifierSelectPage"
+             Title="ユーザ識別子選択">
+
+    <ContentPage.Padding>
+        <OnPlatform x:TypeArguments="Thickness" iOS="0, 20, 0, 0" Android="20" />
+    </ContentPage.Padding>
+
+    <ListView x:Name="IdentifierListView"
+                  HorizontalOptions="FillAndExpand"
+                  ItemsSource="{Binding IdentifierListViewItems}"
+                  CachingStrategy="RecycleElement">
+
+        <ListView.Header>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="5" />
+                    <RowDefinition Height="1" />
+                    <RowDefinition Height="5" />
+                </Grid.RowDefinitions>
+                <Label Grid.Row="0"
+                       HorizontalOptions="Center"
+                       VerticalOptions="CenterAndExpand"
+                       TextColor="#3a3a3a"
+                       Text="あなたの識別子(名前)を選択してください。" />
+                <Label Grid.Row="2"
+                       Margin="10"
+                       HorizontalOptions="Center"
+                       VerticalOptions="CenterAndExpand"
+                       HorizontalTextAlignment="Center"
+                       TextColor="#3a3a3a"
+                       FontSize="Small"
+                       Text="ここで設定した識別子はステータス更新時の識別子として利用します。" />
+                <BoxView Grid.Row="4"
+                         Margin="4,0,4,0"
+                         BackgroundColor="DarkBlue" />
+            </Grid>
+        </ListView.Header>
+
+        <ListView.ItemTemplate>
+            <DataTemplate>
+                <ViewCell>
+                    <StackLayout>
+                        <Label Text="{Binding Name}" 
+                               Margin="20,2,0,2"
+                               VerticalOptions="CenterAndExpand"
+                               StyleId="disclosure"
+                               Style="{DynamicResource ListItemTextStyle}" />
+                    </StackLayout>
+                </ViewCell>
+            </DataTemplate>
+        </ListView.ItemTemplate>
+
+    </ListView>
+
 </ContentPage>
