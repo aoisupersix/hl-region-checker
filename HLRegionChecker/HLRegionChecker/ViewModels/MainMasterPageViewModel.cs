@@ -1,10 +1,11 @@
 ﻿using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Navigation;
-using System;
+using HLRegionChecker.Models;
 using System.Collections.Generic;
 using System.Linq;
 using Xamarin.Forms;
+using Reactive.Bindings;
 
 namespace HLRegionChecker.ViewModels
 {
@@ -15,22 +16,17 @@ namespace HLRegionChecker.ViewModels
         /// 画面遷移関係用
         /// </summary>
         private INavigationService NavigationService { get; }
-
-        private bool _isPresented = false;
         #endregion フィールド
 
         #region プロパティ
         /// <summary>
+        /// ユーザ情報モデル
+        /// </summary>
+        public UserDataModel UserData { get; private set; }
+        /// <summary>
         /// メニューを表示しているか？
         /// </summary>
-        public bool IsPresented
-        {
-            get { return _isPresented; }
-            set
-            {
-                SetProperty(ref _isPresented, value);
-            }
-        }
+        public ReactiveProperty<bool> IsPresented { get; set; }
         /// <summary>
         /// Masterのメニューアイテム
         /// </summary>
@@ -45,6 +41,7 @@ namespace HLRegionChecker.ViewModels
         public Command<MenuItem> ItemSelectedCommand { get; }
         #endregion プロパティ
 
+        #region コンストラクタ
         /// <summary>
         /// デフォルトのコンストラクタです。
         /// </summary>
@@ -52,6 +49,7 @@ namespace HLRegionChecker.ViewModels
         {
             this.NavigationService = navigationService;
 
+            //メニューの初期化
             MenuItems = new List<MenuItem>(new[]
             {
                 new MenuItem
@@ -74,7 +72,7 @@ namespace HLRegionChecker.ViewModels
                 {
                     case "ユーザ識別子選択":
                         NavigationService.NavigateAsync("NavigationPage/MainMasterPage/IdentifierSelectPage");
-                        IsPresented = false;
+                        IsPresented.Value = false;
                         break;
                     case "ステータス更新":
                         break;
@@ -83,7 +81,8 @@ namespace HLRegionChecker.ViewModels
                 }
             });
         }
-	}
+        #endregion コンストラクタ
+    }
 
     /// <summary>
     /// メニューで表示するアイテムです。
