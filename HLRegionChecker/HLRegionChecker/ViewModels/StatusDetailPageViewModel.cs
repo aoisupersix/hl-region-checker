@@ -1,19 +1,54 @@
 ﻿using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Navigation;
-using System;
-using System.Collections.Generic;
+using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
+using HLRegionChecker.Models;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Linq;
-using System.Text;
+using System;
 
 namespace HLRegionChecker.ViewModels
 {
     public class StatusDetailPageViewModel : ViewModelBase
     {
-        public StatusDetailPageViewModel(INavigationService navigationService) 
-            : base (navigationService)
+        /// <summary>
+        /// プロパティの監視管理
+        /// </summary>
+        private CompositeDisposable Disposable { get; } = new CompositeDisposable();
+
+        /// <summary>
+        /// データベースモデル
+        /// </summary>
+        public DbModel Db { get; }
+
+        /// <summary>
+        /// メンバー情報
+        /// </summary>
+        public ReactiveCollection<ObservableCollection<MemberModel>> Members { get; }
+
+        /// <summary>
+        /// ユーザのステータステキスト
+        /// </summary>
+        public ReactiveProperty<string> Status { get; private set; }
+
+        public StatusDetailPageViewModel(INavigationService navigationService) : base (navigationService)
         {
-            Title = "Status Detail";
+            Db = DbModel.Instance;
+            UserDataModel.Instance.MemberId = 11; //仮
+            Members = Db.ObserveProperty(x => x.Members).ToReactiveCollection().AddTo(Disposable);
+            Status = Db.ObserveProperty(x => x.Members).Select(m => Db.GetYourStatusText() ?? "Offline").ToReactiveProperty().AddTo(Disposable);
+        }
+
+        /// <summary>
+        /// プロパティの変更監視を終了します。
+        /// </summary>
+        public void Dispose()
+        {
+            this.Disposable.Dispose();
         }
     }
 }
