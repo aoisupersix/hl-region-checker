@@ -8,8 +8,59 @@
     <MasterDetailPage.Master>
         <ContentPage Title="Menu">
             <StackLayout Padding="20">
-                <!-- TODO: // Update the Layout and add some real menu items  -->
-                <!--<Button Text="ViewA" Command="{Binding NavigateCommand}" CommandParameter="ViewA" />-->
+                <ListView SeparatorVisibility="None"
+                          HasUnevenRows="true"
+                          BackgroundColor="#F9F9F9"
+                          ItemsSource="{Binding MenuItems}">
+                    <ListView.Header>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="10" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="30" />
+                                <RowDefinition Height="80" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="1" />
+                                <RowDefinition Height="15" />
+                            </Grid.RowDefinitions>
+                            <Image Grid.Column="1"
+                                   Grid.Row="1"
+                                   HorizontalOptions="Start"
+                                   Source="{Binding AppIcon}" />
+                            <Label Grid.Column="1"
+                                   Grid.Row="2"
+                                   Text="HLRegionChecker"
+                                   FontSize="30"
+                                   FontAttributes="Bold"
+                                   TextColor="#7A7A7A"
+                                   Style="{DynamicResource SubtitleStyle}" />
+                            <BoxView Grid.Column="1"
+                                     Grid.Row="3"
+                                     BackgroundColor="DarkBlue" />
+                        </Grid>
+                    </ListView.Header>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell StyleId="disclosure">
+                                <StackLayout Padding="15,10"
+                                             Orientation="Horizontal"
+                                             HorizontalOptions="FillAndExpand">
+                                    <Image HeightRequest="30"
+                                           WidthRequest="30"
+                                           Source="{Binding Icon}" />
+                                    <Label VerticalOptions="FillAndExpand"
+                                           VerticalTextAlignment="Center"
+                                           Text="{Binding Title}"
+                                           TextColor="Blue"
+                                           FontSize="24" />
+                                </StackLayout>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
             </StackLayout>
         </ContentPage>
     </MasterDetailPage.Master>
