@@ -2,8 +2,10 @@
 <MasterDetailPage xmlns="http://xamarin.com/schemas/2014/forms"
                   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                   xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+                  xmlns:b="clr-namespace:HLRegionChecker.Behaviors"
                   prism:ViewModelLocator.AutowireViewModel="True"
-                  x:Class="HLRegionChecker.Views.MainMasterPage">
+                  x:Class="HLRegionChecker.Views.MainMasterPage"
+                  IsPresented="{Binding IsPresented, Mode=TwoWay}">
 
     <MasterDetailPage.Master>
         <ContentPage Title="Menu">
@@ -12,6 +14,9 @@
                           HasUnevenRows="true"
                           BackgroundColor="#F9F9F9"
                           ItemsSource="{Binding MenuItems}">
+                    <ListView.Behaviors>
+                        <b:ItemSelectedToCommandBehavior Command="{Binding ItemSelectedCommand}" />
+                    </ListView.Behaviors>
                     <ListView.Header>
                         <Grid>
                             <Grid.ColumnDefinitions>
