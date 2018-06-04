@@ -62,6 +62,11 @@ namespace HLRegionChecker.ViewModels
                     Icon = ImageSource.FromResource("HLRegionChecker.Resources.Icon_SelfUpdate.png"),
                     Title = "ステータス更新",
                 },
+                new MenuItem
+                {
+                    Icon = ImageSource.FromResource("HLRegionChecker.Resources.Icon_UserStatus.png"),
+                    Title = "あなたのステータス"
+                }
             });
 
             //メニューが選択された際の処理
@@ -75,6 +80,10 @@ namespace HLRegionChecker.ViewModels
                         IsPresented.Value = false;
                         break;
                     case "ステータス更新":
+                        break;
+                    case "あなたのステータス":
+                        NavigationService.NavigateAsync("NavigationPage/MainMasterPage/MyStatusDetailPage");
+                        IsPresented.Value = false;
                         break;
                     default:
                         break;

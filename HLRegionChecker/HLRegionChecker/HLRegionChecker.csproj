@@ -9,12 +9,14 @@
     <None Remove="Resources\Icon_AppIcon.png" />
     <None Remove="Resources\Icon_IdentifierSelection.png" />
     <None Remove="Resources\Icon_SelfUpdate.png" />
+    <None Remove="Resources\Icon_UserStatus.png" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Resources\Icon_AppIcon.png" />
     <EmbeddedResource Include="Resources\Icon_IdentifierSelection.png" />
     <EmbeddedResource Include="Resources\Icon_SelfUpdate.png" />
+    <EmbeddedResource Include="Resources\Icon_UserStatus.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -37,6 +39,9 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\MainMasterPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\MyStatusDetailPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>

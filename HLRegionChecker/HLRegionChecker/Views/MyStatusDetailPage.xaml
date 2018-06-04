@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="HLRegionChecker.Views.MyStatusDetailPage">
+
+    <ContentPage.Padding>
+        <OnPlatform x:TypeArguments="Thickness" iOS="0, 20, 0, 0" Android="20" />
+    </ContentPage.Padding>
+
+    <StackLayout>
+        <StackLayout HeightRequest="120">
+            <Label Text="あなたのステータス：" 
+           HorizontalOptions="Center"
+           VerticalOptions="CenterAndExpand" />
+            <Label x:Name="statusDisplayLabel"
+               Text="{Binding Status.Value}"
+               HorizontalOptions="Center"
+               VerticalOptions="CenterAndExpand"
+               Font="80"
+               FontAttributes="Bold"
+               TextColor="Accent" />
+        </StackLayout>
+    </StackLayout>
+
+</ContentPage>

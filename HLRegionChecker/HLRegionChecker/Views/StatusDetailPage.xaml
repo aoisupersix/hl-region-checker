@@ -9,19 +9,32 @@
     </ContentPage.Padding>
 
     <StackLayout>
-        <StackLayout HeightRequest="120">
-            <Label Text="あなたのステータス:" 
-           HorizontalOptions="Center"
-           VerticalOptions="CenterAndExpand" />
-            <Label x:Name="statusDisplayLabel"
-               Text="{Binding Status.Value}"
+        <Label HeightRequest="30"
                HorizontalOptions="Center"
-               VerticalOptions="CenterAndExpand"
-               Font="80"
-               FontAttributes="Bold"
-               TextColor="Accent" />
-        </StackLayout>
-
+               VerticalOptions="Center"
+               Text="みんなのステータス：" />
+        <ListView ItemsSource="{Binding Members.Value}" HasUnevenRows="True" SeparatorVisibility="None" RowHeight="120">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout BackgroundColor="#AAD6EC" Margin="2, 4, 2, 4" Orientation="Horizontal">
+                            <Image Source="Icon_Menu" HeightRequest="50" />
+                            <StackLayout Orientation="Vertical">
+                                <Label HorizontalOptions="Start"
+                                   VerticalOptions="Start"
+                                   TextColor="DarkBlue"
+                                   FontSize="Large"
+                                   Text="{Binding Name}" />
+                                <Label HorizontalOptions="Center"
+                                   VerticalOptions="Center"
+                                   FontSize="50"
+                                   Text="帰宅" />
+                            </StackLayout>
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
     </StackLayout>
 
 </ContentPage>
