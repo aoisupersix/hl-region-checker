@@ -15,6 +15,7 @@ namespace HLRegionChecker.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var memberId = (int)value;
+            System.Diagnostics.Debug.WriteLine("MemberImage:{0}", memberId);
             //とりあえず全員同じイメージを表示する
             return ImageSource.FromResource("HLRegionChecker.Resources.Icon_Dog.png");
         }
