@@ -8,7 +8,7 @@
                   IsPresented="{Binding IsPresented.Value, Mode=TwoWay}">
 
     <MasterDetailPage.Master>
-        <ContentPage Title="Menu">
+        <ContentPage Title="Menu" Icon="Icon_Menu.png">
             <StackLayout>
                 <ListView SeparatorVisibility="None"
                           HasUnevenRows="true"
