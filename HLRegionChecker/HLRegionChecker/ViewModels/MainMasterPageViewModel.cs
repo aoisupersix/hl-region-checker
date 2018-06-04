@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Xamarin.Forms;
 using Reactive.Bindings;
+using Prism.Services;
+using System;
 
 namespace HLRegionChecker.ViewModels
 {
@@ -45,7 +47,7 @@ namespace HLRegionChecker.ViewModels
         /// <summary>
         /// デフォルトのコンストラクタです。
         /// </summary>
-        public MainMasterPageViewModel(INavigationService navigationService)
+        public MainMasterPageViewModel(INavigationService navigationService, IPageDialogService pageDialogService)
         {
             this.NavigationService = navigationService;
 
@@ -80,6 +82,12 @@ namespace HLRegionChecker.ViewModels
                         IsPresented.Value = false;
                         break;
                     case "ステータス更新":
+                        IsPresented.Value = false;
+                        var ret = pageDialogService.DisplayActionSheetAsync(
+                            "ステータス手動更新",
+                            "Cancel",
+                            null,
+                            DbModel.Instance.States.Select(s => s.Name).ToArray());
                         break;
                     case "あなたのステータス":
                         NavigationService.NavigateAsync("NavigationPage/MainMasterPage/MyStatusDetailPage");
