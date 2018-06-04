@@ -27,7 +27,10 @@
                         <StackLayout BackgroundColor="{Binding Status, Converter={StaticResource statePropertyConverter}, ConverterParameter='BgColor_Hex'}"
                                      Margin="4"
                                      Orientation="Horizontal">
-                            <Image Source="{Binding Id, Converter={StaticResource memImageConverter}}" HeightRequest="40" Margin="20,0,20,0" />
+                            <Image Source="{Binding Id, Converter={StaticResource memImageConverter}, Mode=OneTime}"
+                                   Aspect="AspectFit"
+                                   HeightRequest="40"
+                                   Margin="20,0,20,0" />
                             <StackLayout Orientation="Vertical">
                                 <Label HorizontalOptions="Start"
                                        VerticalOptions="Start"

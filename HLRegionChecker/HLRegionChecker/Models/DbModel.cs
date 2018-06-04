@@ -90,7 +90,11 @@ namespace HLRegionChecker.Models
             };
             _dbAdapter.UpdatedMembers += (_, members) =>
             {
-                Members = new ObservableCollection<MemberModel>(members);
+                //更新処理はメインスレッドで行う
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    Members = new ObservableCollection<MemberModel>(members);
+                });
             };
 
             _dbAdapter.InitDb();

@@ -39,7 +39,6 @@ namespace HLRegionChecker.ViewModels
         public StatusDetailPageViewModel(INavigationService navigationService) : base (navigationService)
         {
             Db = DbModel.Instance;
-            UserDataModel.Instance.MemberId = 11; //仮
             Members = Db.ObserveProperty(x => x.Members).ToReactiveProperty().AddTo(Disposable);
             Status = Db.ObserveProperty(x => x.Members).Select(m => Db.GetYourStatusText() ?? "Offline").ToReactiveProperty().AddTo(Disposable);
         }
