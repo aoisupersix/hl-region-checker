@@ -1,8 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:cv="clr-namespace:HLRegionChecker.Converters"
              x:Class="HLRegionChecker.Views.StatusDetailPage"
              Title="H-Lab">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <cv:MemberImageConverter x:Key="memImageConverter" />
+            <cv:StatusNameConverter x:Key="stateTextConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
     <ContentPage.Padding>
         <OnPlatform x:TypeArguments="Thickness" iOS="0, 20, 0, 0" Android="20" />
@@ -13,22 +21,28 @@
                HorizontalOptions="Center"
                VerticalOptions="Center"
                Text="みんなのステータス：" />
-        <ListView ItemsSource="{Binding Members.Value}" HasUnevenRows="True" SeparatorVisibility="None" RowHeight="120">
+        <ListView ItemsSource="{Binding Members.Value}"
+                  HasUnevenRows="True"
+                  SeparatorVisibility="None"
+                  RowHeight="130">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
-                        <StackLayout BackgroundColor="#AAD6EC" Margin="2, 4, 2, 4" Orientation="Horizontal">
-                            <Image Source="Icon_Menu" HeightRequest="50" />
+                        <StackLayout BackgroundColor="#AAD6EC"
+                                     Margin="6"
+                                     Orientation="Horizontal">
+                            <Image Source="{Binding Id, Converter={StaticResource memImageConverter}}" HeightRequest="50" Margin="5,0,5,0" />
                             <StackLayout Orientation="Vertical">
                                 <Label HorizontalOptions="Start"
-                                   VerticalOptions="Start"
-                                   TextColor="DarkBlue"
-                                   FontSize="Large"
-                                   Text="{Binding Name}" />
+                                       VerticalOptions="Start"
+                                       TextColor="DarkBlue"
+                                       FontSize="Large"
+                                       Text="{Binding Name}" />
                                 <Label HorizontalOptions="Center"
-                                   VerticalOptions="Center"
-                                   FontSize="50"
-                                   Text="帰宅" />
+                                       VerticalOptions="FillAndExpand"
+                                       FontSize="50"
+                                       FontAttributes="Bold"
+                                       Text="{Binding Status, Converter={StaticResource stateTextConverter}}" />
                             </StackLayout>
                         </StackLayout>
                     </ViewCell>
