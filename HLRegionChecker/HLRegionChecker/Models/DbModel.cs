@@ -83,7 +83,7 @@ namespace HLRegionChecker.Models
             _dbAdapter.InitializedDb += (_, members, states) =>
             {
                 members.ForEach(x => Console.WriteLine("member-Id:{0},Name:{1},Status:{2}", x.Id, x.Name, x.Status));
-                states.ForEach(x => Console.WriteLine("state-Id:{0},Name:{1},Color:{2}", x.Id, x.Name, x.Color));
+                states.ForEach(x => Console.WriteLine("state-Id:{0},Name:{1},Color:{2},Hex-BgColor:{3},Hex-TextColor:{4}", x.Id, x.Name, x.Color, x.BgColor_Hex, x.TextColor_Hex));
 
                 Members = new ObservableCollection<MemberModel>(members);
                 States = new ObservableCollection<StateModel>(states);

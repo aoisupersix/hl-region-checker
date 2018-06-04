@@ -63,7 +63,9 @@ namespace HLRegionChecker.iOS.DependencyServices
                 {
                     Id = int.Parse(state.Key),
                     Name = state.GetChildSnapshot("name").GetValue().ToString(),
-                    Color = state.GetChildSnapshot("color").GetValue().ToString()
+                    Color = state.GetChildSnapshot("color").GetValue().ToString(),
+                    BgColor_Hex = state.GetChildSnapshot("hcolor-bg").GetValue().ToString(),
+                    TextColor_Hex = state.GetChildSnapshot("hcolor-text").GetValue().ToString(),
                 });
             }
 

@@ -8,7 +8,7 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <cv:MemberImageConverter x:Key="memImageConverter" />
-            <cv:StatusNameConverter x:Key="stateTextConverter" />
+            <cv:StatusPropertyConverter x:Key="statePropertyConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -24,25 +24,26 @@
         <ListView ItemsSource="{Binding Members.Value}"
                   HasUnevenRows="True"
                   SeparatorVisibility="None"
-                  RowHeight="130">
+                  RowHeight="80">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
-                        <StackLayout BackgroundColor="#AAD6EC"
-                                     Margin="6"
+                        <StackLayout BackgroundColor="{Binding Status, Converter={StaticResource statePropertyConverter}, ConverterParameter='BgColor_Hex'}"
+                                     Margin="4"
                                      Orientation="Horizontal">
-                            <Image Source="{Binding Id, Converter={StaticResource memImageConverter}}" HeightRequest="50" Margin="5,0,5,0" />
+                            <Image Source="{Binding Id, Converter={StaticResource memImageConverter}}" HeightRequest="40" Margin="20,0,20,0" />
                             <StackLayout Orientation="Vertical">
                                 <Label HorizontalOptions="Start"
                                        VerticalOptions="Start"
-                                       TextColor="DarkBlue"
-                                       FontSize="Large"
+                                       TextColor="{Binding Status, Converter={StaticResource statePropertyConverter}, ConverterParameter='TextColor_Hex'}"
+                                       FontSize="Default"
                                        Text="{Binding Name}" />
                                 <Label HorizontalOptions="Center"
                                        VerticalOptions="FillAndExpand"
-                                       FontSize="50"
+                                       FontSize="30"
                                        FontAttributes="Bold"
-                                       Text="{Binding Status, Converter={StaticResource stateTextConverter}}" />
+                                       TextColor="{Binding Status, Converter={StaticResource statePropertyConverter}, ConverterParameter='TextColor_Hex'}"
+                                       Text="{Binding Status, Converter={StaticResource statePropertyConverter}, ConverterParameter='Name'}" />
                             </StackLayout>
                         </StackLayout>
                     </ViewCell>
