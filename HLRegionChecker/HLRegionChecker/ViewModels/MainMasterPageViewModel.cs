@@ -107,8 +107,11 @@ namespace HLRegionChecker.ViewModels
                 "Cancel",
                 null,
                 DbModel.Instance.States.Select(s => s.Name).ToArray());
-            var state = DbModel.Instance.States.Where(s => s.Name.Equals(ret)).Select(s => s.Id).First();
-            DbModel.Instance.UpdateState(state);
+            if(DbModel.Instance.States.Select(s => s.Name).Contains(ret))
+            {
+                var state = DbModel.Instance.States.Where(s => s.Name.Equals(ret)).Select(s => s.Id).First();
+                DbModel.Instance.UpdateState(state);
+            }
         }
     }
 
