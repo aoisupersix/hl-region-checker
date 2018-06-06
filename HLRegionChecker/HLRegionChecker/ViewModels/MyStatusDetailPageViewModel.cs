@@ -1,11 +1,8 @@
 ﻿using HLRegionChecker.Models;
-using Prism.Commands;
-using Prism.Mvvm;
+using HLRegionChecker.Const;
 using Prism.Navigation;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
@@ -13,7 +10,7 @@ using Xamarin.Forms;
 
 namespace HLRegionChecker.ViewModels
 {
-	public class MyStatusDetailPageViewModel : ViewModelBase
+    public class MyStatusDetailPageViewModel : ViewModelBase
 	{
         #region プロパティ
         /// <summary>
@@ -39,17 +36,17 @@ namespace HLRegionChecker.ViewModels
         /// <summary>
         /// ビーコンのUUID
         /// </summary>
-        public string Beacon_UUID { get; } = "UUID";
+        public string Beacon_UUID { get; } = "長いから省略";
 
         /// <summary>
         /// ビーコンのメジャー値
         /// </summary>
-        public string Beacon_Major { get; } = "Major";
+        public int Beacon_Major { get; } = RegionConst.BEACON_MAJOR;
 
         /// <summary>
         /// ビーコンのマイナー値
         /// </summary>
-        public string Beacon_Minor { get; } = "Minor";
+        public int Beacon_Minor { get; } = RegionConst.BEACON_MINOR;
 
         /// <summary>
         /// ビーコンのTxPower
