@@ -1,10 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:cv="clr-namespace:HLRegionChecker.Converters"
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="HLRegionChecker.Views.MyStatusDetailPage"
              Title="詳細情報">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <cv:AddSuffixConverter x:Key="suffixConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
     <ContentPage.Padding>
         <OnPlatform x:TypeArguments="Thickness" iOS="0, 20, 0, 0" Android="20" />
@@ -23,7 +30,7 @@
             
             <!-- メンバー情報ここから-->
             <StackLayout Grid.Row="0">
-                <Label Text="あなたのステータス" 
+                <Label Text="{Binding IdentifierName.Value, Converter={StaticResource suffixConverter}, ConverterParameter='のステータス'}" 
                        HorizontalOptions="Center"
                        VerticalOptions="CenterAndExpand" />
                 <Label x:Name="statusDisplayLabel"
@@ -66,7 +73,7 @@
                            VerticalOptions="CenterAndExpand" />
                     <Label Grid.Row="0"
                            Grid.Column="1"
-                           Text="UUIDDDDDDDDDDDDDDDDD"
+                           Text="{Binding Beacon_UUID}"
                            HorizontalOptions="StartAndExpand"
                            VerticalOptions="CenterAndExpand"
                            FontAttributes="Bold" />
@@ -80,7 +87,7 @@
                            VerticalOptions="CenterAndExpand" />
                     <Label Grid.Row="1"
                            Grid.Column="1"
-                           Text="UUIDDDDDDDDDDDDDDDDD"
+                           Text="{Binding Beacon_Major}"
                            HorizontalOptions="StartAndExpand"
                            VerticalOptions="CenterAndExpand"
                            FontAttributes="Bold" />
@@ -94,7 +101,7 @@
                            VerticalOptions="CenterAndExpand" />
                     <Label Grid.Row="2"
                            Grid.Column="1"
-                           Text="UUIDDDDDDDDDDDDDDDDD"
+                           Text="{Binding Beacon_Minor}"
                            HorizontalOptions="StartAndExpand"
                            VerticalOptions="CenterAndExpand"
                            FontAttributes="Bold" />
@@ -108,7 +115,7 @@
                            VerticalOptions="CenterAndExpand" />
                     <Label Grid.Row="3"
                            Grid.Column="1"
-                           Text="UUIDDDDDDDDDDDDDDDDD"
+                           Text="{Binding Beacon_TxPower}"
                            HorizontalOptions="StartAndExpand"
                            VerticalOptions="CenterAndExpand"
                            FontAttributes="Bold" />
@@ -138,7 +145,10 @@
                     
                     <!-- アプリアイコン-->
                     <Image Grid.Row="0"
-                           Grid.ColumnSpan="2" />
+                           Grid.ColumnSpan="2"
+                           Aspect="AspectFit"
+                           HeightRequest="60"
+                           Source="{Binding AppIcon}"/>
                     
                     <!-- アプリ名称 -->
                     <Label Grid.Row="1"
@@ -170,7 +180,7 @@
                            VerticalOptions="CenterAndExpand" />
                     <Label Grid.Row="4"
                            Grid.Column="1"
-                           Text="1"
+                           Text="{Binding Version}"
                            HorizontalOptions="StartAndExpand"
                            VerticalOptions="CenterAndExpand"
                            FontAttributes="Bold" />
@@ -184,7 +194,7 @@
                            VerticalOptions="CenterAndExpand" />
                     <Label Grid.Row="5"
                            Grid.Column="1"
-                           Text="0.1.0.0"
+                           Text="{Binding VersionCode}"
                            HorizontalOptions="StartAndExpand"
                            VerticalOptions="CenterAndExpand"
                            FontAttributes="Bold" />
