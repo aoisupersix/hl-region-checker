@@ -1,6 +1,7 @@
 ﻿using HLRegionChecker.Models;
 using Prism.Commands;
 using Prism.Mvvm;
+using Prism.Navigation;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
@@ -11,7 +12,7 @@ using System.Reactive.Linq;
 
 namespace HLRegionChecker.ViewModels
 {
-	public class MyStatusDetailPageViewModel : BindableBase
+	public class MyStatusDetailPageViewModel : ViewModelBase
 	{
         /// <summary>
         /// プロパティの監視管理
@@ -31,10 +32,16 @@ namespace HLRegionChecker.ViewModels
         /// <summary>
         /// デフォルトのコンストラクタ
         /// </summary>
-        public MyStatusDetailPageViewModel()
+        public MyStatusDetailPageViewModel(INavigationService navigationService) : base(navigationService)
         {
             Db = DbModel.Instance;
             Status = Db.ObserveProperty(x => x.Members).Select(m => Db.GetYourStatusText() ?? "Offline").ToReactiveProperty().AddTo(Disposable);
+        }
+
+        public override void Destroy()
+        {
+            Dispose();
+            base.Destroy();
         }
 
         /// <summary>

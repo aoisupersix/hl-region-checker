@@ -83,11 +83,7 @@ namespace HLRegionChecker.ViewModels
                         break;
                     case "ステータス更新":
                         IsPresented.Value = false;
-                        var ret = pageDialogService.DisplayActionSheetAsync(
-                            "ステータス手動更新",
-                            "Cancel",
-                            null,
-                            DbModel.Instance.States.Select(s => s.Name).ToArray());
+                        SelfUpdate(pageDialogService);
                         break;
                     case "あなたのステータス":
                         NavigationService.NavigateAsync("NavigationPage/MainMasterPage/MyStatusDetailPage");
@@ -99,6 +95,21 @@ namespace HLRegionChecker.ViewModels
             });
         }
         #endregion コンストラクタ
+
+        /// <summary>
+        /// ステータス手動更新ダイアログを表示し、選択されたステータスで更新します。
+        /// </summary>
+        /// <param name="pageDialogService"></param>
+        private async void SelfUpdate(IPageDialogService pageDialogService)
+        {
+            var ret = await pageDialogService.DisplayActionSheetAsync(
+                "ステータス手動更新",
+                "Cancel",
+                null,
+                DbModel.Instance.States.Select(s => s.Name).ToArray());
+            var state = DbModel.Instance.States.Where(s => s.Name.Equals(ret)).Select(s => s.Id).First();
+            DbModel.Instance.UpdateState(state);
+        }
     }
 
     /// <summary>

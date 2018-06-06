@@ -101,6 +101,27 @@ namespace HLRegionChecker.Models
         }
 
         /// <summary>
+        /// 現在設定されているメンバーのステータスを更新します。
+        /// </summary>
+        /// <param name="stateId">更新するステータスID</param>
+        public void UpdateState(int stateId)
+        {
+            var memId = UserDataModel.Instance.MemberId;
+            if(memId.HasValue)
+                UpdateState(memId.Value, stateId);
+        }
+
+        /// <summary>
+        /// 引数に与えられたメンバーIDのステータスを更新します。
+        /// </summary>
+        /// <param name="memberId">更新するメンバーID</param>
+        /// <param name="stateId">更新するステータスID</param>
+        public void UpdateState(int memberId, int stateId)
+        {
+            _dbAdapter.UpdateStatus(memberId, stateId);
+        }
+
+        /// <summary>
         /// 引数に与えられたIDのステータスを取得します。
         /// </summary>
         /// <param name="stateId">取得するステータスID</param>
