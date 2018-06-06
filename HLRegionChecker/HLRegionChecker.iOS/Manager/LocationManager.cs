@@ -4,6 +4,7 @@ using System.Reflection;
 using Foundation;
 using CoreLocation;
 
+using HLRegionChecker.Const;
 using HLRegionChecker.iOS.DependencyServices;
 using HLRegionChecker.Models;
 using HLRegionChecker.iOS.Notification;
@@ -21,33 +22,24 @@ namespace HLRegionChecker.iOS.Manager
         /// </summary>
         private static readonly LocationManager _instance = new LocationManager();
 
-        /// <summary>
-        /// 仮想領域の識別子
-        /// </summary>
-        public enum Region
-        {
-            [Description("tokyo.aoisupersix.region-laboratory")]
-            研究室,
-            [Description("tokyo.aoisupersix.region-campus")]
-            学内,
-        }
+
 
         /// <summary>
         /// HLRegionCheckerで利用するビーコンのUUID
         /// </summary>
-        public static readonly NSUuid BEACON_UUID = new NSUuid("2F0B0D9B-B52C-47BF-B5B8-2BFBCE094653");
+        public static readonly NSUuid BEACON_UUID = new NSUuid(RegionConst.BEACON_UUID);
 
         /// <summary>
         /// 工学部棟の中心緯度/経度
         /// </summary>
-        public static readonly CLLocationCoordinate2D CAMPUS_CENTER_COORDINATE = new CLLocationCoordinate2D(35.626514, 139.279283);
+        public static readonly CLLocationCoordinate2D CAMPUS_CENTER_COORDINATE = new CLLocationCoordinate2D(RegionConst.CAMPUS_LATITUDE, RegionConst.CAMPUS_LONGITUDE);
 
         /// <summary>
         /// 研究室のビーコン領域
         /// </summary>
-        public static readonly CLBeaconRegion REGION_LABORATORY = new CLBeaconRegion(BEACON_UUID, 1, 1, GetRegionIdentifier(Region.研究室));
+        public static readonly CLBeaconRegion REGION_LABORATORY = new CLBeaconRegion(BEACON_UUID, RegionConst.BEACON_MAJOR, RegionConst.BEACON_MINOR, RegionConst.GetRegionIdentifier(RegionConst.Region.研究室));
 
-        public static readonly CLCircularRegion REGION_CAMPUS = new CLCircularRegion(CAMPUS_CENTER_COORDINATE, 400, GetRegionIdentifier(Region.学内));
+        public static readonly CLCircularRegion REGION_CAMPUS = new CLCircularRegion(CAMPUS_CENTER_COORDINATE, RegionConst.CAMPUS_RADIUS, RegionConst.GetRegionIdentifier(RegionConst.Region.学内));
         #endregion
 
         #region メソッド
@@ -58,20 +50,6 @@ namespace HLRegionChecker.iOS.Manager
         public static LocationManager GetInstance()
         {
             return _instance;
-        }
-
-        /// <summary>
-        /// 仮想領域の識別子をアトリビュートから取得します。
-        /// </summary>
-        /// <param name="val">仮想領域</param>
-        /// <returns>仮想領域の識別子</returns>
-        public static string GetRegionIdentifier(Region val)
-        {
-            FieldInfo fi = val.GetType().GetField(val.ToString());
-            var attribute = (DescriptionAttribute)fi.GetCustomAttribute(typeof(DescriptionAttribute), false);
-            if (attribute != null)
-                return attribute.Description;
-            return val.ToString();
         }
 
         /// <summary>
@@ -159,13 +137,13 @@ namespace HLRegionChecker.iOS.Manager
             Console.WriteLine("Enter [{0}] Region", region.Identifier);
             PushNotificationManager.Send("Log表示", "Enter " + region.Identifier.GetType() + " Region");
 
-            if (region.Identifier == LocationManager.GetRegionIdentifier(LocationManager.Region.研究室))
+            if (region.Identifier == RegionConst.GetRegionIdentifier(RegionConst.Region.研究室))
             {
                 //研究室領域に侵入
                 UpdateStatus(2);
                 PushNotificationManager.Send("研究室領域に侵入", "ステータスを「在室」に更新しました。");
             }
-            else if (region.Identifier == LocationManager.GetRegionIdentifier(LocationManager.Region.学内))
+            else if (region.Identifier == RegionConst.GetRegionIdentifier(RegionConst.Region.学内))
             {
                 //学内領域に侵入
                 UpdateStatus(1);
@@ -183,13 +161,13 @@ namespace HLRegionChecker.iOS.Manager
             Console.WriteLine("Exit [{0}] Region", region.Identifier);
             PushNotificationManager.Send("Log表示", "Exit " + region.Identifier.GetType() + " Region");
 
-            if (region.Identifier == LocationManager.GetRegionIdentifier(LocationManager.Region.研究室))
+            if (region.Identifier == RegionConst.GetRegionIdentifier(RegionConst.Region.研究室))
             {
                 //研究室領域から退出
                 UpdateStatus(1);
                 PushNotificationManager.Send("研究室領域から退出", "ステータスを「学内」に更新しました。");
             }
-            else if (region.Identifier == LocationManager.GetRegionIdentifier(LocationManager.Region.学内))
+            else if (region.Identifier == RegionConst.GetRegionIdentifier(RegionConst.Region.学内))
             {
                 //学内領域から退出
                 UpdateStatus(0);

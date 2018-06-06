@@ -67,7 +67,7 @@ namespace HLRegionChecker.ViewModels
                 new MenuItem
                 {
                     Icon = ImageSource.FromResource("HLRegionChecker.Resources.Icon_UserStatus.png"),
-                    Title = "あなたのステータス"
+                    Title = "各種情報"
                 }
             });
 
@@ -82,11 +82,11 @@ namespace HLRegionChecker.ViewModels
                         SelfUpdate(pageDialogService);
                         break;
                     case "ユーザ識別子選択":
-                        NavigationService.NavigateAsync("NavigationPage/MainMasterPage/IdentifierSelectPage");
+                        NavigationService.NavigateAsync("NavigationPage/StatusDetailPage/IdentifierSelectPage");
                         IsPresented.Value = false;
                         break;
-                    case "あなたのステータス":
-                        NavigationService.NavigateAsync("NavigationPage/MainMasterPage/MyStatusDetailPage");
+                    case "各種情報":
+                        NavigationService.NavigateAsync("NavigationPage/StatusDetailPage/MyStatusDetailPage");
                         IsPresented.Value = false;
                         break;
                     default:
