@@ -43,6 +43,12 @@ namespace HLRegionChecker.ViewModels
             Status = Db.ObserveProperty(x => x.Members).Select(m => Db.GetYourStatusText() ?? "Offline").ToReactiveProperty().AddTo(Disposable);
         }
 
+        public override void Destroy()
+        {
+            Dispose();
+            base.Destroy();
+        }
+
         /// <summary>
         /// プロパティの変更監視を終了します。
         /// </summary>
