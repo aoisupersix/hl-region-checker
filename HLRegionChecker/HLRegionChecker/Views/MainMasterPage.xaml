@@ -50,11 +50,11 @@
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell StyleId="disclosure">
-                                <StackLayout Padding="15,10"
+                                <StackLayout Padding="15,20"
                                              Orientation="Horizontal"
                                              HorizontalOptions="FillAndExpand">
-                                    <Image HeightRequest="30"
-                                           WidthRequest="30"
+                                    <Image HeightRequest="40"
+                                           WidthRequest="40"
                                            Source="{Binding Icon}" />
                                     <Label VerticalOptions="FillAndExpand"
                                            VerticalTextAlignment="Center"

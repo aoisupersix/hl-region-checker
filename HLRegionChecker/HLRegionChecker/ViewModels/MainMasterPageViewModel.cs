@@ -56,13 +56,13 @@ namespace HLRegionChecker.ViewModels
             {
                 new MenuItem
                 {
-                    Icon = ImageSource.FromResource("HLRegionChecker.Resources.Icon_IdentifierSelection.png"),
-                    Title = "ユーザ識別子選択",
+                    Icon = ImageSource.FromResource("HLRegionChecker.Resources.Icon_SelfUpdate.png"),
+                    Title = "ステータス更新",
                 },
                 new MenuItem
                 {
-                    Icon = ImageSource.FromResource("HLRegionChecker.Resources.Icon_SelfUpdate.png"),
-                    Title = "ステータス更新",
+                    Icon = ImageSource.FromResource("HLRegionChecker.Resources.Icon_IdentifierSelection.png"),
+                    Title = "ユーザ識別子選択",
                 },
                 new MenuItem
                 {
@@ -77,13 +77,13 @@ namespace HLRegionChecker.ViewModels
                 //TODO: ここの処理が気持ち悪いから後でなんとかする
                 switch(item.Title)
                 {
-                    case "ユーザ識別子選択":
-                        NavigationService.NavigateAsync("NavigationPage/MainMasterPage/IdentifierSelectPage");
-                        IsPresented.Value = false;
-                        break;
                     case "ステータス更新":
                         IsPresented.Value = false;
                         SelfUpdate(pageDialogService);
+                        break;
+                    case "ユーザ識別子選択":
+                        NavigationService.NavigateAsync("NavigationPage/MainMasterPage/IdentifierSelectPage");
+                        IsPresented.Value = false;
                         break;
                     case "あなたのステータス":
                         NavigationService.NavigateAsync("NavigationPage/MainMasterPage/MyStatusDetailPage");
