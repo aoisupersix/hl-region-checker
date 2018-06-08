@@ -30,6 +30,10 @@ namespace HLRegionChecker.ViewModels
         /// </summary>
         public ReactiveProperty<bool> IsPresented { get; set; } = new ReactiveProperty<bool>(false);
         /// <summary>
+        /// メニューのジェスチャーが有効か？
+        /// </summary>
+        public ReactiveProperty<bool> IsGestureEnabled { get; set; } = new ReactiveProperty<bool>(true);
+        /// <summary>
         /// Masterのメニューアイテム
         /// </summary>
         public List<MenuItem> MenuItems { get; private set; }
@@ -82,12 +86,10 @@ namespace HLRegionChecker.ViewModels
                         SelfUpdate(pageDialogService);
                         break;
                     case "ユーザ識別子選択":
-                        NavigationService.NavigateAsync("NavigationPage/StatusDetailPage/IdentifierSelectPage");
-                        IsPresented.Value = false;
+                        PresentIdentifierSelectPage();
                         break;
                     case "各種情報":
-                        NavigationService.NavigateAsync("NavigationPage/StatusDetailPage/MyStatusDetailPage");
-                        IsPresented.Value = false;
+                        PresentMyStatusDetailPage();
                         break;
                     default:
                         break;
@@ -95,7 +97,6 @@ namespace HLRegionChecker.ViewModels
             });
         }
         #endregion コンストラクタ
-
         /// <summary>
         /// ステータス手動更新ダイアログを表示し、選択されたステータスで更新します。
         /// </summary>
@@ -112,6 +113,25 @@ namespace HLRegionChecker.ViewModels
                 var state = DbModel.Instance.States.Where(s => s.Name.Equals(ret)).Select(s => s.Id).First();
                 DbModel.Instance.UpdateState(state);
             }
+        }
+
+        /// <summary>
+        /// 識別子選択ページに遷移します
+        /// </summary>
+        private async void PresentIdentifierSelectPage()
+        {
+            IsGestureEnabled.Value = false;
+            IsPresented.Value = false;
+            await NavigationService.NavigateAsync("NavigationPage/StatusDetailPage/IdentifierSelectPage");
+            IsGestureEnabled.Value = true;
+        }
+
+        private async void PresentMyStatusDetailPage()
+        {
+            IsGestureEnabled.Value = false;
+            IsPresented.Value = false;
+            await NavigationService.NavigateAsync("NavigationPage/StatusDetailPage/MyStatusDetailPage");
+            IsGestureEnabled.Value = true;
         }
     }
 
