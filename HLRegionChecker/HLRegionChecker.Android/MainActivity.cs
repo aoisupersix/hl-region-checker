@@ -6,6 +6,8 @@ using Android.OS;
 using HLRegionChecker.Const;
 using Org.Altbeacon.Beacon;
 using Org.Altbeacon.Beacon.Client;
+using Firebase;
+using Firebase.Database;
 using Prism;
 using Prism.Ioc;
 
@@ -20,6 +22,8 @@ namespace HLRegionChecker.Droid
             ToolbarResource = Resource.Layout.Toolbar;
 
             base.OnCreate(bundle);
+
+            var db = FirebaseDatabase.Instance;
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
             LoadApplication(new App(new AndroidInitializer()));
