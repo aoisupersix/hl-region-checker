@@ -7,7 +7,7 @@
 
     <ContentPage.Resources>
         <ResourceDictionary>
-            <cv:MemberImageConverter x:Key="memImageConverter" />
+            <cv:ResourceConverter x:Key="resConverter" />
             <cv:StatusPropertyConverter x:Key="statePropertyConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
@@ -27,7 +27,7 @@
                         <StackLayout BackgroundColor="{Binding Status, Converter={StaticResource statePropertyConverter}, ConverterParameter='BgColor_Hex'}"
                                      Margin="4"
                                      Orientation="Horizontal">
-                            <Image Source="{Binding Status, Converter={StaticResource memImageConverter}}"
+                            <Image Source="{Binding Converter={StaticResource resConverter}, ConverterParameter='HLRegionChecker.Resources.Icon_Dog.png'}"
                                    Aspect="AspectFit"
                                    HeightRequest="40"
                                    Margin="20,0,20,0" />
