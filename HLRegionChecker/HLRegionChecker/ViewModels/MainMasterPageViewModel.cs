@@ -89,7 +89,10 @@ namespace HLRegionChecker.ViewModels
                         PresentIdentifierSelectPage();
                         break;
                     case "各種情報":
-                        PresentMyStatusDetailPage();
+                        //とりあえず仮対応
+                        //ユーザ識別子が選択されていない場合は遷移しない
+                        if(UserDataModel.Instance.MemberId.HasValue)
+                            PresentMyStatusDetailPage();
                         break;
                     default:
                         break;
