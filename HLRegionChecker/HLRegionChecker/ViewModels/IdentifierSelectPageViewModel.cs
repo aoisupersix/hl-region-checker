@@ -19,10 +19,18 @@ namespace HLRegionChecker.ViewModels
         /// </summary>
         private MainMasterPageViewModel _mainViewModel;
 
+        /// <summary>
+        /// 遷移関係の処理を行うナビゲーションサービス
+        /// </summary>
         private INavigationService navigationService;
+
+        /// <summary>
+        /// ダイアログの処理を行うダイアログサービス
+        /// </summary>
         private IPageDialogService dialogService;
         #endregion
 
+        #region プロパティ
         /// <summary>
         /// ListViewのItemを選択した際のコマンド
         /// </summary>
@@ -32,7 +40,14 @@ namespace HLRegionChecker.ViewModels
         /// 識別子リスト
         /// </summary>
         public ObservableCollection<MemberModel> IdentifierListViewItems { get; set; }
+        #endregion
 
+        #region コンストラクタ
+        /// <summary>
+        /// デフォルトのコンストラクタ
+        /// </summary>
+        /// <param name="navigationService"></param>
+        /// <param name="pageDialogService"></param>
         public IdentifierSelectPageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService)
         {
             this.navigationService = navigationService;
@@ -42,7 +57,12 @@ namespace HLRegionChecker.ViewModels
             //識別子が選択された際の処理
             ItemSelectedCommand = new Command<MemberModel>(IdentifierSelected);
         }
+        #endregion
 
+        /// <summary>
+        /// 識別子が選択された際に遷移元に戻ります
+        /// </summary>
+        /// <param name="item">選択されたListViewItem</param>
         public async void IdentifierSelected(MemberModel item)
         {
             UserDataModel.Instance.MemberId = item.Id;

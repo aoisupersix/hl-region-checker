@@ -76,6 +76,7 @@ namespace HLRegionChecker.ViewModels
         public string VersionCode { get; } = "VersionCode";
         #endregion
 
+        #region コンストラクタ
         /// <summary>
         /// デフォルトのコンストラクタ
         /// </summary>
@@ -91,6 +92,7 @@ namespace HLRegionChecker.ViewModels
 
             Status = DbModel.Instance.ObserveProperty(x => x.Members).Select(m => DbModel.Instance.GetYourStatusText() ?? "Offline").ToReactiveProperty().AddTo(Disposable);
         }
+        #endregion
 
         public override void OnNavigatedFrom(NavigationParameters parameters)
         {

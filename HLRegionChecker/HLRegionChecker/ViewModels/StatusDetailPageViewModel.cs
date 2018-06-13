@@ -16,6 +16,7 @@ namespace HLRegionChecker.ViewModels
 {
     public class StatusDetailPageViewModel : ViewModelBase
     {
+        #region プロパティ
         /// <summary>
         /// プロパティの監視管理
         /// </summary>
@@ -35,13 +36,20 @@ namespace HLRegionChecker.ViewModels
         /// ユーザのステータステキスト
         /// </summary>
         public ReactiveProperty<string> Status { get; private set; }
+        #endregion
 
+        #region コンストラクタ
+        /// <summary>
+        /// デフォルトのコンストラクタ
+        /// </summary>
+        /// <param name="navigationService"></param>
         public StatusDetailPageViewModel(INavigationService navigationService) : base (navigationService)
         {
             Db = DbModel.Instance;
             Members = Db.ObserveProperty(x => x.Members).ToReactiveProperty().AddTo(Disposable);
             Status = Db.ObserveProperty(x => x.Members).Select(m => Db.GetYourStatusText() ?? "Offline").ToReactiveProperty().AddTo(Disposable);
         }
+        #endregion
 
         public override void Destroy()
         {

@@ -11,7 +11,7 @@ using System;
 
 namespace HLRegionChecker.ViewModels
 {
-	public class MainMasterPageViewModel : BindableBase, INavigatedAware
+	public class MainMasterPageViewModel : BindableBase
 	{
         #region フィールド
         /// <summary>
@@ -90,7 +90,6 @@ namespace HLRegionChecker.ViewModels
                         NavigationService.NavigateAsync("NavigationPage/StatusDetailPage/IdentifierSelectPage", new NavigationParameters { { typeof(MainMasterPageViewModel).Name, this } });
                         break;
                     case "各種情報":
-                        //とりあえず仮対応
                         //ユーザ識別子が選択されていない場合は遷移しない
                         if (UserDataModel.Instance.MemberId.HasValue)
                             NavigationService.NavigateAsync("NavigationPage/StatusDetailPage/MyStatusDetailPage", new NavigationParameters { { typeof(MainMasterPageViewModel).Name, this } });
@@ -101,6 +100,7 @@ namespace HLRegionChecker.ViewModels
             });
         }
         #endregion コンストラクタ
+
         /// <summary>
         /// ステータス手動更新ダイアログを表示し、選択されたステータスで更新します。
         /// </summary>
@@ -117,16 +117,6 @@ namespace HLRegionChecker.ViewModels
                 var state = DbModel.Instance.States.Where(s => s.Name.Equals(ret)).Select(s => s.Id).First();
                 DbModel.Instance.UpdateState(state);
             }
-        }
-
-        public void OnNavigatedFrom(NavigationParameters parameters)
-        {
-            System.Diagnostics.Debug.WriteLine(parameters.ToString());
-        }
-
-        public void OnNavigatedTo(NavigationParameters parameters)
-        {
-            System.Diagnostics.Debug.WriteLine(parameters.ToString());
         }
     }
 
