@@ -12,6 +12,13 @@ namespace HLRegionChecker.ViewModels
 {
     public class MyStatusDetailPageViewModel : ViewModelBase
 	{
+        #region フィールド
+        /// <summary>
+        /// MainMasterPageのVM
+        /// </summary>
+        private MainMasterPageViewModel _mainViewModel;
+        #endregion
+
         #region プロパティ
         /// <summary>
         /// プロパティの監視管理
@@ -83,6 +90,25 @@ namespace HLRegionChecker.ViewModels
             }).ToReactiveProperty().AddTo(Disposable);
 
             Status = DbModel.Instance.ObserveProperty(x => x.Members).Select(m => DbModel.Instance.GetYourStatusText() ?? "Offline").ToReactiveProperty().AddTo(Disposable);
+        }
+
+        public override void OnNavigatedFrom(NavigationParameters parameters)
+        {
+            //Masterのジェスチャーを最有効化
+            System.Diagnostics.Debug.WriteLine(parameters.ToString());
+            if (_mainViewModel != null)
+                _mainViewModel.IsGestureEnabled.Value = true;
+        }
+
+        public override void OnNavigatedTo(NavigationParameters parameters)
+        {
+            //MainMasterPageからの遷移であればインスタンスを保持
+            var keyName = typeof(MainMasterPageViewModel).Name;
+            if (parameters.Any(x => x.Key.Equals(keyName)))
+            {
+                _mainViewModel = (MainMasterPageViewModel)parameters[keyName];
+                _mainViewModel.IsGestureEnabled.Value = false;
+            }
         }
 
         public override void Destroy()

@@ -13,8 +13,15 @@ namespace HLRegionChecker.ViewModels
 {
 	public class IdentifierSelectPageViewModel : ViewModelBase
 	{
+        #region フィールド
+        /// <summary>
+        /// MainMasterPageのVM
+        /// </summary>
+        private MainMasterPageViewModel _mainViewModel;
+
         private INavigationService navigationService;
         private IPageDialogService dialogService;
+        #endregion
 
         /// <summary>
         /// ListViewのItemを選択した際のコマンド
@@ -42,5 +49,23 @@ namespace HLRegionChecker.ViewModels
             await dialogService.DisplayAlertAsync("設定完了", $"ユーザ識別子を「{item.Name}」に設定しました。", "OK");
             await navigationService.GoBackAsync();
         }
-	}
+
+        public override void OnNavigatedFrom(NavigationParameters parameters)
+        {
+            //Masterのジェスチャーを最有効化
+            if (_mainViewModel != null)
+                _mainViewModel.IsGestureEnabled.Value = true;
+        }
+
+        public override void OnNavigatedTo(NavigationParameters parameters)
+        {
+            //MainMasterPageからの遷移であればインスタンスを保持
+            var keyName = typeof(MainMasterPageViewModel).Name;
+            if (parameters.Any(x => x.Key.Equals(keyName)))
+            {
+                _mainViewModel = (MainMasterPageViewModel)parameters[keyName];
+                _mainViewModel.IsGestureEnabled.Value = false;
+            }
+        }
+    }
 }

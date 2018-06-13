@@ -11,7 +11,7 @@ using System;
 
 namespace HLRegionChecker.ViewModels
 {
-	public class MainMasterPageViewModel : BindableBase
+	public class MainMasterPageViewModel : BindableBase, INavigatedAware
 	{
         #region フィールド
         /// <summary>
@@ -78,21 +78,22 @@ namespace HLRegionChecker.ViewModels
             //メニューが選択された際の処理
             ItemSelectedCommand = new Command<MenuItem>((item) =>
             {
+                IsPresented.Value = false;
                 //TODO: ここの処理が気持ち悪いから後でなんとかする
-                switch(item.Title)
+                switch (item.Title)
                 {
                     case "ステータス更新":
                         IsPresented.Value = false;
                         SelfUpdate(pageDialogService);
                         break;
                     case "ユーザ識別子選択":
-                        PresentIdentifierSelectPage();
+                        NavigationService.NavigateAsync("NavigationPage/StatusDetailPage/IdentifierSelectPage", new NavigationParameters { { typeof(MainMasterPageViewModel).Name, this } });
                         break;
                     case "各種情報":
                         //とりあえず仮対応
                         //ユーザ識別子が選択されていない場合は遷移しない
-                        if(UserDataModel.Instance.MemberId.HasValue)
-                            PresentMyStatusDetailPage();
+                        if (UserDataModel.Instance.MemberId.HasValue)
+                            NavigationService.NavigateAsync("NavigationPage/StatusDetailPage/MyStatusDetailPage", new NavigationParameters { { typeof(MainMasterPageViewModel).Name, this } });
                         break;
                     default:
                         break;
@@ -118,23 +119,14 @@ namespace HLRegionChecker.ViewModels
             }
         }
 
-        /// <summary>
-        /// 識別子選択ページに遷移します
-        /// </summary>
-        private async void PresentIdentifierSelectPage()
+        public void OnNavigatedFrom(NavigationParameters parameters)
         {
-            IsGestureEnabled.Value = false;
-            IsPresented.Value = false;
-            await NavigationService.NavigateAsync("NavigationPage/StatusDetailPage/IdentifierSelectPage");
-            IsGestureEnabled.Value = true;
+            System.Diagnostics.Debug.WriteLine(parameters.ToString());
         }
 
-        private async void PresentMyStatusDetailPage()
+        public void OnNavigatedTo(NavigationParameters parameters)
         {
-            IsGestureEnabled.Value = false;
-            IsPresented.Value = false;
-            await NavigationService.NavigateAsync("NavigationPage/StatusDetailPage/MyStatusDetailPage");
-            IsGestureEnabled.Value = true;
+            System.Diagnostics.Debug.WriteLine(parameters.ToString());
         }
     }
 
