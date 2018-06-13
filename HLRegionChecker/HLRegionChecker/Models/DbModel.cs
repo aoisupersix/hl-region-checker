@@ -88,7 +88,7 @@ namespace HLRegionChecker.Models
                 //更新処理はメインスレッドで行う
                 Device.BeginInvokeOnMainThread(() =>
                 {
-                    Members = new ObservableCollection<MemberModel>(members);
+                    //Members = new ObservableCollection<MemberModel>(members);
                     States = new ObservableCollection<StateModel>(states);
                 });
             };
