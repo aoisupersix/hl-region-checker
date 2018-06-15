@@ -140,7 +140,6 @@ namespace HLRegionChecker.iOS.Manager
         public override void RegionEntered(CLLocationManager manager, CLRegion region)
         {
             Console.WriteLine("Enter [{0}] Region", region.Identifier);
-            PushNotificationManager.Send("Log表示", "Enter " + region.Identifier.GetType() + " Region");
 
             if (region.Identifier == RegionConst.GetRegionIdentifier(RegionConst.Region.研究室))
             {
@@ -164,7 +163,6 @@ namespace HLRegionChecker.iOS.Manager
         public override void RegionLeft(CLLocationManager manager, CLRegion region)
         {
             Console.WriteLine("Exit [{0}] Region", region.Identifier);
-            PushNotificationManager.Send("Log表示", "Exit " + region.Identifier.GetType() + " Region");
 
             if (region.Identifier == RegionConst.GetRegionIdentifier(RegionConst.Region.研究室))
             {
