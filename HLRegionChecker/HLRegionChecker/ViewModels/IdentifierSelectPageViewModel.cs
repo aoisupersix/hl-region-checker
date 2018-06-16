@@ -66,6 +66,7 @@ namespace HLRegionChecker.ViewModels
         public async void IdentifierSelected(MemberModel item)
         {
             UserDataModel.Instance.MemberId = item.Id;
+            DbModel.Instance.UpdateMemberDisplayName();
             await dialogService.DisplayAlertAsync("設定完了", $"ユーザ識別子を「{item.Name}」に設定しました。", "OK");
             await navigationService.GoBackAsync();
         }

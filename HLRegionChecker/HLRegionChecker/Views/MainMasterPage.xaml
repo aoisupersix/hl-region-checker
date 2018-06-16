@@ -32,14 +32,28 @@
                                 <RowDefinition Height="1" />
                                 <RowDefinition Height="15" />
                             </Grid.RowDefinitions>
-                            <Image Grid.Column="1"
-                                   Grid.Row="1"
+                            <Grid Grid.Column="1"
+                                  Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="100" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Image Grid.Column="0"
                                    HorizontalOptions="Start"
                                    Source="{Binding AppIcon}" />
+                                <Label Grid.Column="1"
+                                       VerticalOptions="Center"
+                                       HorizontalOptions="Center"
+                                       FontAttributes="None"
+                                       FontSize="26"
+                                       TextColor="#7A7A7A"
+                                       Text="{Binding MemberName.Value}" />
+                            </Grid>
                             <Label Grid.Column="1"
                                    Grid.Row="2"
+                                   HorizontalTextAlignment="Center"
                                    Text="HLRegionChecker"
-                                   FontSize="30"
+                                   FontSize="Large"
                                    FontAttributes="Bold"
                                    TextColor="#7A7A7A"
                                    Style="{DynamicResource SubtitleStyle}" />
@@ -61,7 +75,7 @@
                                            VerticalTextAlignment="Center"
                                            Text="{Binding Title}"
                                            TextColor="Blue"
-                                           FontSize="24" />
+                                           FontSize="Large" />
                                 </StackLayout>
                             </ViewCell>
                         </DataTemplate>

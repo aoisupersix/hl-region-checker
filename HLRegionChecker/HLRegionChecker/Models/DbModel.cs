@@ -28,6 +28,8 @@ namespace HLRegionChecker.Models
 
         private ObservableCollection<StateModel> _states;
 
+        private string _memberDisplayName; 
+
         #endregion
 
         #region プロパティ
@@ -51,7 +53,11 @@ namespace HLRegionChecker.Models
         public ObservableCollection<MemberModel> Members
         {
             get { return _members; }
-            set { SetProperty(ref _members, value); }
+            set
+            {
+                SetProperty(ref _members, value);
+                UpdateMemberDisplayName();
+            }
         }
 
         /// <summary>
@@ -61,6 +67,20 @@ namespace HLRegionChecker.Models
         {
             get { return _states; }
             set { SetProperty(ref _states, value); }
+        }
+
+        /// <summary>
+        /// 自分の表示名
+        /// </summary>
+        public string MemberDisplayName
+        {
+            get
+            {
+                if (_memberDisplayName == null)
+                    UpdateMemberDisplayName();
+                return _memberDisplayName;
+            }
+            set { SetProperty(ref _memberDisplayName, value); }
         }
         #endregion
 
@@ -102,6 +122,18 @@ namespace HLRegionChecker.Models
             };
 
             _dbAdapter.InitDb();
+        }
+
+        /// <summary>
+        /// メンバーの表示名を更新します。
+        /// </summary>
+        public void UpdateMemberDisplayName()
+        {
+            var id = UserDataModel.Instance.MemberId;
+            if (!id.HasValue || Members == null || !Members.Any())
+                MemberDisplayName = "ー";
+            else
+                MemberDisplayName = Members.Where(x => x.Id == id).Select(x => x.Name).First() ?? "ー";
         }
 
         /// <summary>

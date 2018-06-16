@@ -8,23 +8,18 @@ using Xamarin.Forms;
 using Reactive.Bindings;
 using Prism.Services;
 using System;
+using Reactive.Bindings.Extensions;
+using System.Reactive.Disposables;
 
 namespace HLRegionChecker.ViewModels
 {
-	public class MainMasterPageViewModel : BindableBase
+	public class MainMasterPageViewModel : ViewModelBase
 	{
-        #region フィールド
-        /// <summary>
-        /// 画面遷移関係用
-        /// </summary>
-        private INavigationService NavigationService { get; }
-        #endregion フィールド
-
         #region プロパティ
         /// <summary>
-        /// ユーザ情報モデル
+        /// プロパティの監視管理
         /// </summary>
-        public UserDataModel UserData { get; private set; }
+        private CompositeDisposable Disposable { get; } = new CompositeDisposable();
         /// <summary>
         /// メニューを表示しているか？
         /// </summary>
@@ -42,6 +37,10 @@ namespace HLRegionChecker.ViewModels
         /// </summary>
         public ImageSource AppIcon { get; private set; } = ImageSource.FromResource("HLRegionChecker.Resources.Icon_AppIcon.png");
         /// <summary>
+        /// Masterのメンバー名
+        /// </summary>
+        public ReactiveProperty<string> MemberName { get; set; }
+        /// <summary>
         /// ListViewのItemを選択した際のコマンド
         /// </summary>
         public Command<MenuItem> ItemSelectedCommand { get; }
@@ -51,9 +50,9 @@ namespace HLRegionChecker.ViewModels
         /// <summary>
         /// デフォルトのコンストラクタです。
         /// </summary>
-        public MainMasterPageViewModel(INavigationService navigationService, IPageDialogService pageDialogService)
+        public MainMasterPageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService)
         {
-            this.NavigationService = navigationService;
+            MemberName = DbModel.Instance.ObserveProperty(x => x.MemberDisplayName).ToReactiveProperty().AddTo(Disposable);
 
             //メニューの初期化
             MenuItems = new List<MenuItem>(new[]
@@ -117,6 +116,20 @@ namespace HLRegionChecker.ViewModels
                 var state = DbModel.Instance.States.Where(s => s.Name.Equals(ret)).Select(s => s.Id).First();
                 DbModel.Instance.UpdateState(state);
             }
+        }
+
+        public override void Destroy()
+        {
+            Dispose();
+            base.Destroy();
+        }
+
+        /// <summary>
+        /// プロパティの変更監視を終了します。
+        /// </summary>
+        public void Dispose()
+        {
+            this.Disposable.Dispose();
         }
     }
 
