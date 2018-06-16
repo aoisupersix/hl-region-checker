@@ -61,16 +61,30 @@ namespace HLRegionChecker.ViewModels
                 {
                     Icon = ImageSource.FromResource("HLRegionChecker.Resources.Icon_SelfUpdate.png"),
                     Title = "ステータス更新",
+                    OnSelectedAction = () =>
+                    {
+                        SelfUpdate(pageDialogService);
+                    }
                 },
                 new MenuItem
                 {
                     Icon = ImageSource.FromResource("HLRegionChecker.Resources.Icon_IdentifierSelection.png"),
                     Title = "ユーザ識別子選択",
+                    OnSelectedAction = () =>
+                    {
+                        NavigationService.NavigateAsync("NavigationPage/StatusDetailPage/IdentifierSelectPage", new NavigationParameters { { typeof(MainMasterPageViewModel).Name, this } });
+                    }
                 },
                 new MenuItem
                 {
                     Icon = ImageSource.FromResource("HLRegionChecker.Resources.Icon_UserStatus.png"),
-                    Title = "各種情報"
+                    Title = "各種情報",
+                    OnSelectedAction = () =>
+                    {
+                        //ユーザ識別子が選択されていない場合は遷移しない
+                        if (UserDataModel.Instance.MemberId.HasValue)
+                            NavigationService.NavigateAsync("NavigationPage/StatusDetailPage/MyStatusDetailPage", new NavigationParameters { { typeof(MainMasterPageViewModel).Name, this } });
+                    }
                 }
             });
 
@@ -78,24 +92,7 @@ namespace HLRegionChecker.ViewModels
             ItemSelectedCommand = new Command<MenuItem>((item) =>
             {
                 IsPresented.Value = false;
-                //TODO: ここの処理が気持ち悪いから後でなんとかする
-                switch (item.Title)
-                {
-                    case "ステータス更新":
-                        IsPresented.Value = false;
-                        SelfUpdate(pageDialogService);
-                        break;
-                    case "ユーザ識別子選択":
-                        NavigationService.NavigateAsync("NavigationPage/StatusDetailPage/IdentifierSelectPage", new NavigationParameters { { typeof(MainMasterPageViewModel).Name, this } });
-                        break;
-                    case "各種情報":
-                        //ユーザ識別子が選択されていない場合は遷移しない
-                        if (UserDataModel.Instance.MemberId.HasValue)
-                            NavigationService.NavigateAsync("NavigationPage/StatusDetailPage/MyStatusDetailPage", new NavigationParameters { { typeof(MainMasterPageViewModel).Name, this } });
-                        break;
-                    default:
-                        break;
-                }
+                item.OnSelectedAction();
             });
         }
         #endregion コンストラクタ
@@ -147,5 +144,7 @@ namespace HLRegionChecker.ViewModels
         /// メニューアイテムのタイトル
         /// </summary>
         public string Title { get; set; }
+
+        public Action OnSelectedAction { get; set; }
     }
 }
