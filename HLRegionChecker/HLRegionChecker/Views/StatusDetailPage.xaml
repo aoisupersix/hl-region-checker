@@ -19,8 +19,7 @@
     <StackLayout>
         <ListView ItemsSource="{Binding Members.Value}"
                   HasUnevenRows="True"
-                  SeparatorVisibility="None"
-                  RowHeight="80">
+                  SeparatorVisibility="None">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
@@ -31,16 +30,17 @@
                                    Aspect="AspectFit"
                                    HeightRequest="40"
                                    Margin="20,0,20,0" />
-                            <StackLayout Orientation="Vertical">
+                            <StackLayout Orientation="Vertical"
+                                         VerticalOptions="Start">
                                 <Label HorizontalOptions="Start"
-                                       VerticalOptions="Start"
+                                       VerticalTextAlignment="Start"
                                        TextColor="{Binding Status, Converter={StaticResource statePropertyConverter}, ConverterParameter='TextColor_Hex'}"
                                        FontSize="Default"
                                        Text="{Binding Name}" />
-                                <Label HorizontalOptions="Center"
-                                       VerticalOptions="FillAndExpand"
-                                       FontSize="30"
-                                       FontAttributes="Bold"
+                                <Label VerticalTextAlignment="Start"
+                                       FontSize="35"
+                                       Margin="0,5,0,5"
+                                       FontAttributes="None"
                                        TextColor="{Binding Status, Converter={StaticResource statePropertyConverter}, ConverterParameter='TextColor_Hex'}"
                                        Text="{Binding Status, Converter={StaticResource statePropertyConverter}, ConverterParameter='Name'}" />
                             </StackLayout>

@@ -38,10 +38,14 @@ namespace HLRegionChecker.iOS.DependencyServices
             List<MemberModel> memModels = new List<MemberModel>();
             while (members.NextObject() is DataSnapshot member)
             {
+                var last_name = member.GetChildSnapshot("last_name").GetValue().ToString();
+                var first_name = member.GetChildSnapshot("first_name").GetValue().ToString();
                 memModels.Add(new MemberModel()
                 {
                     Id = int.Parse(member.Key),
-                    Name = member.GetChildSnapshot("name").GetValue().ToString(),
+                    Name = $"{last_name} {first_name}",
+                    LastName = last_name,
+                    FirstName = first_name,
                     Status = int.Parse(member.GetChildSnapshot("status").GetValue().ToString())
                 });
             }
