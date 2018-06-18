@@ -11,6 +11,12 @@ Therefore, we do not correspond to use outside the Hayakawa laboratory.
 
 **The [author](https://github.com/aoisupersix) assumes no responsibility for any damage caused by using this software.**
 
+## Related Applications
+- [HLDisplay](https://github.com/aoisupersix/HLDisplay)
+- [HLDispalyWebPage](https://github.com/aoisupersix/HLDisplayWebPage)
+- [~~HLRegionChecker-Native-iOS~~(Development end)](https://github.com/aoisupersix/HLRegionChecker-NativeIOS)
+- [~~HLabManager~~(Development end)](https://github.com/aoisupersix/hlabManager)
+
 ## Requirement
 - Xamarin.Forms
 - Import GoogleServices.json and GoogleServices.Info.plist into your project.
