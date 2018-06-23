@@ -195,6 +195,9 @@
     <PackageReference Include="ReactiveProperty">
       <Version>5.1.1</Version>
     </PackageReference>
+    <PackageReference Include="Xamarin.Firebase.iOS.Database">
+      <Version>4.1.3.1</Version>
+    </PackageReference>
     <PackageReference Include="Xamarin.Forms">
       <Version>3.1.0.583944</Version>
     </PackageReference>
