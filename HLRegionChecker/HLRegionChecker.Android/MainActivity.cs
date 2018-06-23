@@ -23,6 +23,7 @@ namespace HLRegionChecker.Droid
 
             base.OnCreate(bundle);
 
+            FirebaseApp.InitializeApp(this);
             var db = FirebaseDatabase.Instance;
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
