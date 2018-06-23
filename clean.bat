@@ -11,6 +11,16 @@ SET O3=.\HLRegionChecker\HLRegionChecker.iOS\obj\*
 
 echo %DATE% %TIME% 処理開始
 
+rem ファイル削除
+del /S /Q %VS%
+del /S /Q %B1%
+del /S /Q %O1%
+del /S /Q %B2%
+del /S /Q %O2%
+del /S /Q %B3%
+del /S /Q %O3%
+
+rem ディレクトリ削除
 for /D %%1 in (%VS%) do rd /S /Q "%%1"
 for /D %%1 in (%B1%) do rd /S /Q "%%1"
 for /D %%1 in (%O1%) do rd /S /Q "%%1"
