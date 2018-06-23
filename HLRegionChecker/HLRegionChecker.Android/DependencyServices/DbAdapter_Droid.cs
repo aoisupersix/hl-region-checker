@@ -179,17 +179,17 @@ namespace HLRegionChecker.Droid.DependencyServices
         /// <param name="stateId">更新ステータスID</param>
         void IDbAdapter.UpdateStatus(int memberId, int stateId)
         {
-            ////ステータスIDが含まれているかのチェック
-            //if (!_states.Select(x => x.Id).Contains(stateId))
-            //    return;
+            //ステータスIDが含まれているかのチェック
+            if (!States.Value.Select(x => x.Id).Contains(stateId))
+                return;
 
-            ////更新情報の用意
-            //var childDict = new NSDictionary("status", stateId);
+            //更新情報の用意
+            var childDict = new Dictionary<string, Java.Lang.Object>();
+            childDict.Add("status", stateId);
 
-            ////更新
-            //var rootRef = Database.DefaultInstance.GetRootReference();
-            //var memRef = rootRef.GetChild("members");
-            //memRef.GetChild(memberId.ToString()).UpdateChildValues(childDict);
+            //更新
+            var memRef = FirebaseDatabase.Instance.GetReference("members");
+            memRef.Child(memberId.ToString()).UpdateChildren(childDict);
         }
         #endregion インタフェース実装
     }
