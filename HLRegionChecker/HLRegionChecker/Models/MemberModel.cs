@@ -38,10 +38,33 @@ namespace HLRegionChecker.Models
         /// <value>The last update date.</value>
         public DateTime LastUpdateDate { get; set; }
 
+        public string LastUpdateDateDisplayName {
+            get 
+            {
+                if (LastUpdateDate == DateTime.MinValue)
+                    return "-";
+                return LastUpdateDate.ToString("YYYY/MM/DD HH:MM:SS");
+            }
+        }
+
         /// <summary>
         /// ステータスの最終更新方法が自動か？
         /// </summary>
         /// <value><c>true</c> if last update is auto; otherwise, <c>false</c>.</value>
         public bool LastUpdateIsAuto { get; set; }
+
+        /// <summary>
+        /// 更新種類の表示文字列
+        /// </summary>
+        /// <value>The last update type string.</value>
+        public string LastUpdateTypeDisplayName {
+            get 
+            {
+                if (LastUpdateIsAuto)
+                    return "自動更新";
+                else
+                    return "手動更新";
+            }
+        }
     }
 }

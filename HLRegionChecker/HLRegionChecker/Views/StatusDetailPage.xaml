@@ -29,7 +29,7 @@
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="60" />
-                                    <ColumnDefinition Width="90" />
+                                    <ColumnDefinition Width="110*" />
                                     <ColumnDefinition Width="220*" />
                                 </Grid.ColumnDefinitions>
                                 <Image Grid.Column="0"
@@ -61,9 +61,10 @@
                                            TextColor="{Binding Status, Converter={StaticResource statePropertyConverter}, ConverterParameter='TextColor_Hex'}">
                                         <Label.FormattedText>
                                             <FormattedString>
-                                                <Span Text="最終更新:2018/06/27 18:40:33" />
+                                                <Span Text="最終更新:" />
+                                                <Span Text="{Binding LastUpdateDateDisplayName}" />
                                                 <Span Text="{x:Static x:Environment.NewLine}" />
-                                                <Span FontSize="Default" Text="手動更新" />
+                                                <Span FontSize="Default" Text="{Binding LastUpdateTypeDisplayName}" />
                                             </FormattedString>
                                         </Label.FormattedText>
                                     </Label>
