@@ -10,6 +10,7 @@ using Firebase;
 using Firebase.Database;
 using Prism;
 using Prism.Ioc;
+using Android.Gms.Location;
 
 namespace HLRegionChecker.Droid
 {

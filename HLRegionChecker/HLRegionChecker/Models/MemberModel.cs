@@ -1,4 +1,5 @@
-﻿
+﻿using System;
+
 namespace HLRegionChecker.Models
 {
     /// <summary>
@@ -30,5 +31,17 @@ namespace HLRegionChecker.Models
         /// メンバーのステータスID
         /// </summary>
         public int Status { get; set; }
+
+        /// <summary>
+        /// ステータスの最終更新時間
+        /// </summary>
+        /// <value>The last update date.</value>
+        public DateTime LastUpdateDate { get; set; }
+
+        /// <summary>
+        /// ステータスの最終更新方法が自動か？
+        /// </summary>
+        /// <value><c>true</c> if last update is auto; otherwise, <c>false</c>.</value>
+        public bool LastUpdateIsAuto { get; set; }
     }
 }

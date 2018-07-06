@@ -40,13 +40,17 @@ namespace HLRegionChecker.iOS.DependencyServices
             {
                 var last_name = member.GetChildSnapshot("last_name").GetValue().ToString();
                 var first_name = member.GetChildSnapshot("first_name").GetValue().ToString();
+                var last_update_date = member.GetChildSnapshot("last_update_date").GetValue().ToString();
+                var last_update_auto_flg = member.GetChildSnapshot("last_update_is_auto").GetValue().ToString();
                 memModels.Add(new MemberModel()
                 {
                     Id = int.Parse(member.Key),
                     Name = $"{last_name} {first_name}",
                     LastName = last_name,
                     FirstName = first_name,
-                    Status = int.Parse(member.GetChildSnapshot("status").GetValue().ToString())
+                    Status = int.Parse(member.GetChildSnapshot("status").GetValue().ToString()),
+                    LastUpdateDate = !last_update_date.Equals("") ? DateTime.Parse(last_update_date) : DateTime.MinValue,
+                    LastUpdateIsAuto = Convert.ToBoolean(int.Parse(last_update_auto_flg))
                 });
             }
 
