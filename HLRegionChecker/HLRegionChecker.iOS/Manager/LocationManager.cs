@@ -79,12 +79,13 @@ namespace HLRegionChecker.iOS.Manager
                 return;
 
             //ステータスの更新処理
-            var childDict = new NSDictionary("status", stateId);
+            //var childDict = new NSDictionary("status", stateId);
 
-            var rootRef = Database.DefaultInstance.GetRootReference();
-            var memRef = rootRef.GetChild("members");
-            memRef.GetChild(memId.Value.ToString()).UpdateChildValues(childDict);
+            //var rootRef = Database.DefaultInstance.GetRootReference();
+            //var memRef = rootRef.GetChild("members");
+            //memRef.GetChild(memId.Value.ToString()).UpdateChildValues(childDict);
             var adapter = (IDbAdapter)(new DbAdapter_iOS());
+            adapter.UpdateStatus(memId.Value, stateId, true);
         }
 
         /// <summary>

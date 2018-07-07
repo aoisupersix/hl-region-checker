@@ -154,7 +154,7 @@ namespace HLRegionChecker.Models
         /// <param name="stateId">更新するステータスID</param>
         public void UpdateState(int memberId, int stateId)
         {
-            _dbAdapter.UpdateStatus(memberId, stateId);
+            _dbAdapter.UpdateStatus(memberId, stateId, false);
         }
 
         /// <summary>
