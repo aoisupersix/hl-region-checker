@@ -153,7 +153,7 @@ namespace HLRegionChecker.iOS.DependencyServices
             var vals = new[]
             {
                 NSObject.FromObject(stateId),
-                NSObject.FromObject(DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss")),
+                NSObject.FromObject(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")),
                 NSObject.FromObject(autoUpdateFlg),
             };
             var childDict = NSDictionary.FromObjectsAndKeys(vals, keys, keys.Length);

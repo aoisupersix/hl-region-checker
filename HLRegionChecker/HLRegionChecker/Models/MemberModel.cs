@@ -43,7 +43,7 @@ namespace HLRegionChecker.Models
             {
                 if (LastUpdateDate == DateTime.MinValue)
                     return "-";
-                return LastUpdateDate.ToString("YYYY/MM/DD HH:MM:SS");
+                return LastUpdateDate.ToString("yyyy/MM/dd HH:mm:ss");
             }
         }
 
