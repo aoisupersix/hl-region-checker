@@ -19,6 +19,11 @@ namespace HLRegionChecker.iOS.DependencyServices
         private static List<StateModel> _states = new List<StateModel>();
 
         /// <summary>
+        /// メンバー情報
+        /// </summary>
+        private static List<MemberModel> _members = new List<MemberModel>();
+
+        /// <summary>
         /// データベースの初期値を取得した際のイベントハンドラです。
         /// </summary>
         public event DbInitializeEventHandler InitializedDb;
@@ -35,26 +40,27 @@ namespace HLRegionChecker.iOS.DependencyServices
         /// <returns>メンバー情報を代入したMemberModel</returns>
         private List<MemberModel> ConvertToMemberModels(NSEnumerator members)
         {
-            List<MemberModel> memModels = new List<MemberModel>();
+            _members.Clear();
             while (members.NextObject() is DataSnapshot member)
             {
                 var last_name = member.GetChildSnapshot("last_name").GetValue().ToString();
                 var first_name = member.GetChildSnapshot("first_name").GetValue().ToString();
                 var last_update_date = member.GetChildSnapshot("last_update_date").GetValue().ToString();
                 var last_update_auto_flg = member.GetChildSnapshot("last_update_is_auto").GetValue().ToString();
-                memModels.Add(new MemberModel()
+                _members.Add(new MemberModel()
                 {
                     Id = int.Parse(member.Key),
                     Name = $"{last_name} {first_name}",
                     LastName = last_name,
                     FirstName = first_name,
                     Status = int.Parse(member.GetChildSnapshot("status").GetValue().ToString()),
+                    LastStatus = int.Parse(member.GetChildSnapshot("last_status").GetValue().ToString()),
                     LastUpdateDate = !last_update_date.Equals("") ? DateTime.Parse(last_update_date) : DateTime.MinValue,
                     LastUpdateIsAuto = Convert.ToBoolean(int.Parse(last_update_auto_flg))
                 });
             }
 
-            return memModels.OrderBy(x => x.Id).ToList();
+            return _members.OrderBy(x => x.Id).ToList();
         }
 
         /// <summary>
@@ -147,12 +153,14 @@ namespace HLRegionChecker.iOS.DependencyServices
             var keys = new[]
             {
                 "status",
+                "last_status",
                 "last_update_date",
                 "last_update_is_auto",
             };
             var vals = new[]
             {
                 NSObject.FromObject(stateId),
+                NSObject.FromObject(_members.Where(x => x.Id == memberId).First().Status),
                 NSObject.FromObject(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")),
                 NSObject.FromObject(autoUpdateFlg),
             };

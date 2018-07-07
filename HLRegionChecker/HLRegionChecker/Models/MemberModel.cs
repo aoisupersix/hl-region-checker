@@ -33,6 +33,12 @@ namespace HLRegionChecker.Models
         public int Status { get; set; }
 
         /// <summary>
+        /// メンバーの最終更新ステータスID
+        /// </summary>
+        /// <value>The last status.</value>
+        public int LastStatus { get; set; }
+
+        /// <summary>
         /// ステータスの最終更新時間
         /// </summary>
         /// <value>The last update date.</value>

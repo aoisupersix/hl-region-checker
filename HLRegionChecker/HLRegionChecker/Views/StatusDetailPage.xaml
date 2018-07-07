@@ -64,7 +64,12 @@
                                                 <Span Text="最終更新:" />
                                                 <Span Text="{Binding LastUpdateDateDisplayName}" />
                                                 <Span Text="{x:Static x:Environment.NewLine}" />
-                                                <Span FontSize="Default" Text="{Binding LastUpdateTypeDisplayName}" />
+                                                <Span Text="{Binding LastUpdateTypeDisplayName}" />
+                                                <Span Text="(" />
+                                                <Span Text="{Binding LastStatus, Converter={StaticResource statePropertyConverter}, ConverterParameter='Name'}" />
+                                                <Span Text="→" />
+                                                <Span Text="{Binding Status, Converter={StaticResource statePropertyConverter}, ConverterParameter='Name'}" />
+                                                <Span Text=")" />
                                             </FormattedString>
                                         </Label.FormattedText>
                                     </Label>
