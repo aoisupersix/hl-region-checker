@@ -13,7 +13,7 @@
     </ContentPage.Resources>
 
     <ContentPage.Padding>
-        <OnPlatform x:TypeArguments="Thickness" iOS="0, 20, 0, 0" Android="20" />
+        <OnPlatform x:TypeArguments="Thickness" iOS="0, 20, 0, 0" Android="2" />
     </ContentPage.Padding>
 
     <StackLayout>
