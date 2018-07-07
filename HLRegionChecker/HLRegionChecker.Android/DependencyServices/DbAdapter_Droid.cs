@@ -69,13 +69,18 @@ namespace HLRegionChecker.Droid.DependencyServices
             {
                 var last_name = member.Child("last_name").GetValue(true).ToString();
                 var first_name = member.Child("first_name").GetValue(true).ToString();
+                var last_update_date_str = member.Child("last_update_date").GetValue(true).ToString();
+                var last_update_is_auto = member.Child("last_update_is_auto").GetValue(true).ToString();
                 memModels.Add(new MemberModel()
                 {
                     Id = int.Parse(member.Key),
                     Name = $"{last_name} {first_name}",
                     LastName = last_name,
                     FirstName = first_name,
-                    Status = int.Parse(member.Child("status").GetValue(true).ToString())
+                    Status = int.Parse(member.Child("status").GetValue(true).ToString()),
+                    LastStatus = int.Parse(member.Child("last_status").GetValue(true).ToString()),
+                    LastUpdateDate = !last_update_date_str.Equals("") ? DateTime.Parse(last_update_date_str) : DateTime.MinValue,
+                    LastUpdateIsAuto = Boolean.Parse(last_update_is_auto),
                 });
             }
             return memModels.OrderBy(x => x.Id).ToList();
@@ -177,7 +182,7 @@ namespace HLRegionChecker.Droid.DependencyServices
         /// </summary>
         /// <param name="memberId">更新するメンバーのID</param>
         /// <param name="stateId">更新ステータスID</param>
-        void IDbAdapter.UpdateStatus(int memberId, int stateId, bool autoUpdateFlg = false)
+        void IDbAdapter.UpdateStatus(int memberId, int stateId, bool autoUpdateFlg)
         {
             //ステータスIDが含まれているかのチェック
             if (!States.Value.Select(x => x.Id).Contains(stateId))
@@ -186,6 +191,9 @@ namespace HLRegionChecker.Droid.DependencyServices
             //更新情報の用意
             var childDict = new Dictionary<string, Java.Lang.Object>();
             childDict.Add("status", stateId);
+            childDict.Add("last_status", Members.Value.Where(x => x.Id == memberId).First().Status);
+            childDict.Add("last_update_date", DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
+            childDict.Add("last_update_is_auto", autoUpdateFlg);
 
             //更新
             var memRef = FirebaseDatabase.Instance.GetReference("members");
