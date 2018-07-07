@@ -177,7 +177,7 @@ namespace HLRegionChecker.Droid.DependencyServices
         /// </summary>
         /// <param name="memberId">更新するメンバーのID</param>
         /// <param name="stateId">更新ステータスID</param>
-        void IDbAdapter.UpdateStatus(int memberId, int stateId)
+        void IDbAdapter.UpdateStatus(int memberId, int stateId, bool autoUpdateFlg = false)
         {
             //ステータスIDが含まれているかのチェック
             if (!States.Value.Select(x => x.Id).Contains(stateId))

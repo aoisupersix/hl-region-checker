@@ -137,14 +137,26 @@ namespace HLRegionChecker.iOS.DependencyServices
         /// </summary>
         /// <param name="memberId">更新するメンバーのID</param>
         /// <param name="stateId">更新ステータスID</param>
-        void IDbAdapter.UpdateStatus(int memberId, int stateId)
+        void IDbAdapter.UpdateStatus(int memberId, int stateId, bool autoUpdateFlg = false)
         {
             //ステータスIDが含まれているかのチェック
             if (!_states.Select(x => x.Id).Contains(stateId))
                 return;
-
+            
             //更新情報の用意
-            var childDict = new NSDictionary("status", stateId);
+            var keys = new[]
+            {
+                "status",
+                "last_update_date",
+                "last_update_is_auto",
+            };
+            var vals = new[]
+            {
+                NSObject.FromObject(stateId),
+                NSObject.FromObject(DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss")),
+                NSObject.FromObject(autoUpdateFlg),
+            };
+            var childDict = NSDictionary.FromObjectsAndKeys(vals, keys, keys.Length);
 
             //更新
             var rootRef = Database.DefaultInstance.GetRootReference();

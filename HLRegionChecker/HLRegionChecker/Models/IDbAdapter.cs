@@ -46,7 +46,7 @@ namespace HLRegionChecker.Models
         /// </summary>
         /// <param name="memberId">更新するメンバーのID</param>
         /// <param name="stateId">更新ステータスID</param>
-        void UpdateStatus(int memberId, int stateId);
+        void UpdateStatus(int memberId, int stateId, bool autoUpdateFlg = false);
 
         /// <summary>
         /// データベースの初期値を取得した際のイベントハンドラです。
