@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Android.App;
 using Android.Content;
 using Android.Content.PM;
@@ -15,61 +16,46 @@ using Android.Gms.Common.Apis;
 using Java.Lang;
 using Android.Gms.Common;
 using Android.Views;
+using System.Collections.Generic;
+using Android.Support.V4.App;
+using Android;
+using Android.Support.V4.Content;
+using Android.Gms.Tasks;
+using Xamarin.Forms;
 
 namespace HLRegionChecker.Droid
 {
     [Activity(Label = "HLRegionChecker", Icon = "@mipmap/ic_launcher", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
-    public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity, GoogleApiClient.IConnectionCallbacks, GoogleApiClient.IOnConnectionFailedListener
+    public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity, Android.Gms.Tasks.IOnCompleteListener
     {
-        /// <summary>
-        /// 位置情報の更新間隔
-        /// </summary>
-        const long UPDATE_INTERVAL = 10 * 1000;
-        const long FASTEST_UPDATE_INTERVAL = UPDATE_INTERVAL / 2;
-        const long MAX_WAIT_TIME = UPDATE_INTERVAL * 3;
-        
-        /// <summary>
-        /// GoogleApiClient
-        /// </summary>
-        GoogleApiClient mGoogleApiClient;
+        protected string TAG = typeof(MainActivity).Name;
+        public int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
 
-        /// <summary>
-        /// LocationRequest
-        /// </summary>
-        LocationRequest mLocationRequest;
-
-        /// <summary>
-        /// GoogleApiClientの初期化を行います
-        /// </summary>
-        void BuildGoogleApiClient() {
-            if (mGoogleApiClient != null)
-                return;
-            mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .AddConnectionCallbacks(this)
-                .EnableAutoManage(this, this)
-                .AddApi(LocationServices.API)
-                .Build();
-            CreateLocationRequest();
+        private enum PendingGeofenceTask
+        {
+            ADD, REMOVE, NONE
         }
 
-        /// <summary>
-        /// LocationRequestの初期化を行います
-        /// </summary>
-        void CreateLocationRequest() {
-            mLocationRequest = new LocationRequest();
+        private GeofencingClient mGeofencingClient;
+        private IList<IGeofence> mGeofenceList;
+        private PendingIntent mGeofencePendingIntent;
+        private PendingGeofenceTask mPendingGeofenceTask = PendingGeofenceTask.NONE;
 
-            mLocationRequest.SetInterval(UPDATE_INTERVAL);
+        public const string PROPERTY_KEY_LOCATION_UPDATES_REQUESTED = "location-updates-requested";
 
-            mLocationRequest.SetFastestInterval(FASTEST_UPDATE_INTERVAL);
-            mLocationRequest.SetPriority(LocationRequest.PriorityHighAccuracy);
-
-            mLocationRequest.SetMaxWaitTime(MAX_WAIT_TIME);
-        }
-
-        PendingIntent GetPendingIntent() {
-            var intent = new Intent(this, typeof(LocationUpdateIntentService));
-            intent.SetAction(LocationUpdateIntentService.ACTION_PROCESS_UPDATES);
-            return PendingIntent.GetService(this, 0, intent, PendingIntentFlags.UpdateCurrent);
+        public bool? GeofenceAdded
+        {
+            get
+            {
+                if (Xamarin.Forms.Application.Current.Properties.ContainsKey(PROPERTY_KEY_LOCATION_UPDATES_REQUESTED))
+                    return Xamarin.Forms.Application.Current.Properties[PROPERTY_KEY_LOCATION_UPDATES_REQUESTED] as bool?;
+                return null;
+            }
+            set
+            {
+                Xamarin.Forms.Application.Current.Properties[PROPERTY_KEY_LOCATION_UPDATES_REQUESTED] = value;
+                Xamarin.Forms.Application.Current.SavePropertiesAsync();
+            }
         }
 
         protected override void OnCreate(Bundle bundle)
@@ -85,67 +71,129 @@ namespace HLRegionChecker.Droid
             global::Xamarin.Forms.Forms.Init(this, bundle);
             LoadApplication(new App(new AndroidInitializer()));
 
-            BuildGoogleApiClient();
+            mGeofenceList = new List<IGeofence>();
+            mGeofencePendingIntent = null;
+            PopulateGeofenceList();
+            mGeofencingClient = LocationServices.GetGeofencingClient(this);
 
             var beaconManager = BeaconManager.GetInstanceForApplication(this.ApplicationContext);
             beaconManager.BeaconParsers.Add(new BeaconParser().SetBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
             beaconManager.Bind(new MyBeaconConsumer(beaconManager));
         }
 
-        public void RequestLocationUpdates()
+        protected override void OnStart()
         {
-            try
+            base.OnStart();
+
+            AddGeofences();
+
+            //if (CheckPermission() && GeofenceAdded.HasValue && !GeofenceAdded.Value)
+            //    AddGeofences();
+        }
+
+        /// <summary>
+        /// GeofencingRequestを生成して返します。
+        /// </summary>
+        /// <returns>The geofencing request.</returns>
+        GeofencingRequest GetGeofencingRequest()
+        {
+            GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
+            builder.SetInitialTrigger(GeofencingRequest.InitialTriggerEnter);
+            builder.AddGeofences(mGeofenceList);
+            return builder.Build();
+        }
+
+        /// <summary>
+        /// Adds the geofences.
+        /// </summary>
+        void AddGeofences()
+        {
+            if (!CheckPermissions())
             {
-                System.Diagnostics.Debug.WriteLine("Starting location updates");
-                LocationRequestModel.Instance.LocationRequesting = true;
-                LocationServices.FusedLocationApi.RequestLocationUpdates(
-                        mGoogleApiClient, mLocationRequest, GetPendingIntent());
+                System.Diagnostics.Debug.WriteLine("Permission Denied");
+                return;
             }
-            catch (SecurityException e)
+
+            mGeofencingClient.AddGeofences(GetGeofencingRequest(), GetGeofencePendingIntent())
+                    .AddOnCompleteListener(this);
+        }
+
+        /// <summary>
+        /// Removes the geofences.
+        /// </summary>
+        void RemoveGeofences()
+        {
+            if (!CheckPermissions())
             {
-                LocationRequestModel.Instance.LocationRequesting = false;
-                System.Diagnostics.Debug.WriteLine(e.Message);
+                System.Diagnostics.Debug.WriteLine("Permission Denied");
+                return;
+            }
+
+            mGeofencingClient.RemoveGeofences(GetGeofencePendingIntent()).AddOnCompleteListener(this);
+        }
+
+        /// <summary>
+        /// GeofencePendingIntentを生成して返します。
+        /// </summary>
+        /// <returns>The geofence pending intent.</returns>
+        PendingIntent GetGeofencePendingIntent()
+        {
+            // Reuse the PendingIntent if we already have it.
+            if (mGeofencePendingIntent != null)
+            {
+                return mGeofencePendingIntent;
+            }
+            Intent intent = new Intent(this, typeof(GeofenceTransitionsIntentService));
+            mGeofencePendingIntent = PendingIntent.GetBroadcast(this, 0, intent, PendingIntentFlags.UpdateCurrent);
+            return mGeofencePendingIntent;
+        }
+
+        void PopulateGeofenceList()
+        {
+            foreach (var entry in Constants.BAY_AREA_LANDMARKS)
+            {
+
+                mGeofenceList.Add(new GeofenceBuilder()
+                    .SetRequestId(entry.Key)
+                    .SetCircularRegion(
+                        entry.Value.Latitude,
+                        entry.Value.Longitude,
+                        Constants.GEOFENCE_RADIUS_IN_METERS
+                    )
+                    .SetExpirationDuration(Constants.GEOFENCE_EXPIRATION_IN_MILLISECONDS)
+                    .SetTransitionTypes(Geofence.GeofenceTransitionEnter | Geofence.GeofenceTransitionExit)
+                    .Build());
             }
         }
 
-        public void RemoveLocationUpdates(View view)
+        /// <summary>
+        /// 位置情報の利用が許可されているのか確認します。
+        /// </summary>
+        /// <returns><c>true</c>, if permissions was checked, <c>false</c> otherwise.</returns>
+        bool CheckPermissions()
         {
-            System.Diagnostics.Debug.WriteLine("Removing Location Updates");
-            LocationRequestModel.Instance.LocationRequesting = false;
-            LocationServices.FusedLocationApi.RemoveLocationUpdates(mGoogleApiClient,
-                    GetPendingIntent());
+            //TODO
+            return true;
         }
 
-        /// <summary>
-        /// IConnectionCallbackイベント
-        /// </summary>
-        /// <param name="connectionHint">Connection hint.</param>
-        public void OnConnected(Bundle connectionHint)
+        public void OnComplete(Task task)
         {
-            System.Diagnostics.Debug.WriteLine("GoogleServiceClient: Connected!");
-            RequestLocationUpdates();
-        }
+            mPendingGeofenceTask = PendingGeofenceTask.NONE;
+            if (task.IsSuccessful)
+            {
+                GeofenceAdded = !GeofenceAdded;
 
-        /// <summary>
-        /// IConnectionCallbackイベント
-        /// </summary>
-        /// <param name="cause">Cause.</param>
-        public void OnConnectionSuspended(int cause)
-        {
-            System.Diagnostics.Debug.WriteLine("GoogleServiceClient: Connection Suspended!");
-        }
-
-        /// <summary>
-        /// IConnectionFailedListenerイベント
-        /// </summary>
-        /// <param name="result">Result.</param>
-        public void OnConnectionFailed(ConnectionResult result)
-        {
-            System.Diagnostics.Debug.WriteLine("GoogleServiceClient: Connection Failed!");
-            System.Diagnostics.Debug.WriteLine(result);
+                string message = GeofenceAdded.HasValue && GeofenceAdded.Value ? "Geofence Added" : "Geofence Removed";
+                System.Diagnostics.Debug.WriteLine(message);
+            }
+            else
+            {
+                // Get the status code for the error and log it using a user-friendly message.
+                string errorMessage = GeofenceErrorMessages.GetErrorString(this, task.Exception);
+                System.Diagnostics.Debug.WriteLine(errorMessage);
+            }
         }
     }
-
     public class MyBeaconConsumer : Java.Lang.Object, IBeaconConsumer
     {
         private BeaconManager _beaconManager;
@@ -174,7 +222,7 @@ namespace HLRegionChecker.Droid
             {
                 _beaconManager.StartMonitoringBeaconsInRegion(region);
             }
-            catch(System.Exception e)
+            catch (System.Exception e)
             {
                 System.Diagnostics.Debug.WriteLine(e.Message);
             }

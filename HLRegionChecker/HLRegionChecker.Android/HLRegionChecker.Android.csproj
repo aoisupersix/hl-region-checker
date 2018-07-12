@@ -65,9 +65,10 @@
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="LocationRequestModel.cs" />
-    <Compile Include="LocationUpdateIntentService.cs" />
+    <Compile Include="GeofenceTransitionsIntentService.cs" />
     <Compile Include="LocationResultHelper.cs" />
-    <Compile Include="LocationUpdateBroadcastReceiver.cs" />
+    <Compile Include="GeofenceErrorMessages.cs" />
+    <Compile Include="Constants.cs" />
   </ItemGroup>
   <ItemGroup>
     <GoogleServicesJson Include="google-services.json" />
@@ -80,6 +81,7 @@
     <AndroidResource Include="Resources\mipmap-xhdpi\ic_launcher.png" />
     <AndroidResource Include="Resources\mipmap-xxhdpi\ic_launcher.png" />
     <AndroidResource Include="Resources\mipmap-xxxhdpi\ic_launcher.png" />
+    <AndroidResource Include="Resources\values\Strings.xml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml" />
@@ -126,6 +128,9 @@
       <Version>7.0.0.396</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.GooglePlayServices.Location">
+      <Version>60.1142.1</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.GooglePlayServices.Maps">
       <Version>60.1142.1</Version>
     </PackageReference>
   </ItemGroup>
