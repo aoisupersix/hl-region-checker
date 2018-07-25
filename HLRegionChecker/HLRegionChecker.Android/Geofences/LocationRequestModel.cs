@@ -2,8 +2,11 @@
 using Android.Content;
 using Xamarin.Forms;
 
-namespace HLRegionChecker.Droid
+namespace HLRegionChecker.Droid.Geofences
 {
+    /// <summary>
+    /// 位置情報の取得状態を保持するクラス
+    /// </summary>
     public class LocationRequestModel
     {
         public const string PROPERTY_KEY_LOCATION_UPDATES_REQUESTED = "location-updates-requested";

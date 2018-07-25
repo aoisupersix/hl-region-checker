@@ -3,8 +3,11 @@ using Android.Content;
 using Android.Gms.Common.Apis;
 using Android.Gms.Location;
 
-namespace HLRegionChecker.Droid
+namespace HLRegionChecker.Droid.Geofences
 {
+    /// <summary>
+    /// ジオフェンスのエラーメッセージ処理クラス
+    /// </summary>
     public class GeofenceErrorMessages
     {
         private GeofenceErrorMessages()

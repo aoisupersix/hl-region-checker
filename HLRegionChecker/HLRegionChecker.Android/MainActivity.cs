@@ -13,11 +13,14 @@ using Prism.Ioc;
 namespace HLRegionChecker.Droid
 {
     [Activity(Label = "HLRegionChecker", Icon = "@mipmap/ic_launcher", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
-    public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity, Android.Gms.Tasks.IOnCompleteListener
+    public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity, IOnCompleteListener
     {
         protected string TAG = typeof(MainActivity).Name;
         public int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
 
+        /// <summary>
+        /// ジオフェンスの状態
+        /// </summary>
         private enum PendingGeofenceTask
         {
             ADD, REMOVE, NONE
@@ -30,6 +33,9 @@ namespace HLRegionChecker.Droid
 
         public const string PROPERTY_KEY_LOCATION_UPDATES_REQUESTED = "location-updates-requested";
 
+        /// <summary>
+        /// ジオフェンスが追加されているか？
+        /// </summary>
         public bool? GeofenceAdded
         {
             get
@@ -45,6 +51,10 @@ namespace HLRegionChecker.Droid
             }
         }
 
+        /// <summary>
+        /// 初期化処理
+        /// </summary>
+        /// <param name="bundle"></param>
         protected override void OnCreate(Bundle bundle)
         {
             TabLayoutResource = Resource.Layout.Tabbar;
@@ -58,6 +68,7 @@ namespace HLRegionChecker.Droid
             global::Xamarin.Forms.Forms.Init(this, bundle);
             LoadApplication(new App(new AndroidInitializer()));
 
+            //ジオフェンスの初期化
             mGeofenceList = new List<IGeofence>();
             mGeofencePendingIntent = null;
             PopulateGeofenceList();
@@ -87,7 +98,7 @@ namespace HLRegionChecker.Droid
         }
 
         /// <summary>
-        /// Adds the geofences.
+        /// ジオフェンスを追加します。
         /// </summary>
         void AddGeofences()
         {
@@ -102,7 +113,7 @@ namespace HLRegionChecker.Droid
         }
 
         /// <summary>
-        /// Removes the geofences.
+        /// ジオフェンスを削除します。
         /// </summary>
         void RemoveGeofences()
         {
@@ -126,14 +137,17 @@ namespace HLRegionChecker.Droid
             {
                 return mGeofencePendingIntent;
             }
-            Intent intent = new Intent(this, typeof(GeofenceTransitionsIntentService));
+            Intent intent = new Intent(this, typeof(Geofences.GeofenceTransitionsIntentService));
             mGeofencePendingIntent = PendingIntent.GetBroadcast(this, 0, intent, PendingIntentFlags.UpdateCurrent);
             return mGeofencePendingIntent;
         }
 
+        /// <summary>
+        /// ジオフェンスのリストを設定します。
+        /// </summary>
         void PopulateGeofenceList()
         {
-            foreach (var entry in Constants.BAY_AREA_LANDMARKS)
+            foreach (var entry in Geofences.Constants.BAY_AREA_LANDMARKS)
             {
 
                 mGeofenceList.Add(new GeofenceBuilder()
@@ -141,9 +155,9 @@ namespace HLRegionChecker.Droid
                     .SetCircularRegion(
                         entry.Value.Latitude,
                         entry.Value.Longitude,
-                        Constants.GEOFENCE_RADIUS_IN_METERS
+                        Geofences.Constants.GEOFENCE_RADIUS_IN_METERS
                     )
-                    .SetExpirationDuration(Constants.GEOFENCE_EXPIRATION_IN_MILLISECONDS)
+                    .SetExpirationDuration(Geofences.Constants.GEOFENCE_EXPIRATION_IN_MILLISECONDS)
                     .SetTransitionTypes(Geofence.GeofenceTransitionEnter | Geofence.GeofenceTransitionExit)
                     .Build());
             }
@@ -172,12 +186,16 @@ namespace HLRegionChecker.Droid
             else
             {
                 // Get the status code for the error and log it using a user-friendly message.
-                string errorMessage = GeofenceErrorMessages.GetErrorString(this, task.Exception);
+                string errorMessage = Geofences.GeofenceErrorMessages.GetErrorString(this, task.Exception);
                 System.Diagnostics.Debug.WriteLine(errorMessage);
             }
         }
     }
 
+    /// <summary>
+    /// よくわかんないけど消すと落ちる
+    /// ジオフェンス関係の処理だと思う
+    /// </summary>
     public class AndroidInitializer : IPlatformInitializer
     {
         public void RegisterTypes(IContainerRegistry container)

@@ -8,9 +8,12 @@ using Android.Support.V4.App;
 using Java.Lang;
 using Android.Util;
 
-namespace HLRegionChecker.Droid
+namespace HLRegionChecker.Droid.Geofences
 {
     [Service]
+    /// <summary>
+    /// ジオフェンスに侵入/退出した際の処理クラス
+    /// </summary>
     public class GeofenceTransitionsIntentService : IntentService
     {
         private const string TAG = "GeofenceTransitionsIS";

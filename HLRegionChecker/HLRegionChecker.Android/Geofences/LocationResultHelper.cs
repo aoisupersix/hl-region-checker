@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Android.Content;
 using Android.Locations;
 
-namespace HLRegionChecker.Droid
+namespace HLRegionChecker.Droid.Geofences
 {
     public class LocationResultHelper
     {

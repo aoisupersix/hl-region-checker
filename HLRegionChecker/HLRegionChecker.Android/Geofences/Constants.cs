@@ -1,7 +1,7 @@
 ﻿using Android.Gms.Maps.Model;
 using System.Collections.Generic;
 
-namespace HLRegionChecker.Droid
+namespace HLRegionChecker.Droid.Geofences
 {
 
     public static class Constants

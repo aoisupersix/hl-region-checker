@@ -65,11 +65,11 @@
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="LocationRequestModel.cs" />
-    <Compile Include="GeofenceTransitionsIntentService.cs" />
-    <Compile Include="LocationResultHelper.cs" />
-    <Compile Include="GeofenceErrorMessages.cs" />
-    <Compile Include="Constants.cs" />
+    <Compile Include="Geofences\LocationRequestModel.cs" />
+    <Compile Include="Geofences\GeofenceTransitionsIntentService.cs" />
+    <Compile Include="Geofences\LocationResultHelper.cs" />
+    <Compile Include="Geofences\GeofenceErrorMessages.cs" />
+    <Compile Include="Geofences\Constants.cs" />
   </ItemGroup>
   <ItemGroup>
     <GoogleServicesJson Include="google-services.json" />
