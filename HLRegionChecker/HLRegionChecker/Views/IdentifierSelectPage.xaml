@@ -8,7 +8,7 @@
              Title="ユーザ識別子選択">
 
     <ContentPage.Padding>
-        <OnPlatform x:TypeArguments="Thickness" iOS="0, 20, 0, 0" Android="20" />
+        <OnPlatform x:TypeArguments="Thickness" iOS="0, 20, 0, 0" Android="0, 20, 0, 0" />
     </ContentPage.Padding>
 
     <ListView x:Name="IdentifierListView"
