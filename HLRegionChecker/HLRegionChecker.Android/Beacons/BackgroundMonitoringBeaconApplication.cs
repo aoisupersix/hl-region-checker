@@ -61,24 +61,42 @@ namespace HLRegionChecker.Droid
             notificationManager.Notify(/*notification id*/1, notificationBuilder.Build());
         }
 
-        // このコンストラクタを明示的に override する必要があるらしい
-        public BackgroundMonitoringBeaconApplication(IntPtr javaReference, JniHandleOwnership transfer) : base(javaReference, transfer)
+        /// <summary>
+        /// BeaconManagerの初期化処理
+        /// </summary>
+        private void InitBeaconManager()
         {
-        }
-
-        public override void OnCreate()
-        {
-            base.OnCreate();
-
             _beaconManager = BeaconManager.GetInstanceForApplication(this);
             _beaconManager.BeaconParsers.Clear();
             _beaconManager.BeaconParsers.Add(new BeaconParser().SetBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
+        }
 
+        /// <summary>
+        /// Beacon領域の初期化処理
+        /// </summary>
+        private void InitBeaconRegion()
+        {
             var uuid = Identifier.Parse(RegionConst.BEACON_UUID);
             var major = Identifier.Parse(RegionConst.BEACON_MAJOR.ToString());
             var minor = Identifier.Parse(RegionConst.BEACON_MINOR.ToString());
             var region = new Org.Altbeacon.Beacon.Region(RegionConst.GetRegionIdentifier(RegionConst.Region.研究室), uuid, major, minor);
             _regionBootstrap = new RegionBootstrap(this, region);
+        }
+
+        // このコンストラクタを明示的に override する必要があるらしい
+        public BackgroundMonitoringBeaconApplication(IntPtr javaReference, JniHandleOwnership transfer) : base(javaReference, transfer)
+        {
+        }
+
+        /// <summary>
+        /// 生成時の処理
+        /// </summary>
+        public override void OnCreate()
+        {
+            base.OnCreate();
+
+            InitBeaconManager();
+            InitBeaconRegion();
             _backgroundPowerSaver = new BackgroundPowerSaver(this);
         }
 
