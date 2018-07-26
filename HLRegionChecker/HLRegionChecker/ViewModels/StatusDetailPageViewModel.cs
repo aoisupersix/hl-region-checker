@@ -36,6 +36,10 @@ namespace HLRegionChecker.ViewModels
         /// ユーザのステータステキスト
         /// </summary>
         public ReactiveProperty<string> Status { get; private set; }
+
+        public ReactiveProperty<int> SelectedItemId { get; }
+
+        public Command<MemberModel> ItemSelectedCommand { get; }
         #endregion
 
         #region コンストラクタ
@@ -48,6 +52,20 @@ namespace HLRegionChecker.ViewModels
             Db = DbModel.Instance;
             Members = Db.ObserveProperty(x => x.Members).ToReactiveProperty().AddTo(Disposable);
             Status = Db.ObserveProperty(x => x.Members).Select(m => Db.GetYourStatusText() ?? "Offline").ToReactiveProperty().AddTo(Disposable);
+
+            SelectedItemId = new ReactiveProperty<int>();
+            ItemSelectedCommand = new Command<MemberModel>(
+                x => SelectedItemId.Value = x.Id,
+                x => x != null
+                );
+
+            //初期でIdが0になってしまうので-1にしておく
+            SelectedItemId.Value = -1;
+
+            SelectedItemId.Subscribe(value =>
+            {
+                Console.WriteLine(value);
+            });
         }
         #endregion
 

@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:cv="clr-namespace:HLRegionChecker.Converters"
+             xmlns:b="clr-namespace:HLRegionChecker.Behaviors"
              x:Class="HLRegionChecker.Views.StatusDetailPage"
              Title="ステータス">
 
@@ -20,6 +21,9 @@
         <ListView ItemsSource="{Binding Members.Value}"
                   HasUnevenRows="True"
                   SeparatorVisibility="None">
+            <ListView.Behaviors>
+                <b:ItemSelectedToCommandBehavior Command="{Binding ItemSelectedCommand}"/>
+            </ListView.Behaviors>
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>

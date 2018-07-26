@@ -5,7 +5,7 @@ namespace HLRegionChecker.Models
     /// <summary>
     /// データベースのメンバー情報のモデルクラスです。
     /// </summary>
-    public struct MemberModel
+    public class MemberModel
     {
         /// <summary>
         /// メンバーID
