@@ -44,9 +44,9 @@ namespace HLRegionChecker.Const
         /// </summary>
         public enum Region
         {
-            [Description("tokyo.aoisupersix.region-laboratory")]
+            [Description("org.hykwlab.hlregionchecker.region-laboratory")]
             研究室,
-            [Description("tokyo.aoisupersix.region-campus")]
+            [Description("org.hykwlab.hlregionchecker.region-campus")]
             学内,
         }
 
