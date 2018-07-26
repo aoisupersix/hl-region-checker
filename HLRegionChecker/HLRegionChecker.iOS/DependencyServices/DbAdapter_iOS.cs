@@ -146,22 +146,22 @@ namespace HLRegionChecker.iOS.DependencyServices
         void IDbAdapter.UpdateStatus(int memberId, int stateId, bool autoUpdateFlg)
         {
             //ステータスIDが含まれているかのチェック
-            if (!_states.Select(x => x.Id).Contains(stateId))
+            if (_states != null && !_states.Select(x => x.Id).Contains(stateId))
                 return;
             
             //更新情報の用意
             var keys = new[]
             {
                 "status",
-                "last_status",
-                "last_update_date",
+            //    "last_status",
+            //    "last_update_date",
                 "last_update_is_auto",
             };
             var vals = new[]
             {
                 NSObject.FromObject(stateId),
-                NSObject.FromObject(_members.Where(x => x.Id == memberId).First().Status),
-                NSObject.FromObject(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")),
+            //    NSObject.FromObject(_members.Where(x => x.Id == memberId).First().Status),
+            //    NSObject.FromObject(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")),
                 NSObject.FromObject(autoUpdateFlg),
             };
             var childDict = NSDictionary.FromObjectsAndKeys(vals, keys, keys.Length);
