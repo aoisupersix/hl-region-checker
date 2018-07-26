@@ -69,6 +69,7 @@ namespace HLRegionChecker.Droid
             _beaconManager = BeaconManager.GetInstanceForApplication(this);
             _beaconManager.BeaconParsers.Clear();
             _beaconManager.BeaconParsers.Add(new BeaconParser().SetBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
+            _beaconManager.SetEnableScheduledScanJobs(true);
         }
 
         /// <summary>
