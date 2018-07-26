@@ -6,6 +6,8 @@ using Android.OS;
 using Android.Runtime;
 using Android.Support.V4.App;
 using HLRegionChecker.Const;
+using HLRegionChecker.Droid.DependencyServices;
+using HLRegionChecker.Models;
 using Org.Altbeacon.Beacon;
 using Org.Altbeacon.Beacon.Powersave;
 using Org.Altbeacon.Beacon.Startup;
@@ -21,6 +23,26 @@ namespace HLRegionChecker.Droid
         private BeaconManager _beaconManager;
         private RegionBootstrap _regionBootstrap;
         private BackgroundPowerSaver _backgroundPowerSaver;
+
+        /// <summary>
+        /// ステータス情報を更新します。
+        /// </summary>
+        /// <param name="stateId">更新するステータスID</param>
+        private void UpdateStatus(int stateId)
+        {
+            var memId = UserDataModel.Instance.MemberId;
+            if (memId == null)
+                return;
+
+            //ステータスの更新処理
+            //var childDict = new NSDictionary("status", stateId);
+
+            //var rootRef = Database.DefaultInstance.GetRootReference();
+            //var memRef = rootRef.GetChild("members");
+            //memRef.GetChild(memId.Value.ToString()).UpdateChildValues(childDict);
+            var adapter = (IDbAdapter)(new DbAdapter_Droid());
+            adapter.UpdateStatus(memId.Value, stateId, true);
+        }
 
         /// <summary>
         /// プッシュ通知を送信します。
@@ -96,6 +118,9 @@ namespace HLRegionChecker.Droid
         {
             base.OnCreate();
 
+            var adapter = (IDbAdapter)(new DbAdapter_Droid());
+            adapter.InitDb();
+
             InitBeaconManager();
             InitBeaconRegion();
             _backgroundPowerSaver = new BackgroundPowerSaver(this);
@@ -121,6 +146,7 @@ namespace HLRegionChecker.Droid
             if(p0.UniqueId.Equals(RegionConst.GetRegionIdentifier(RegionConst.Region.研究室)))
             {
                 //研究室に侵入
+                UpdateStatus(2);
                 SendNotification("研究室領域に侵入", "ステータスを「在室」に更新しました。", "ステータス自動更新");
             }
         }
@@ -136,6 +162,7 @@ namespace HLRegionChecker.Droid
             if (p0.UniqueId.Equals(RegionConst.GetRegionIdentifier(RegionConst.Region.研究室)))
             {
                 //研究室から退出
+                UpdateStatus(1);
                 SendNotification("研究室領域から退出", "ステータスを「学内」に更新しました。", "ステータス自動更新");
             }
         }

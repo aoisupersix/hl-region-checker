@@ -185,13 +185,13 @@ namespace HLRegionChecker.Droid.DependencyServices
         void IDbAdapter.UpdateStatus(int memberId, int stateId, bool autoUpdateFlg)
         {
             //ステータスIDが含まれているかのチェック
-            if (!States.Value.Select(x => x.Id).Contains(stateId))
+            if (States.Value != null && !States.Value.Select(x => x.Id).Contains(stateId))
                 return;
 
             //更新情報の用意
             var childDict = new Dictionary<string, Java.Lang.Object>();
             childDict.Add("status", stateId);
-            childDict.Add("last_status", Members.Value.Where(x => x.Id == memberId).First().Status);
+            //childDict.Add("last_status", Members.Value.Where(x => x.Id == memberId).First().Status);
             childDict.Add("last_update_date", DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
             childDict.Add("last_update_is_auto", autoUpdateFlg);
 
