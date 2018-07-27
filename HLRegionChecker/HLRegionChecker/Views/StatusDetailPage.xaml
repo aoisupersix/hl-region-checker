@@ -1,14 +1,36 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms" 
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:cv="clr-namespace:HLRegionChecker.Converters"
              x:Class="HLRegionChecker.Views.StatusDetailPage"
              Title="ステータス詳細">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <cv:StatusPropertyConverter x:Key="statePropertyConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
     <ContentPage.Padding>
         <OnPlatform x:TypeArguments="Thickness" iOS="0, 20, 0, 0" Android="2" />
     </ContentPage.Padding>
 
-    <StackLayout>
-        <Label Text="Hello Xamarin.Forms!" />
+    <StackLayout VerticalOptions="CenterAndExpand">
+        <Label HorizontalOptions="Start"
+               FontSize="30"
+               FontAttributes="Bold"
+               Margin="5,3,0,3"
+               Text="{Binding SelectedMemberModel.Value.Name}" />
+        <Label HorizontalOptions="Start"
+               FontSize="Default"
+               FontAttributes="Bold"
+               Margin="5,3,0,3"
+               Text="の現在のステータス：" />
+        <Label HorizontalOptions="Center"
+               FontSize="50"
+               FontAttributes="Bold"
+               BackgroundColor="{Binding SelectedMemberModel.Value.Status, Converter={StaticResource statePropertyConverter}, ConverterParameter='BgColor_Hex'}"
+               TextColor="{Binding SelectedMemberModel.Value.Status, Converter={StaticResource statePropertyConverter}, ConverterParameter='TextColor_Hex'}"
+               Text="{Binding SelectedMemberModel.Value.Status, Converter={StaticResource statePropertyConverter}, ConverterParameter='Name'}" />
     </StackLayout>
 </ContentPage>
