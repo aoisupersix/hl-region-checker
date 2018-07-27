@@ -16,6 +16,8 @@ namespace HLRegionChecker.ViewModels
 {
     public class StatusListPageViewModel : ViewModelBase
     {
+        public const string NAVIGATION_PARAM_MEMBER_ID = "member_id";
+
         #region プロパティ
         /// <summary>
         /// プロパティの監視管理
@@ -65,6 +67,14 @@ namespace HLRegionChecker.ViewModels
             SelectedItemId.Subscribe(value =>
             {
                 Console.WriteLine(value);
+                
+                if(value != -1)
+                {
+                    NavigationService.NavigateAsync(
+                        "StatusDetailPage",
+                        new NavigationParameters { { NAVIGATION_PARAM_MEMBER_ID, value } }
+                    );
+                }
             });
         }
         #endregion
