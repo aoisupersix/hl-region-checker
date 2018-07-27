@@ -14,7 +14,7 @@ using Xamarin.Forms;
 
 namespace HLRegionChecker.ViewModels
 {
-    public class StatusDetailPageViewModel : ViewModelBase
+    public class StatusListPageViewModel : ViewModelBase
     {
         #region プロパティ
         /// <summary>
@@ -47,7 +47,7 @@ namespace HLRegionChecker.ViewModels
         /// デフォルトのコンストラクタ
         /// </summary>
         /// <param name="navigationService"></param>
-        public StatusDetailPageViewModel(INavigationService navigationService) : base (navigationService)
+        public StatusListPageViewModel(INavigationService navigationService) : base (navigationService)
         {
             Db = DbModel.Instance;
             Members = Db.ObserveProperty(x => x.Members).ToReactiveProperty().AddTo(Disposable);

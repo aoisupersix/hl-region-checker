@@ -24,13 +24,13 @@ namespace HLRegionChecker
         {
             InitializeComponent();
 
-            await NavigationService.NavigateAsync("MainMasterPage/NavigationPage/StatusDetailPage");
+            await NavigationService.NavigateAsync("MainMasterPage/NavigationPage/StatusListPage");
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.RegisterForNavigation<NavigationPage>();
-            containerRegistry.RegisterForNavigation<StatusDetailPage>();
+            containerRegistry.RegisterForNavigation<StatusListPage>();
             containerRegistry.RegisterForNavigation<MainMasterPage>();
             containerRegistry.RegisterForNavigation<IdentifierSelectPage>();
             containerRegistry.RegisterForNavigation<MyStatusDetailPage>();

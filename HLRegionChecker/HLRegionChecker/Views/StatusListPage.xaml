@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:cv="clr-namespace:HLRegionChecker.Converters"
              xmlns:b="clr-namespace:HLRegionChecker.Behaviors"
-             x:Class="HLRegionChecker.Views.StatusDetailPage"
+             x:Class="HLRegionChecker.Views.StatusListPage"
              Title="ステータス">
 
     <ContentPage.Resources>

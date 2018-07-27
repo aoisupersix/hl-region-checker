@@ -32,8 +32,8 @@
     <Compile Update="Views\MainMasterPage.xaml.cs">
       <DependentUpon>MainMasterPage.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\StatusDetailPage.xaml.cs">
-      <DependentUpon>StatusDetailPage.xaml</DependentUpon>
+    <Compile Update="Views\StatusListPage.xaml.cs">
+      <DependentUpon>StatusListPage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
 

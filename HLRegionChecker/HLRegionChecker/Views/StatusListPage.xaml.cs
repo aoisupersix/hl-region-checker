@@ -7,9 +7,9 @@ using Xamarin.Forms;
 
 namespace HLRegionChecker.Views
 {
-	public partial class StatusDetailPage : ContentPage
+	public partial class StatusListPage : ContentPage
 	{
-		public StatusDetailPage ()
+		public StatusListPage ()
 		{
 			InitializeComponent ();
 		}

@@ -72,7 +72,7 @@ namespace HLRegionChecker.ViewModels
                     Title = "ユーザ識別子選択",
                     OnSelectedAction = () =>
                     {
-                        NavigationService.NavigateAsync("NavigationPage/StatusDetailPage/IdentifierSelectPage", new NavigationParameters { { typeof(MainMasterPageViewModel).Name, this } });
+                        NavigationService.NavigateAsync("NavigationPage/StatusListPage/IdentifierSelectPage", new NavigationParameters { { typeof(MainMasterPageViewModel).Name, this } });
                     }
                 },
                 //new MenuItem
@@ -83,7 +83,7 @@ namespace HLRegionChecker.ViewModels
                 //    {
                 //        //ユーザ識別子が選択されていない場合は遷移しない
                 //        if (UserDataModel.Instance.MemberId.HasValue)
-                //            NavigationService.NavigateAsync("NavigationPage/StatusDetailPage/MyStatusDetailPage", new NavigationParameters { { typeof(MainMasterPageViewModel).Name, this } });
+                //            NavigationService.NavigateAsync("NavigationPage/StatusListPage/MyStatusDetailPage", new NavigationParameters { { typeof(MainMasterPageViewModel).Name, this } });
                 //    }
                 //}
             });
