@@ -1,10 +1,11 @@
 ﻿using System;
-
+using System.Collections.Generic;
 using Android.App;
 using Android.Graphics;
 using Android.OS;
 using Android.Runtime;
 using Android.Support.V4.App;
+using Firebase.Database;
 using HLRegionChecker.Const;
 using HLRegionChecker.Droid.DependencyServices;
 using HLRegionChecker.Models;
@@ -35,13 +36,16 @@ namespace HLRegionChecker.Droid
                 return;
 
             //ステータスの更新処理
-            //var childDict = new NSDictionary("status", stateId);
+            var childDict = new Dictionary<string, Java.Lang.Object>();
+            childDict.Add("status", stateId);
+            childDict.Add("last_update_is_auto", true);
 
-            //var rootRef = Database.DefaultInstance.GetRootReference();
-            //var memRef = rootRef.GetChild("members");
-            //memRef.GetChild(memId.Value.ToString()).UpdateChildValues(childDict);
-            var adapter = (IDbAdapter)(new DbAdapter_Droid());
-            adapter.UpdateStatus(memId.Value, stateId, true);
+            //更新
+            var memRef = FirebaseDatabase.Instance.GetReference("members");
+            memRef.Child(memId.ToString()).UpdateChildren(childDict);
+
+            //var adapter = (IDbAdapter)(new DbAdapter_Droid());
+            //adapter.UpdateStatus(memId.Value, stateId, true);
         }
 
         /// <summary>
@@ -118,9 +122,6 @@ namespace HLRegionChecker.Droid
         {
             base.OnCreate();
 
-            var adapter = (IDbAdapter)(new DbAdapter_Droid());
-            adapter.InitDb();
-
             InitBeaconManager();
             InitBeaconRegion();
             _backgroundPowerSaver = new BackgroundPowerSaver(this);
@@ -142,12 +143,13 @@ namespace HLRegionChecker.Droid
         public void DidEnterRegion(Org.Altbeacon.Beacon.Region p0)
         {
             Console.WriteLine("Enter [{0}] Region", p0.UniqueId);
+            Firebase.FirebaseApp.InitializeApp(this.ApplicationContext);
 
-            if(p0.UniqueId.Equals(RegionConst.GetRegionIdentifier(RegionConst.Region.研究室)))
+            if (p0.UniqueId.Equals(RegionConst.GetRegionIdentifier(RegionConst.Region.研究室)))
             {
                 //研究室に侵入
-                UpdateStatus(2);
                 SendNotification("研究室領域に侵入", "ステータスを「在室」に更新しました。", "ステータス自動更新");
+                UpdateStatus(2);
             }
         }
 
@@ -162,8 +164,8 @@ namespace HLRegionChecker.Droid
             if (p0.UniqueId.Equals(RegionConst.GetRegionIdentifier(RegionConst.Region.研究室)))
             {
                 //研究室から退出
-                UpdateStatus(1);
                 SendNotification("研究室領域から退出", "ステータスを「学内」に更新しました。", "ステータス自動更新");
+                UpdateStatus(1);
             }
         }
     }
