@@ -191,8 +191,6 @@ namespace HLRegionChecker.Droid.DependencyServices
             //更新情報の用意
             var childDict = new Dictionary<string, Java.Lang.Object>();
             childDict.Add("status", stateId);
-            //childDict.Add("last_status", Members.Value.Where(x => x.Id == memberId).First().Status);
-            childDict.Add("last_update_date", DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
             childDict.Add("last_update_is_auto", autoUpdateFlg);
 
             //更新

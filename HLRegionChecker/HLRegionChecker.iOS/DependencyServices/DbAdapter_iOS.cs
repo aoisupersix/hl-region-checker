@@ -150,18 +150,15 @@ namespace HLRegionChecker.iOS.DependencyServices
                 return;
             
             //更新情報の用意
+            //最終更新はFirebaseFunctionsで行うのでここでは行わない。
             var keys = new[]
             {
                 "status",
-            //    "last_status",
-            //    "last_update_date",
                 "last_update_is_auto",
             };
             var vals = new[]
             {
                 NSObject.FromObject(stateId),
-            //    NSObject.FromObject(_members.Where(x => x.Id == memberId).First().Status),
-            //    NSObject.FromObject(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")),
                 NSObject.FromObject(autoUpdateFlg),
             };
             var childDict = NSDictionary.FromObjectsAndKeys(vals, keys, keys.Length);
