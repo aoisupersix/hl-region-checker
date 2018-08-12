@@ -130,7 +130,7 @@ namespace HLRegionChecker.Models
         public void UpdateMemberDisplayName()
         {
             var id = UserDataModel.Instance.MemberId;
-            if (!id.HasValue || Members == null || !Members.Any())
+            if (id == UserDataModel.DefaultMemberId || Members == null || !Members.Any())
                 MemberDisplayName = "ー";
             else
                 MemberDisplayName = Members.Where(x => x.Id == id).Select(x => x.Name).First() ?? "ー";
@@ -143,8 +143,8 @@ namespace HLRegionChecker.Models
         public void UpdateState(int stateId)
         {
             var memId = UserDataModel.Instance.MemberId;
-            if(memId.HasValue)
-                UpdateState(memId.Value, stateId);
+            if(memId != UserDataModel.DefaultMemberId)
+                UpdateState(memId, stateId);
         }
 
         /// <summary>
@@ -176,7 +176,7 @@ namespace HLRegionChecker.Models
         public String GetYourStatusText()
         {
             var memId = UserDataModel.Instance.MemberId;
-            if (Members.Count == 0 || States.Count == 0 || memId == null)
+            if (Members.Count == 0 || States.Count == 0 || memId == UserDataModel.DefaultMemberId)
                 return null;
 
             var state = DbModel.Instance.GetStatusNameForId(

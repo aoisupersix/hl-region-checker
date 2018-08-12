@@ -75,7 +75,7 @@ namespace HLRegionChecker.iOS.Manager
         private void UpdateStatus(int stateId)
         {
             var memId = UserDataModel.Instance.MemberId;
-            if (memId == null)
+            if (memId == UserDataModel.DefaultMemberId)
                 return;
 
             //ステータスの更新処理
@@ -85,7 +85,7 @@ namespace HLRegionChecker.iOS.Manager
             //var memRef = rootRef.GetChild("members");
             //memRef.GetChild(memId.Value.ToString()).UpdateChildValues(childDict);
             var adapter = (IDbAdapter)(new DbAdapter_iOS());
-            adapter.UpdateStatus(memId.Value, stateId, true);
+            adapter.UpdateStatus(memId, stateId, true);
         }
 
         /// <summary>

@@ -32,7 +32,7 @@ namespace HLRegionChecker.Droid
         private void UpdateStatus(int stateId)
         {
             var memId = UserDataModel.Instance.MemberId;
-            if (memId == null)
+            if (memId == UserDataModel.DefaultMemberId)
                 return;
 
             //ステータスの更新処理
