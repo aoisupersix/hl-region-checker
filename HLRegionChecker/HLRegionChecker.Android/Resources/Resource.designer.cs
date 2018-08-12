@@ -4444,6 +4444,9 @@ namespace HLRegionChecker.Droid
 			// aapt resource value: 0x7f080052
 			public const int path_password_strike_through = 2131230802;
 			
+			// aapt resource value: 0x7f080061
+			public const int permission_rationale = 2131230817;
+			
 			// aapt resource value: 0x7f08003e
 			public const int search_menu_title = 2131230782;
 			

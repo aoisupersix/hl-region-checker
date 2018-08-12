@@ -21,4 +21,5 @@
     <string name="geofence_transition_notification_text">
     Click notification to return to app
   </string>
+  <string name="permission_rationale">学内領域取得のために位置情報を利用します。</string>
 </resources>

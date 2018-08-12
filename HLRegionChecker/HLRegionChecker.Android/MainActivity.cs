@@ -1,14 +1,26 @@
-﻿using Android.App;
+﻿using System;
+using Android.App;
 using Android.Content;
-using Android.Content.PM;
+using Android.Widget;
 using Android.OS;
-using Firebase;
-using Firebase.Database;
-using Android.Gms.Location;
+using Android.Support.V7.App;
 using System.Collections.Generic;
+using Android;
+using Android.Arch.Lifecycle;
+using Android.Content.PM;
+using Android.Gms.Location;
 using Android.Gms.Tasks;
 using Prism;
 using Prism.Ioc;
+using Android.Provider;
+using Android.Support.Design.Widget;
+using Android.Support.V4.App;
+using Android.Support.V4.Content;
+using Android.Util;
+using Android.Views;
+using static Android.Support.V4.App.ActivityCompat;
+using Firebase;
+using Firebase.Database;
 
 namespace HLRegionChecker.Droid
 {
@@ -79,10 +91,12 @@ namespace HLRegionChecker.Droid
         {
             base.OnStart();
 
-            AddGeofences();
-
-            //if (CheckPermission() && GeofenceAdded.HasValue && !GeofenceAdded.Value)
-            //    AddGeofences();
+            if (!CheckPermissions())
+                RequestPermissions();
+            else
+            {
+                AddGeofences();
+            }
         }
 
         /// <summary>
@@ -120,6 +134,7 @@ namespace HLRegionChecker.Droid
             if (!CheckPermissions())
             {
                 System.Diagnostics.Debug.WriteLine("Permission Denied");
+                RequestPermissions();
                 return;
             }
 
@@ -169,8 +184,53 @@ namespace HLRegionChecker.Droid
         /// <returns><c>true</c>, if permissions was checked, <c>false</c> otherwise.</returns>
         bool CheckPermissions()
         {
-            //TODO
-            return true;
+            var permissionState = ContextCompat.CheckSelfPermission(this, Manifest.Permission.AccessFineLocation);
+            return permissionState == (int)Permission.Granted;
+        }
+
+        /// <summary>
+        /// 位置情報の許可リクエストを行います。
+        /// </summary>
+        void RequestPermissions()
+        {
+            var shouldProvideRationale = ActivityCompat.ShouldShowRequestPermissionRationale(this, Manifest.Permission.AccessFineLocation);
+
+            if (shouldProvideRationale)
+            {
+                Log.Info(TAG, "Displaying permission rationale to provide additional context.");
+                var listener = (View.IOnClickListener)new RequestPermissionsClickListener { Activity = this };
+                ShowSnackbar(Resource.String.permission_rationale, Android.Resource.String.Ok, listener);
+            }
+            else
+            {
+                Log.Info(TAG, "Requesting permission");
+                ActivityCompat.RequestPermissions(this, new[] { Manifest.Permission.AccessFineLocation }, REQUEST_PERMISSIONS_REQUEST_CODE);
+            }
+        }
+
+        /// <summary>
+        /// スナックバーを表示します。
+        /// </summary>
+        /// <param name="text"></param>
+        private void ShowSnackbar(string text)
+        {
+            var container = FindViewById<View>(Android.Resource.Id.Content);
+            if (container != null)
+            {
+                Snackbar.Make(container, text, Snackbar.LengthLong).Show();
+            }
+        }
+
+        /// <summary>
+        /// スナックバーを表示します。
+        /// </summary>
+        /// <param name="text"></param>
+        private void ShowSnackbar(int mainTextStringId, int actionStringId, View.IOnClickListener listener)
+        {
+            Snackbar.Make(FindViewById(Android.Resource.Id.Content),
+                    GetString(mainTextStringId),
+                    Snackbar.LengthIndefinite)
+                .SetAction(GetString(actionStringId), listener).Show();
         }
 
         public void OnComplete(Task task)
@@ -189,6 +249,31 @@ namespace HLRegionChecker.Droid
                 string errorMessage = Geofences.GeofenceErrorMessages.GetErrorString(this, task.Exception);
                 System.Diagnostics.Debug.WriteLine(errorMessage);
             }
+        }
+    }
+
+    public class RequestPermissionsClickListener : Java.Lang.Object, View.IOnClickListener
+    {
+        public MainActivity Activity { get; set; }
+
+        public void OnClick(View v)
+        {
+            RequestPermissions(Activity, new[] { Manifest.Permission.AccessFineLocation }, Activity.REQUEST_PERMISSIONS_REQUEST_CODE);
+        }
+    }
+
+    public class OnRequestPermissionsResultClickListener : Java.Lang.Object, View.IOnClickListener
+    {
+
+        public MainActivity Activity { get; set; }
+        public void OnClick(View v)
+        {
+            Intent intent = new Intent();
+            intent.SetAction(Settings.ActionApplicationDetailsSettings);
+            var uri = Android.Net.Uri.FromParts("package", BuildConfig.ApplicationId, null);
+            intent.SetData(uri);
+            intent.SetFlags(ActivityFlags.NewTask);
+            Activity.StartActivity(intent);
         }
     }
 
