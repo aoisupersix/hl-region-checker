@@ -13,7 +13,7 @@
 
     <ListView x:Name="IdentifierListView"
                   HorizontalOptions="FillAndExpand"
-                  ItemsSource="{Binding IdentifierListViewItems}"
+                  ItemsSource="{Binding IdentifierListViewItems.Value}"
                   CachingStrategy="RecycleElement">
         <ListView.Behaviors>
             <b:ItemSelectedToCommandBehavior Command="{Binding ItemSelectedCommand}" />

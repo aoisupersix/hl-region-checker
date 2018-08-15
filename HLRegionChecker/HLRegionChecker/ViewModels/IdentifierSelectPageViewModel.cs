@@ -3,6 +3,8 @@ using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Navigation;
 using Prism.Services;
+using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -39,7 +41,7 @@ namespace HLRegionChecker.ViewModels
         /// <summary>
         /// 識別子リスト
         /// </summary>
-        public ObservableCollection<MemberModel> IdentifierListViewItems { get; set; }
+        public ReactiveProperty<ObservableCollection<MemberModel>> IdentifierListViewItems { get; set; }
         #endregion
 
         #region コンストラクタ
@@ -52,7 +54,7 @@ namespace HLRegionChecker.ViewModels
         {
             this.navigationService = navigationService;
             this.dialogService = pageDialogService;
-            IdentifierListViewItems = DbModel.Instance.Members;
+            IdentifierListViewItems = DbModel.Instance.ObserveProperty(x => x.Members).ToReactiveProperty();
 
             //識別子が選択された際の処理
             ItemSelectedCommand = new Command<MemberModel>(IdentifierSelected);

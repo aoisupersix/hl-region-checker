@@ -27,7 +27,7 @@ namespace HLRegionChecker
             InitializeComponent();
 
             if (UserDataModel.Instance.MemberId == UserDataModel.DefaultMemberId)
-                await NavigationService.NavigateAsync("NavigationPage/StatusListPage/IdentifierSelectPage");
+                await NavigationService.NavigateAsync("MainMasterPage/NavigationPage/StatusListPage/IdentifierSelectPage");
             else
                 await NavigationService.NavigateAsync("MainMasterPage/NavigationPage/StatusListPage");
         }
