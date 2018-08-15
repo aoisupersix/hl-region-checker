@@ -106,7 +106,7 @@ namespace HLRegionChecker.Droid
             var uuid = Identifier.Parse(RegionConst.BEACON_UUID);
             var major = Identifier.Parse(RegionConst.BEACON_MAJOR.ToString());
             var minor = Identifier.Parse(RegionConst.BEACON_MINOR.ToString());
-            var region = new Org.Altbeacon.Beacon.Region(RegionConst.GetRegionIdentifier(RegionConst.Region.研究室), uuid, major, minor);
+            var region = new Org.Altbeacon.Beacon.Region(Const.Region.研究室.GetIdentifier(), uuid, major, minor);
             _regionBootstrap = new RegionBootstrap(this, region);
         }
 
@@ -145,7 +145,7 @@ namespace HLRegionChecker.Droid
             Console.WriteLine("Enter [{0}] Region", p0.UniqueId);
             Firebase.FirebaseApp.InitializeApp(this.ApplicationContext);
 
-            if (p0.UniqueId.Equals(RegionConst.GetRegionIdentifier(RegionConst.Region.研究室)))
+            if (p0.UniqueId.Equals(Const.Region.研究室.GetIdentifier()))
             {
                 //研究室に侵入
                 SendNotification("研究室領域に侵入", "ステータスを「在室」に更新しました。", "ステータス自動更新");
@@ -161,7 +161,7 @@ namespace HLRegionChecker.Droid
         {
             Console.WriteLine("Exit [{0}] Region", p0.UniqueId);
 
-            if (p0.UniqueId.Equals(RegionConst.GetRegionIdentifier(RegionConst.Region.研究室)))
+            if (p0.UniqueId.Equals(Const.Region.学内.GetIdentifier()))
             {
                 //研究室から退出
                 SendNotification("研究室領域から退出", "ステータスを「学内」に更新しました。", "ステータス自動更新");

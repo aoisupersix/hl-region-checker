@@ -38,9 +38,9 @@ namespace HLRegionChecker.iOS.Manager
         /// <summary>
         /// 研究室のビーコン領域
         /// </summary>
-        public static readonly CLBeaconRegion REGION_LABORATORY = new CLBeaconRegion(BEACON_UUID, RegionConst.BEACON_MAJOR, RegionConst.BEACON_MINOR, RegionConst.GetRegionIdentifier(RegionConst.Region.研究室));
+        public static readonly CLBeaconRegion REGION_LABORATORY = new CLBeaconRegion(BEACON_UUID, RegionConst.BEACON_MAJOR, RegionConst.BEACON_MINOR, Region.研究室.GetIdentifier());
 
-        public static readonly CLCircularRegion REGION_CAMPUS = new CLCircularRegion(CAMPUS_CENTER_COORDINATE, RegionConst.CAMPUS_RADIUS, RegionConst.GetRegionIdentifier(RegionConst.Region.学内));
+        public static readonly CLCircularRegion REGION_CAMPUS = new CLCircularRegion(CAMPUS_CENTER_COORDINATE, RegionConst.CAMPUS_RADIUS, Region.学内.GetIdentifier());
         #endregion
 
         #region メソッド
@@ -142,13 +142,13 @@ namespace HLRegionChecker.iOS.Manager
         {
             Console.WriteLine("Enter [{0}] Region", region.Identifier);
 
-            if (region.Identifier == RegionConst.GetRegionIdentifier(RegionConst.Region.研究室))
+            if (region.Identifier.Equals(Region.研究室.GetIdentifier()))
             {
                 //研究室領域に侵入
                 UpdateStatus(2);
                 PushNotificationManager.Send("研究室領域に侵入", "ステータスを「在室」に更新しました。");
             }
-            else if (region.Identifier == RegionConst.GetRegionIdentifier(RegionConst.Region.学内))
+            else if (region.Identifier.Equals(Region.学内.GetIdentifier()))
             {
                 //学内領域に侵入
                 UpdateStatus(1);
@@ -165,13 +165,13 @@ namespace HLRegionChecker.iOS.Manager
         {
             Console.WriteLine("Exit [{0}] Region", region.Identifier);
 
-            if (region.Identifier == RegionConst.GetRegionIdentifier(RegionConst.Region.研究室))
+            if (region.Identifier.Equals(Region.研究室.GetIdentifier()))
             {
                 //研究室領域から退出
                 UpdateStatus(1);
                 PushNotificationManager.Send("研究室領域から退出", "ステータスを「学内」に更新しました。");
             }
-            else if (region.Identifier == RegionConst.GetRegionIdentifier(RegionConst.Region.学内))
+            else if (region.Identifier.Equals(Region.学内.GetIdentifier()))
             {
                 //学内領域から退出
                 UpdateStatus(0);

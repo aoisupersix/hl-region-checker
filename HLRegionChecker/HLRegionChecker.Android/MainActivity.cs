@@ -21,6 +21,7 @@ using Android.Views;
 using static Android.Support.V4.App.ActivityCompat;
 using Firebase;
 using Firebase.Database;
+using HLRegionChecker.Const;
 
 namespace HLRegionChecker.Droid
 {
@@ -162,20 +163,16 @@ namespace HLRegionChecker.Droid
         /// </summary>
         void PopulateGeofenceList()
         {
-            foreach (var entry in Geofences.Constants.BAY_AREA_LANDMARKS)
-            {
-
-                mGeofenceList.Add(new GeofenceBuilder()
-                    .SetRequestId(entry.Key)
-                    .SetCircularRegion(
-                        entry.Value.Latitude,
-                        entry.Value.Longitude,
-                        Geofences.Constants.GEOFENCE_RADIUS_IN_METERS
-                    )
-                    .SetExpirationDuration(Geofences.Constants.GEOFENCE_EXPIRATION_IN_MILLISECONDS)
-                    .SetTransitionTypes(Geofence.GeofenceTransitionEnter | Geofence.GeofenceTransitionExit)
-                    .Build());
-            }
+            mGeofenceList.Add(new GeofenceBuilder()
+                .SetRequestId(Region.研究室.GetIdentifier())
+                .SetCircularRegion(
+                    RegionConst.CAMPUS_LATITUDE,
+                    RegionConst.CAMPUS_LONGITUDE,
+                    Geofences.Constants.GEOFENCE_RADIUS_IN_METERS
+                )
+                .SetExpirationDuration(Geofences.Constants.GEOFENCE_EXPIRATION_IN_MILLISECONDS)
+                .SetTransitionTypes(Geofence.GeofenceTransitionEnter | Geofence.GeofenceTransitionExit)
+                .Build());
         }
 
         /// <summary>
