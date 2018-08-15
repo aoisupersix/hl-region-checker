@@ -278,8 +278,7 @@ namespace HLRegionChecker.Droid
     }
 
     /// <summary>
-    /// よくわかんないけど消すと落ちる
-    /// ジオフェンス関係の処理だと思う
+    /// Prismの初期化処理？
     /// </summary>
     public class AndroidInitializer : IPlatformInitializer
     {

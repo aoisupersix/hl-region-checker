@@ -5,6 +5,8 @@ using HLRegionChecker.Views;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using Prism.Unity;
+using HLRegionChecker.Models;
+using Prism.Navigation;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace HLRegionChecker
@@ -24,7 +26,10 @@ namespace HLRegionChecker
         {
             InitializeComponent();
 
-            await NavigationService.NavigateAsync("MainMasterPage/NavigationPage/StatusListPage");
+            if (UserDataModel.Instance.MemberId == UserDataModel.DefaultMemberId)
+                await NavigationService.NavigateAsync("NavigationPage/StatusListPage/IdentifierSelectPage");
+            else
+                await NavigationService.NavigateAsync("MainMasterPage/NavigationPage/StatusListPage");
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
