@@ -29,7 +29,7 @@ namespace HLRegionChecker.ViewModels
         /// <summary>
         /// 表示するメンバー情報
         /// </summary>
-        public ReactiveProperty<MemberModel> SelectedMemberModel { get; }
+        public ReactiveProperty<MemberModel> SelectedMemberModel { get; private set; }
 
         #endregion
 
