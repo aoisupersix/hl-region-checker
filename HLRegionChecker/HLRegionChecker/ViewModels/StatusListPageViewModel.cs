@@ -74,6 +74,7 @@ namespace HLRegionChecker.ViewModels
                         "StatusDetailPage",
                         new NavigationParameters { { NAVIGATION_PARAM_MEMBER_ID, value } }
                     );
+                    SelectedItemId.Value = -1;
                 }
             });
         }

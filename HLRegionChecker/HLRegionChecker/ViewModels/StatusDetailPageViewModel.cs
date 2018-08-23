@@ -40,7 +40,7 @@ namespace HLRegionChecker.ViewModels
             SelectedMemberModel = new ReactiveProperty<MemberModel>();
         }
 
-        public override void OnNavigatedTo(NavigationParameters parameters)
+        public override void OnNavigatingTo(NavigationParameters parameters)
         {
             //遷移元MemberIdを取得
             var keyName = StatusListPageViewModel.NAVIGATION_PARAM_MEMBER_ID;
