@@ -3,8 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:cv="clr-namespace:HLRegionChecker.Converters"
              x:Class="HLRegionChecker.Views.StatusDetailPage"
-             Title="ステータス詳細"
-             BackgroundColor="{Binding SelectedMemberModel.Value.Status, Converter={StaticResource statePropertyConverter}, ConverterParameter='BgColor_Hex'}">
+             Title="ステータス詳細">
 
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -12,25 +11,54 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <ContentPage.Padding>
-        <OnPlatform x:TypeArguments="Thickness" iOS="0, 20, 0, 0" Android="2" />
-    </ContentPage.Padding>
-
-    <StackLayout VerticalOptions="StartAndExpand">
-        <Label HorizontalOptions="Start"
-               FontSize="30"
-               Margin="5,3,0,3"
-               TextColor="{Binding SelectedMemberModel.Value.Status, Converter={StaticResource statePropertyConverter}, ConverterParameter='TextColor_Hex'}"
-               Text="{Binding SelectedMemberModel.Value.Name}" />
-        <Label HorizontalOptions="Start"
-               FontSize="Default"
-               Margin="5,3,0,3"
-               TextColor="{Binding SelectedMemberModel.Value.Status, Converter={StaticResource statePropertyConverter}, ConverterParameter='TextColor_Hex'}"
-               Text="の現在のステータス：" />
-        <Label HorizontalOptions="Center"
-               FontSize="50"
-               FontAttributes="Bold"
-               TextColor="{Binding SelectedMemberModel.Value.Status, Converter={StaticResource statePropertyConverter}, ConverterParameter='TextColor_Hex'}"
-               Text="{Binding SelectedMemberModel.Value.Status, Converter={StaticResource statePropertyConverter}, ConverterParameter='Name'}" />
-    </StackLayout>
+    <TableView Intent="Form"
+                   HasUnevenRows="True">
+            <TableView.Root>
+                <TableRoot>
+                <TableSection Title="※このビューは自動で更新されません。">
+                    <ViewCell Height="250" IsEnabled="False">
+                        <StackLayout VerticalOptions="FillAndExpand"
+                                     Padding="0, 50, 0, 0"
+                                     BackgroundColor="{Binding SelectedMemberModel.Value.Status, Converter={StaticResource statePropertyConverter}, ConverterParameter='BgColor_Hex'}"
+                                     Opacity="0.9"
+                                     Orientation="Vertical">
+                            <Label HorizontalOptions="Start"
+                                       FontSize="30"
+                                       Margin="5,3,0,3"
+                                       TextColor="{Binding SelectedMemberModel.Value.Status, Converter={StaticResource statePropertyConverter}, ConverterParameter='TextColor_Hex'}"
+                                       Text="{Binding SelectedMemberModel.Value.Name}" />
+                            <Label HorizontalOptions="Start"
+                                       FontSize="Default"
+                                       Margin="5,3,0,3"
+                                       TextColor="{Binding SelectedMemberModel.Value.Status, Converter={StaticResource statePropertyConverter}, ConverterParameter='TextColor_Hex'}"
+                                       Text="の現在のステータス：" />
+                            <Label HorizontalOptions="Center"
+                                       FontSize="50"
+                                       FontAttributes="Bold"
+                                       TextColor="{Binding SelectedMemberModel.Value.Status, Converter={StaticResource statePropertyConverter}, ConverterParameter='TextColor_Hex'}"
+                                       Text="{Binding SelectedMemberModel.Value.Status, Converter={StaticResource statePropertyConverter}, ConverterParameter='Name'}" />
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell Height="60" IsEnabled="False">
+                        <StackLayout VerticalOptions="CenterAndExpand"
+                                     Orientation="Horizontal">
+                            <Label  Margin="5, 3, 0, 3"
+                                   Text="最終更新日時：" />
+                            <Label Margin="5, 3, 0, 3"
+                                   Text="{Binding SelectedMemberModel.Value.LastUpdateDate}" />
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell Height="60" IsEnabled="False">
+                        <StackLayout VerticalOptions="CenterAndExpand"
+                                     Orientation="Horizontal">
+                            <Label  Margin="5, 3, 0, 3"
+                                   Text="最終更新ステータス：" />
+                            <Label Margin="5, 3, 0, 3"
+                                   Text="{Binding SelectedMemberModel.Value.LastStatus, Converter={StaticResource statePropertyConverter}, ConverterParameter='Name'}" />
+                        </StackLayout>
+                    </ViewCell>
+                </TableSection>
+            </TableRoot>
+            </TableView.Root>
+        </TableView>
 </ContentPage>
