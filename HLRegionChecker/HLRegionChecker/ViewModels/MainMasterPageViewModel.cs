@@ -92,7 +92,7 @@ namespace HLRegionChecker.ViewModels
                     Title = "アプリ情報",
                     OnSelectedAction = () =>
                     {
-                        NavigationService.NavigateAsync("MainMasterPage/NavigationPage/AppInfoPage");
+                        NavigationService.NavigateAsync("NavigationPage/StatusListPage/AppInfoPage", new NavigationParameters { { typeof(MainMasterPageViewModel).Name, this } });
                     }
                 },
                 //new MenuItem

@@ -7,9 +7,6 @@
              x:Class="HLRegionChecker.Views.AppInfoPage"
              Title="アプリ情報">
     
-    <ContentPage.Padding>
-        <OnPlatform x:TypeArguments="Thickness" iOS="0, 20, 0, 0" Android="0, 0, 0, 0" />
-    </ContentPage.Padding>
     <TableView Intent="Form"
                HasUnevenRows="True">
         <TableView.Root>
@@ -31,6 +28,14 @@
                                    Text="{Binding AppName}" />
                         </StackLayout>
                     </ViewCell>
+                    <TextCell Height="60" 
+                              Text="バージョンコード"
+                              Detail="1" />
+                    <TextCell Height="60" 
+                              Text="バージョン"
+                              Detail="1.0.0.0" />
+                    <TextCell Height="60"
+                              Text="View souce code on Github" />
                 </TableSection>
             </TableRoot>
         </TableView.Root>
