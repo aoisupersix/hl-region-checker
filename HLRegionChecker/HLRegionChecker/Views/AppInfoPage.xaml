@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:b="clr-namespace:HLRegionChecker.Behaviors"
+             xmlns:local="clr-namespace:HLRegionChecker.Controls"
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="HLRegionChecker.Views.AppInfoPage"
@@ -35,6 +35,8 @@
                               Text="バージョン"
                               Detail="{Binding VersionName}" />
                     <TextCell Height="60"
+                              Command="{Binding JumpGithubCommand}"
+                              TextColor="Green"
                               Text="View souce code on Github" />
                 </TableSection>
                 <TableSection Title="ビーコン情報">

@@ -1,10 +1,12 @@
 ﻿using HLRegionChecker.Const;
 using HLRegionChecker.Interfaces;
+using Prism.Commands;
 using Prism.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace HLRegionChecker.ViewModels
@@ -24,6 +26,12 @@ namespace HLRegionChecker.ViewModels
         #endregion
 
         #region プロパティ
+
+        /// <summary>
+        /// Githubにジャンプするコマンド
+        /// </summary>
+        public ICommand JumpGithubCommand { get; }
+
         /// <summary>
         /// アプリアイコン
         /// </summary>
@@ -68,6 +76,12 @@ namespace HLRegionChecker.ViewModels
         public AppInfoPageViewModel(INavigationService navigationService) : base(navigationService)
         {
             this.navigationService = navigationService;
+
+            JumpGithubCommand = new DelegateCommand(() =>
+            {
+                Uri uri = new Uri("https://github.com/aoisupersix/hl-region-checker");
+                Xamarin.Forms.DependencyService.Get<IWebBrowserService>().Open(uri);
+            });
         }
 
         public override void OnNavigatedFrom(NavigationParameters parameters)

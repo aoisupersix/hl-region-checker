@@ -99,6 +99,7 @@
     <Compile Include="DependencyServices\WebBrowserService_iOS.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
+    <Compile Include="Renderers\LinkLabelRenderer_iOS.cs" />
     <None Include="Entitlements.plist" />
     <BundleResource Include="GoogleService-Info.plist" />
     <None Include="Info.plist">
