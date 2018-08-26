@@ -1,4 +1,5 @@
-﻿using Prism.Navigation;
+﻿using HLRegionChecker.Interfaces;
+using Prism.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +31,17 @@ namespace HLRegionChecker.ViewModels
         /// <summary>
         /// アプリ名
         /// </summary>
-        public string AppName { get; } = "HLRegionChecker";
+        public string AppName { get; } = DependencyService.Get<IAssemblyService>().GetPackageName();
+
+        /// <summary>
+        /// バージョンコード
+        /// </summary>
+        public string VersionCode { get; } = DependencyService.Get<IAssemblyService>().GetVersionCode().ToString();
+
+        /// <summary>
+        /// バージョン名
+        /// </summary>
+        public string VersionName { get; } = DependencyService.Get<IAssemblyService>().GetVersionName();
         #endregion
 
         public AppInfoPageViewModel(INavigationService navigationService) : base(navigationService)

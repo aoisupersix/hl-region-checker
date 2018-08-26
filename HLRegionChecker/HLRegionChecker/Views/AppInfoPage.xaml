@@ -30,10 +30,10 @@
                     </ViewCell>
                     <TextCell Height="60" 
                               Text="バージョンコード"
-                              Detail="1" />
+                              Detail="{Binding VersionCode}" />
                     <TextCell Height="60" 
                               Text="バージョン"
-                              Detail="1.0.0.0" />
+                              Detail="{Binding VersionName}" />
                     <TextCell Height="60"
                               Text="View souce code on Github" />
                 </TableSection>
