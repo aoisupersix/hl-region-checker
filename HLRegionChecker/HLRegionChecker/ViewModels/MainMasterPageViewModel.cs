@@ -10,6 +10,7 @@ using Prism.Services;
 using System;
 using Reactive.Bindings.Extensions;
 using System.Reactive.Disposables;
+using HLRegionChecker.Interfaces;
 
 namespace HLRegionChecker.ViewModels
 {
@@ -75,6 +76,16 @@ namespace HLRegionChecker.ViewModels
                         NavigationService.NavigateAsync("NavigationPage/StatusListPage/IdentifierSelectPage", new NavigationParameters { { typeof(MainMasterPageViewModel).Name, this } });
                     }
                 },
+                new MenuItem
+                {
+                    Icon = ImageSource.FromResource("HLRegionChecker.Resources.Icon_Open.png"),
+                    Title = "Webで確認する",
+                    OnSelectedAction = () =>
+                    {
+                        Uri uri = new Uri("https://hlmanager-32609.firebaseapp.com/");
+                        Xamarin.Forms.DependencyService.Get<IWebBrowserService>().Open(uri);
+                    }
+                }
                 //new MenuItem
                 //{
                 //    Icon = ImageSource.FromResource("HLRegionChecker.Resources.Icon_UserStatus.png"),
