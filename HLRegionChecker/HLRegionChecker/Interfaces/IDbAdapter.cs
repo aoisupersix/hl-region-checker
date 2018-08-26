@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace HLRegionChecker.Models
+namespace HLRegionChecker.Interfaces
 {
     /// <summary>
     /// DBの初期値取得イベントハンドラです。

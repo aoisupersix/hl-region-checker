@@ -14,6 +14,7 @@ using Xamarin.Forms;
 using Firebase.Database;
 using HLRegionChecker.Droid.DependencyServices;
 using Reactive.Bindings;
+using HLRegionChecker.Interfaces;
 
 [assembly: Dependency(typeof(DbAdapter_Droid))]
 namespace HLRegionChecker.Droid.DependencyServices

@@ -7,6 +7,7 @@ using CoreLocation;
 using HLRegionChecker.Const;
 using HLRegionChecker.iOS.DependencyServices;
 using HLRegionChecker.Models;
+using HLRegionChecker.Interfaces;
 using HLRegionChecker.iOS.Notification;
 using Firebase.Database;
 
