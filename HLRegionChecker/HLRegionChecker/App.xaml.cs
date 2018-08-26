@@ -39,7 +39,6 @@ namespace HLRegionChecker
             containerRegistry.RegisterForNavigation<StatusDetailPage>();
             containerRegistry.RegisterForNavigation<MainMasterPage>();
             containerRegistry.RegisterForNavigation<IdentifierSelectPage>();
-            containerRegistry.RegisterForNavigation<MyStatusDetailPage>();
             containerRegistry.RegisterForNavigation<AppInfoPage>();
         }
     }

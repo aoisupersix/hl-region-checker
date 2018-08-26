@@ -12,7 +12,6 @@
     <None Remove="Resources\Icon_Info.png" />
     <None Remove="Resources\Icon_Open.png" />
     <None Remove="Resources\Icon_SelfUpdate.png" />
-    <None Remove="Resources\Icon_UserStatus.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,7 +21,6 @@
     <EmbeddedResource Include="Resources\Icon_Info.png" />
     <EmbeddedResource Include="Resources\Icon_Open.png" />
     <EmbeddedResource Include="Resources\Icon_SelfUpdate.png" />
-    <EmbeddedResource Include="Resources\Icon_UserStatus.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -50,9 +48,6 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\MainMasterPage.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Views\MyStatusDetailPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\StatusDetailPage.xaml">
