@@ -37,6 +37,20 @@
                     <TextCell Height="60"
                               Text="View souce code on Github" />
                 </TableSection>
+                <TableSection Title="ビーコン情報">
+                    <TextCell Height="60"
+                              Text="ビーコンUUID"
+                              Detail="{Binding BeaconUuid}" />
+                    <TextCell Height="60"
+                              Text="ビーコンMajor値"
+                              Detail="{Binding BeaconMajorValue}" />
+                    <TextCell Height="60"
+                              Text="ビーコンMinor値"
+                              Detail="{Binding BeaconMinorValue}" />
+                    <TextCell Height="60"
+                              Text="ビーコン識別子"
+                              Detail="{Binding BeaconIdentifier}" />
+                </TableSection>
             </TableRoot>
         </TableView.Root>
     </TableView>

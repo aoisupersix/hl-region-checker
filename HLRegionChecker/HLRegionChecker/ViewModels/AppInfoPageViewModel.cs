@@ -1,4 +1,5 @@
-﻿using HLRegionChecker.Interfaces;
+﻿using HLRegionChecker.Const;
+using HLRegionChecker.Interfaces;
 using Prism.Navigation;
 using System;
 using System.Collections.Generic;
@@ -42,6 +43,26 @@ namespace HLRegionChecker.ViewModels
         /// バージョン名
         /// </summary>
         public string VersionName { get; } = DependencyService.Get<IAssemblyService>().GetVersionName();
+
+        /// <summary>
+        /// ビーコンUUID
+        /// </summary>
+        public string BeaconUuid { get; } = RegionConst.BEACON_UUID;
+
+        /// <summary>
+        /// ビーコンMajor値
+        /// </summary>
+        public int BeaconMajorValue { get; } = RegionConst.BEACON_MAJOR;
+
+        /// <summary>
+        /// ビーコンMinor値
+        /// </summary>
+        public int BeaconMinorValue { get; } = RegionConst.BEACON_MINOR;
+
+        /// <summary>
+        /// ビーコン(研究室）識別子
+        /// </summary>
+        public string BeaconIdentifier { get; } = Region.研究室.GetIdentifier();
         #endregion
 
         public AppInfoPageViewModel(INavigationService navigationService) : base(navigationService)
