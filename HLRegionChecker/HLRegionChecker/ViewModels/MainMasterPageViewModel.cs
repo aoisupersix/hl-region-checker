@@ -85,7 +85,16 @@ namespace HLRegionChecker.ViewModels
                         Uri uri = new Uri("https://hlmanager-32609.firebaseapp.com/");
                         Xamarin.Forms.DependencyService.Get<IWebBrowserService>().Open(uri);
                     }
-                }
+                },
+                new MenuItem
+                {
+                    Icon = ImageSource.FromResource("HLRegionChecker.Resources.Icon_Info.png"),
+                    Title = "アプリ情報",
+                    OnSelectedAction = () =>
+                    {
+                        NavigationService.NavigateAsync("MainMasterPage/NavigationPage/AppInfoPage");
+                    }
+                },
                 //new MenuItem
                 //{
                 //    Icon = ImageSource.FromResource("HLRegionChecker.Resources.Icon_UserStatus.png"),

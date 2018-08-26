@@ -9,6 +9,7 @@
     <None Remove="Resources\Icon_AppIcon.png" />
     <None Remove="Resources\Icon_Dog.png" />
     <None Remove="Resources\Icon_IdentifierSelection.png" />
+    <None Remove="Resources\Icon_Info.png" />
     <None Remove="Resources\Icon_Open.png" />
     <None Remove="Resources\Icon_SelfUpdate.png" />
     <None Remove="Resources\Icon_UserStatus.png" />
@@ -18,6 +19,7 @@
     <EmbeddedResource Include="Resources\Icon_AppIcon.png" />
     <EmbeddedResource Include="Resources\Icon_Dog.png" />
     <EmbeddedResource Include="Resources\Icon_IdentifierSelection.png" />
+    <EmbeddedResource Include="Resources\Icon_Info.png" />
     <EmbeddedResource Include="Resources\Icon_Open.png" />
     <EmbeddedResource Include="Resources\Icon_SelfUpdate.png" />
     <EmbeddedResource Include="Resources\Icon_UserStatus.png" />
@@ -41,6 +43,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="Views\AppInfoPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Views\IdentifierSelectPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>

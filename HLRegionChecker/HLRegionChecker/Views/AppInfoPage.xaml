@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:b="clr-namespace:HLRegionChecker.Behaviors"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="HLRegionChecker.Views.AppInfoPage"
+             Title="アプリ情報">
+    
+    <ContentPage.Padding>
+        <OnPlatform x:TypeArguments="Thickness" iOS="0, 20, 0, 0" Android="0, 0, 0, 0" />
+    </ContentPage.Padding>
+    <TableView Intent="Form"
+               HasUnevenRows="True">
+        <TableView.Root>
+            <TableRoot>
+                <TableSection>
+                    <ViewCell Height="250" IsEnabled="False">
+                        <StackLayout VerticalOptions="FillAndExpand"
+                                     Padding="0, 30, 0, 0"
+                                     BackgroundColor="WhiteSmoke"
+                                     Opacity="0.9"
+                                     Orientation="Vertical">
+                            <Image Source="{Binding AppIcon}"
+                                   HeightRequest="150"
+                                   HorizontalOptions="CenterAndExpand" />
+                            <Label HorizontalOptions="Center"
+                                   FontSize="Large"
+                                   TextColor="#2E9AFE"
+                                   Margin="5,3,0,3"
+                                   Text="{Binding AppName}" />
+                        </StackLayout>
+                    </ViewCell>
+                </TableSection>
+            </TableRoot>
+        </TableView.Root>
+    </TableView>
+</ContentPage>
