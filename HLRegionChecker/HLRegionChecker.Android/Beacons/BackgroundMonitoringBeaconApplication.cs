@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using Android;
 using Android.App;
+using Android.Content.PM;
 using Android.Graphics;
 using Android.OS;
 using Android.Runtime;
 using Android.Support.V4.App;
+using Android.Support.V4.Content;
 using Firebase.Database;
 using HLRegionChecker.Const;
 using HLRegionChecker.Droid.DependencyServices;
@@ -31,6 +34,11 @@ namespace HLRegionChecker.Droid
         /// <param name="stateId">更新するステータスID</param>
         private void UpdateStatus(int stateId)
         {
+            //パーミッション確認
+            var permissionWriteState = ContextCompat.CheckSelfPermission(this, Manifest.Permission.WriteExternalStorage);
+            if (permissionWriteState != (int)Permission.Granted)
+                return;
+
             var memId = UserDataModel.Instance.MemberId;
             if (memId == UserDataModel.DefaultMemberId)
                 return;

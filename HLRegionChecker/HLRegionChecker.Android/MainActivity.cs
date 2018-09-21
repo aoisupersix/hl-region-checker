@@ -104,6 +104,9 @@ namespace HLRegionChecker.Droid
         {
             base.OnStart();
 
+            if (!CheckStoragePermissions())
+                RequestStoragePermissions();
+
             if (!CheckLocationPermissions())
                 RequestLocationPermissions();
             else
@@ -189,6 +192,36 @@ namespace HLRegionChecker.Droid
         #region パーミッション関係メソッド
 
         /// <summary>
+        /// ストレージの利用が許可されているのか確認します。
+        /// </summary>
+        /// <returns><c>true</c>, if permissions was checked, <c>false</c> otherwise.</returns>
+        bool CheckStoragePermissions()
+        {
+            var permissionWriteState = ContextCompat.CheckSelfPermission(this, Manifest.Permission.WriteExternalStorage);
+            return permissionWriteState == (int)Permission.Granted;
+        }
+
+        /// <summary>
+        /// ストレージの許可リクエストを行います。
+        /// </summary>
+        void RequestStoragePermissions()
+        {
+            var shouldProvideRationale = ActivityCompat.ShouldShowRequestPermissionRationale(this, Manifest.Permission.WriteExternalStorage);
+
+            if (shouldProvideRationale)
+            {
+                Log.Info(TAG, "Displaying permission rationale to provide additional context.");
+                var listener = (View.IOnClickListener)new RequestStoragePermissionsClickListener { Activity = this };
+                ShowSnackbar(Resource.String.permission_rationale, Android.Resource.String.Ok, listener);
+            }
+            else
+            {
+                Log.Info(TAG, "Requesting external storage permission");
+                ActivityCompat.RequestPermissions(this, new[] { Manifest.Permission.WriteExternalStorage }, REQUEST_EXTERNAL_STORAGE_CODE);
+            }
+        }
+
+        /// <summary>
         /// 位置情報の利用が許可されているのか確認します。
         /// </summary>
         /// <returns><c>true</c>, if permissions was checked, <c>false</c> otherwise.</returns>
@@ -213,7 +246,7 @@ namespace HLRegionChecker.Droid
             }
             else
             {
-                Log.Info(TAG, "Requesting permission");
+                Log.Info(TAG, "Requesting fine location permission");
                 ActivityCompat.RequestPermissions(this, new[] { Manifest.Permission.AccessFineLocation }, REQUEST_FINE_LOCATION_CODE);
             }
         }
