@@ -169,7 +169,7 @@ namespace HLRegionChecker.Droid
         {
             Console.WriteLine("Exit [{0}] Region", p0.UniqueId);
 
-            if (p0.UniqueId.Equals(Const.Region.学内.GetIdentifier()))
+            if (p0.UniqueId.Equals(Const.Region.研究室.GetIdentifier()))
             {
                 //研究室から退出
                 SendNotification("研究室領域から退出", "ステータスを「学内」に更新しました。", "ステータス自動更新");
