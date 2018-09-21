@@ -50,9 +50,8 @@
     <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AltBeacon_2.15, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\AltBeacon_2.15.dll</HintPath>
+    <Reference Include="AltBeacon_2.15.1">
+      <HintPath>.\AltBeacon_2.15.1.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Android" />
     <Reference Include="System" />
@@ -143,7 +142,6 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="AltBeacon_2.15.dll" />
     <AndroidResource Include="Resources\mipmap-xxxhdpi\appicon.png">
       <Generator>MSBuild:UpdateGeneratedFiles</Generator>
     </AndroidResource>
