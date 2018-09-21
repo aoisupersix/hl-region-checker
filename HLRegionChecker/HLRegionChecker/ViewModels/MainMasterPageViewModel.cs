@@ -95,17 +95,6 @@ namespace HLRegionChecker.ViewModels
                         NavigationService.NavigateAsync("NavigationPage/StatusListPage/AppInfoPage", new NavigationParameters { { typeof(MainMasterPageViewModel).Name, this } });
                     }
                 },
-                //new MenuItem
-                //{
-                //    Icon = ImageSource.FromResource("HLRegionChecker.Resources.Icon_UserStatus.png"),
-                //    Title = "各種情報",
-                //    OnSelectedAction = () =>
-                //    {
-                //        //ユーザ識別子が選択されていない場合は遷移しない
-                //        if (UserDataModel.Instance.MemberId.HasValue)
-                //            NavigationService.NavigateAsync("NavigationPage/StatusListPage/MyStatusDetailPage", new NavigationParameters { { typeof(MainMasterPageViewModel).Name, this } });
-                //    }
-                //}
             });
 
             //メニューが選択された際の処理
