@@ -80,11 +80,6 @@ namespace HLRegionChecker.iOS.Manager
                 return;
 
             //ステータスの更新処理
-            //var childDict = new NSDictionary("status", stateId);
-
-            //var rootRef = Database.DefaultInstance.GetRootReference();
-            //var memRef = rootRef.GetChild("members");
-            //memRef.GetChild(memId.Value.ToString()).UpdateChildValues(childDict);
             var adapter = (IDbAdapter)(new DbAdapter_iOS());
             adapter.UpdateStatus(memId, stateId, true);
         }
@@ -146,13 +141,13 @@ namespace HLRegionChecker.iOS.Manager
             if (region.Identifier.Equals(Region.研究室.GetIdentifier()))
             {
                 //研究室領域に侵入
-                UpdateStatus(2);
+                UpdateStatus(Status.在室.GetStatusId());
                 PushNotificationManager.Send("研究室領域に侵入", "ステータスを「在室」に更新しました。");
             }
             else if (region.Identifier.Equals(Region.学内.GetIdentifier()))
             {
                 //学内領域に侵入
-                UpdateStatus(1);
+                UpdateStatus(Status.学内.GetStatusId());
                 PushNotificationManager.Send("学内領域に侵入", "ステータスを「学内」に更新しました。");
             }
         }
@@ -169,13 +164,13 @@ namespace HLRegionChecker.iOS.Manager
             if (region.Identifier.Equals(Region.研究室.GetIdentifier()))
             {
                 //研究室領域から退出
-                UpdateStatus(1);
+                UpdateStatus(Status.学内.GetStatusId());
                 PushNotificationManager.Send("研究室領域から退出", "ステータスを「学内」に更新しました。");
             }
             else if (region.Identifier.Equals(Region.学内.GetIdentifier()))
             {
                 //学内領域から退出
-                UpdateStatus(0);
+                UpdateStatus(Status.帰宅.GetStatusId());
                 PushNotificationManager.Send("学内領域から退出", "ステータスを「帰宅」に更新しました。");
             }
         }

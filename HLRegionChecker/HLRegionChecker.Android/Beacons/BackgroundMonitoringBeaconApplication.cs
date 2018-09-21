@@ -149,7 +149,7 @@ namespace HLRegionChecker.Droid
             {
                 //研究室に侵入
                 SendNotification("研究室領域に侵入", "ステータスを「在室」に更新しました。", "ステータス自動更新");
-                UpdateStatus(2);
+                UpdateStatus(Status.在室.GetStatusId());
             }
         }
 
@@ -165,7 +165,7 @@ namespace HLRegionChecker.Droid
             {
                 //研究室から退出
                 SendNotification("研究室領域から退出", "ステータスを「学内」に更新しました。", "ステータス自動更新");
-                UpdateStatus(1);
+                UpdateStatus(Status.学内.GetStatusId());
             }
         }
     }
