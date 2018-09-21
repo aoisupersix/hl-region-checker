@@ -115,6 +115,70 @@ namespace HLRegionChecker.Droid
             }
         }
 
+        #region パーミッション関係メソッド
+
+        /// <summary>
+        /// ストレージの利用が許可されているのか確認します。
+        /// </summary>
+        /// <returns><c>true</c>, if permissions was checked, <c>false</c> otherwise.</returns>
+        bool CheckStoragePermissions()
+        {
+            var permissionWriteState = ContextCompat.CheckSelfPermission(this, Manifest.Permission.WriteExternalStorage);
+            return permissionWriteState == (int)Permission.Granted;
+        }
+
+        /// <summary>
+        /// ストレージの許可リクエストを行います。
+        /// </summary>
+        void RequestStoragePermissions()
+        {
+            var shouldProvideRationale = ActivityCompat.ShouldShowRequestPermissionRationale(this, Manifest.Permission.WriteExternalStorage);
+
+            if (shouldProvideRationale)
+            {
+                Log.Info(TAG, "Displaying permission rationale to provide additional context.");
+                var listener = (View.IOnClickListener)new RequestStoragePermissionsClickListener { Activity = this };
+                ShowSnackbar(Resource.String.permission_rationale, Android.Resource.String.Ok, listener);
+            }
+            else
+            {
+                Log.Info(TAG, "Requesting external storage permission");
+                ActivityCompat.RequestPermissions(this, new[] { Manifest.Permission.WriteExternalStorage }, REQUEST_EXTERNAL_STORAGE_CODE);
+            }
+        }
+
+        /// <summary>
+        /// 位置情報の利用が許可されているのか確認します。
+        /// </summary>
+        /// <returns><c>true</c>, if permissions was checked, <c>false</c> otherwise.</returns>
+        bool CheckLocationPermissions()
+        {
+            var permissionState = ContextCompat.CheckSelfPermission(this, Manifest.Permission.AccessFineLocation);
+            return permissionState == (int)Permission.Granted;
+        }
+
+        /// <summary>
+        /// 位置情報の許可リクエストを行います。
+        /// </summary>
+        void RequestLocationPermissions()
+        {
+            var shouldProvideRationale = ActivityCompat.ShouldShowRequestPermissionRationale(this, Manifest.Permission.AccessFineLocation);
+
+            if (shouldProvideRationale)
+            {
+                Log.Info(TAG, "Displaying permission rationale to provide additional context.");
+                var listener = (View.IOnClickListener)new RequestLocationPermissionsClickListener { Activity = this };
+                ShowSnackbar(Resource.String.permission_rationale, Android.Resource.String.Ok, listener);
+            }
+            else
+            {
+                Log.Info(TAG, "Requesting fine location permission");
+                ActivityCompat.RequestPermissions(this, new[] { Manifest.Permission.AccessFineLocation }, REQUEST_FINE_LOCATION_CODE);
+            }
+        }
+
+        #endregion
+
         /// <summary>
         /// GeofencingRequestを生成して返します。
         /// </summary>
@@ -189,69 +253,6 @@ namespace HLRegionChecker.Droid
                 .SetTransitionTypes(Geofence.GeofenceTransitionEnter | Geofence.GeofenceTransitionExit)
                 .Build());
         }
-        #region パーミッション関係メソッド
-
-        /// <summary>
-        /// ストレージの利用が許可されているのか確認します。
-        /// </summary>
-        /// <returns><c>true</c>, if permissions was checked, <c>false</c> otherwise.</returns>
-        bool CheckStoragePermissions()
-        {
-            var permissionWriteState = ContextCompat.CheckSelfPermission(this, Manifest.Permission.WriteExternalStorage);
-            return permissionWriteState == (int)Permission.Granted;
-        }
-
-        /// <summary>
-        /// ストレージの許可リクエストを行います。
-        /// </summary>
-        void RequestStoragePermissions()
-        {
-            var shouldProvideRationale = ActivityCompat.ShouldShowRequestPermissionRationale(this, Manifest.Permission.WriteExternalStorage);
-
-            if (shouldProvideRationale)
-            {
-                Log.Info(TAG, "Displaying permission rationale to provide additional context.");
-                var listener = (View.IOnClickListener)new RequestStoragePermissionsClickListener { Activity = this };
-                ShowSnackbar(Resource.String.permission_rationale, Android.Resource.String.Ok, listener);
-            }
-            else
-            {
-                Log.Info(TAG, "Requesting external storage permission");
-                ActivityCompat.RequestPermissions(this, new[] { Manifest.Permission.WriteExternalStorage }, REQUEST_EXTERNAL_STORAGE_CODE);
-            }
-        }
-
-        /// <summary>
-        /// 位置情報の利用が許可されているのか確認します。
-        /// </summary>
-        /// <returns><c>true</c>, if permissions was checked, <c>false</c> otherwise.</returns>
-        bool CheckLocationPermissions()
-        {
-            var permissionState = ContextCompat.CheckSelfPermission(this, Manifest.Permission.AccessFineLocation);
-            return permissionState == (int)Permission.Granted;
-        }
-
-        /// <summary>
-        /// 位置情報の許可リクエストを行います。
-        /// </summary>
-        void RequestLocationPermissions()
-        {
-            var shouldProvideRationale = ActivityCompat.ShouldShowRequestPermissionRationale(this, Manifest.Permission.AccessFineLocation);
-
-            if (shouldProvideRationale)
-            {
-                Log.Info(TAG, "Displaying permission rationale to provide additional context.");
-                var listener = (View.IOnClickListener)new RequestLocationPermissionsClickListener { Activity = this };
-                ShowSnackbar(Resource.String.permission_rationale, Android.Resource.String.Ok, listener);
-            }
-            else
-            {
-                Log.Info(TAG, "Requesting fine location permission");
-                ActivityCompat.RequestPermissions(this, new[] { Manifest.Permission.AccessFineLocation }, REQUEST_FINE_LOCATION_CODE);
-            }
-        }
-
-        #endregion
 
         /// <summary>
         /// スナックバーを表示します。
@@ -298,7 +299,7 @@ namespace HLRegionChecker.Droid
     }
 
     /// <summary>
-    /// 位置情報利用許可のリスナー
+    /// ストレージ利用許可のリスナー
     /// </summary>
     public class RequestLocationPermissionsClickListener : Java.Lang.Object, View.IOnClickListener
     {
