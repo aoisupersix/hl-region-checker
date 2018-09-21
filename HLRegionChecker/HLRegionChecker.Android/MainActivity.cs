@@ -28,8 +28,18 @@ namespace HLRegionChecker.Droid
     [Activity(Label = "HLRegionChecker", Icon = "@mipmap/appicon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity, IOnCompleteListener
     {
+        #region フィールド
         protected string TAG = typeof(MainActivity).Name;
-        public int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
+
+        /// <summary>
+        /// ストレージパーミッションコード
+        /// </summary>
+        public int REQUEST_EXTERNAL_STORAGE_CODE = 1;
+
+        /// <summary>
+        /// 位置情報パーミッションコード
+        /// </summary>
+        public int REQUEST_FINE_LOCATION_CODE = 34;
 
         /// <summary>
         /// ジオフェンスの状態
@@ -45,6 +55,8 @@ namespace HLRegionChecker.Droid
         //private PendingGeofenceTask mPendingGeofenceTask = PendingGeofenceTask.NONE;
 
         public const string PROPERTY_KEY_LOCATION_UPDATES_REQUESTED = "location-updates-requested";
+
+        #endregion
 
         /// <summary>
         /// ジオフェンスが追加されているか？
@@ -92,8 +104,8 @@ namespace HLRegionChecker.Droid
         {
             base.OnStart();
 
-            if (!CheckPermissions())
-                RequestPermissions();
+            if (!CheckLocationPermissions())
+                RequestLocationPermissions();
             else
             {
                 AddGeofences();
@@ -117,7 +129,7 @@ namespace HLRegionChecker.Droid
         /// </summary>
         void AddGeofences()
         {
-            if (!CheckPermissions())
+            if (!CheckLocationPermissions())
             {
                 System.Diagnostics.Debug.WriteLine("Permission Denied");
                 return;
@@ -132,10 +144,10 @@ namespace HLRegionChecker.Droid
         /// </summary>
         void RemoveGeofences()
         {
-            if (!CheckPermissions())
+            if (!CheckLocationPermissions())
             {
                 System.Diagnostics.Debug.WriteLine("Permission Denied");
-                RequestPermissions();
+                RequestLocationPermissions();
                 return;
             }
 
@@ -174,12 +186,13 @@ namespace HLRegionChecker.Droid
                 .SetTransitionTypes(Geofence.GeofenceTransitionEnter | Geofence.GeofenceTransitionExit)
                 .Build());
         }
+        #region パーミッション関係メソッド
 
         /// <summary>
         /// 位置情報の利用が許可されているのか確認します。
         /// </summary>
         /// <returns><c>true</c>, if permissions was checked, <c>false</c> otherwise.</returns>
-        bool CheckPermissions()
+        bool CheckLocationPermissions()
         {
             var permissionState = ContextCompat.CheckSelfPermission(this, Manifest.Permission.AccessFineLocation);
             return permissionState == (int)Permission.Granted;
@@ -188,22 +201,24 @@ namespace HLRegionChecker.Droid
         /// <summary>
         /// 位置情報の許可リクエストを行います。
         /// </summary>
-        void RequestPermissions()
+        void RequestLocationPermissions()
         {
             var shouldProvideRationale = ActivityCompat.ShouldShowRequestPermissionRationale(this, Manifest.Permission.AccessFineLocation);
 
             if (shouldProvideRationale)
             {
                 Log.Info(TAG, "Displaying permission rationale to provide additional context.");
-                var listener = (View.IOnClickListener)new RequestPermissionsClickListener { Activity = this };
+                var listener = (View.IOnClickListener)new RequestLocationPermissionsClickListener { Activity = this };
                 ShowSnackbar(Resource.String.permission_rationale, Android.Resource.String.Ok, listener);
             }
             else
             {
                 Log.Info(TAG, "Requesting permission");
-                ActivityCompat.RequestPermissions(this, new[] { Manifest.Permission.AccessFineLocation }, REQUEST_PERMISSIONS_REQUEST_CODE);
+                ActivityCompat.RequestPermissions(this, new[] { Manifest.Permission.AccessFineLocation }, REQUEST_FINE_LOCATION_CODE);
             }
         }
+
+        #endregion
 
         /// <summary>
         /// スナックバーを表示します。
@@ -249,13 +264,29 @@ namespace HLRegionChecker.Droid
         }
     }
 
-    public class RequestPermissionsClickListener : Java.Lang.Object, View.IOnClickListener
+    /// <summary>
+    /// 位置情報利用許可のリスナー
+    /// </summary>
+    public class RequestLocationPermissionsClickListener : Java.Lang.Object, View.IOnClickListener
     {
         public MainActivity Activity { get; set; }
 
         public void OnClick(View v)
         {
-            RequestPermissions(Activity, new[] { Manifest.Permission.AccessFineLocation }, Activity.REQUEST_PERMISSIONS_REQUEST_CODE);
+            RequestPermissions(Activity, new[] { Manifest.Permission.AccessFineLocation }, Activity.REQUEST_FINE_LOCATION_CODE);
+        }
+    }
+
+    /// <summary>
+    /// 位置情報利用許可のリスナー
+    /// </summary>
+    public class RequestStoragePermissionsClickListener : Java.Lang.Object, View.IOnClickListener
+    {
+        public MainActivity Activity { get; set; }
+
+        public void OnClick(View v)
+        {
+            RequestPermissions(Activity, new[] { Manifest.Permission.AccessFineLocation }, Activity.REQUEST_EXTERNAL_STORAGE_CODE);
         }
     }
 
