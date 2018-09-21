@@ -90,6 +90,8 @@ namespace HLRegionChecker.Droid
             FirebaseApp.InitializeApp(this);
             var db = FirebaseDatabase.Instance;
 
+            NotificationUtil.Instance.CreateNotificationChannel((NotificationManager)GetSystemService(NotificationService));
+            NotificationUtil.Instance.SendNotification(this, "通知テスト", "テストです.", "テスト");
             global::Xamarin.Forms.Forms.Init(this, bundle);
             LoadApplication(new App(new AndroidInitializer()));
 
@@ -284,8 +286,6 @@ namespace HLRegionChecker.Droid
             //mPendingGeofenceTask = PendingGeofenceTask.NONE;
             if (task.IsSuccessful)
             {
-                GeofenceAdded = !GeofenceAdded;
-
                 string message = GeofenceAdded.HasValue && GeofenceAdded.Value ? "Geofence Added" : "Geofence Removed";
                 System.Diagnostics.Debug.WriteLine(message);
             }
