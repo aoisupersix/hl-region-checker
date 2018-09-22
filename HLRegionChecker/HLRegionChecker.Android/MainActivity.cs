@@ -22,13 +22,14 @@ using static Android.Support.V4.App.ActivityCompat;
 using Firebase;
 using Firebase.Database;
 using HLRegionChecker.Const;
+using Android.Runtime;
 
 namespace HLRegionChecker.Droid
 {
     [Activity(Label = "HLRegionChecker", Icon = "@mipmap/appicon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity, IOnCompleteListener
     {
-        #region フィールド
+        #region メンバ
         protected string TAG = typeof(MainActivity).Name;
 
         /// <summary>
@@ -41,9 +42,8 @@ namespace HLRegionChecker.Droid
         /// </summary>
         public int REQUEST_FINE_LOCATION_CODE = 34;
 
-        /// <summary>
-        /// ジオフェンスの状態
-        /// </summary>
+        public int NO_INITIAL_TRIGGER = 0;
+
         private enum PendingGeofenceTask
         {
             ADD, REMOVE, NONE
@@ -52,7 +52,7 @@ namespace HLRegionChecker.Droid
         private GeofencingClient mGeofencingClient;
         private IList<IGeofence> mGeofenceList;
         private PendingIntent mGeofencePendingIntent;
-        //private PendingGeofenceTask mPendingGeofenceTask = PendingGeofenceTask.NONE;
+        private PendingGeofenceTask mPendingGeofenceTask = PendingGeofenceTask.NONE;
 
         public const string PROPERTY_KEY_LOCATION_UPDATES_REQUESTED = "location-updates-requested";
 
@@ -91,7 +91,7 @@ namespace HLRegionChecker.Droid
             var db = FirebaseDatabase.Instance;
 
             NotificationUtil.Instance.CreateNotificationChannel((NotificationManager)GetSystemService(NotificationService));
-            NotificationUtil.Instance.SendNotification(this, "通知テスト", "テストです.", "テスト");
+
             global::Xamarin.Forms.Forms.Init(this, bundle);
             LoadApplication(new App(new AndroidInitializer()));
 
@@ -106,15 +106,13 @@ namespace HLRegionChecker.Droid
         {
             base.OnStart();
 
-            if (!CheckStoragePermissions())
-                RequestStoragePermissions();
+            //if (!CheckStoragePermissions())
+            //    RequestStoragePermissions();
 
             if (!CheckLocationPermissions())
                 RequestLocationPermissions();
             else
-            {
                 AddGeofences();
-            }
         }
 
         #region パーミッション関係メソッド
@@ -179,6 +177,30 @@ namespace HLRegionChecker.Droid
             }
         }
 
+        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Permission[] grantResults)
+        {
+            Log.Info(TAG, "onRequestPermissionResult");
+            if (requestCode == REQUEST_FINE_LOCATION_CODE)
+            {
+                if (grantResults.Length <= 0)
+                {
+                    Log.Info(TAG, "User interaction was cancelled.");
+                }
+                else if (grantResults[0] == (int)Permission.Granted)
+                {
+                    Log.Info(TAG, "Permission granted.");
+                    if(mPendingGeofenceTask == PendingGeofenceTask.ADD)
+                        AddGeofences();
+                    mPendingGeofenceTask = PendingGeofenceTask.NONE;
+                }
+                else
+                {
+                    //var listener = (View.IOnClickListener)new OnRequestPermissionsResultClickListener { Activity = this };
+                    ShowSnackbar("設定から位置情報の利用を許可してください。");
+                }
+            }
+        }
+
         #endregion
 
         /// <summary>
@@ -188,6 +210,7 @@ namespace HLRegionChecker.Droid
         GeofencingRequest GetGeofencingRequest()
         {
             GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
+            //builder.SetInitialTrigger(NO_INITIAL_TRIGGER);
             builder.SetInitialTrigger(GeofencingRequest.InitialTriggerEnter);
             builder.AddGeofences(mGeofenceList);
             return builder.Build();
@@ -200,12 +223,16 @@ namespace HLRegionChecker.Droid
         {
             if (!CheckLocationPermissions())
             {
+                ShowSnackbar("Permission Denied");
                 System.Diagnostics.Debug.WriteLine("Permission Denied");
+                mPendingGeofenceTask = PendingGeofenceTask.ADD;
+                RequestLocationPermissions();
                 return;
             }
 
             mGeofencingClient.AddGeofences(GetGeofencingRequest(), GetGeofencePendingIntent())
                     .AddOnCompleteListener(this);
+
         }
 
         /// <summary>
@@ -215,6 +242,7 @@ namespace HLRegionChecker.Droid
         {
             if (!CheckLocationPermissions())
             {
+                ShowSnackbar("Permission Denied");
                 System.Diagnostics.Debug.WriteLine("Permission Denied");
                 RequestLocationPermissions();
                 return;
@@ -234,9 +262,8 @@ namespace HLRegionChecker.Droid
             {
                 return mGeofencePendingIntent;
             }
-            Intent intent = new Intent(this, typeof(Geofences.GeofenceTransitionsIntentService));
-            mGeofencePendingIntent = PendingIntent.GetBroadcast(this, 0, intent, PendingIntentFlags.UpdateCurrent);
-            return mGeofencePendingIntent;
+            var intent = new Intent(this, typeof(Geofences.GeofenceTransitionsIntentService));
+            return PendingIntent.GetService(this, 0, intent, PendingIntentFlags.UpdateCurrent);
         }
 
         /// <summary>
@@ -245,13 +272,13 @@ namespace HLRegionChecker.Droid
         void PopulateGeofenceList()
         {
             mGeofenceList.Add(new GeofenceBuilder()
-                .SetRequestId(Region.研究室.GetIdentifier())
+                .SetRequestId(Region.学内.GetIdentifier())
                 .SetCircularRegion(
-                    RegionConst.CAMPUS_LATITUDE,
-                    RegionConst.CAMPUS_LONGITUDE,
-                    Geofences.Constants.GEOFENCE_RADIUS_IN_METERS
+                    35.817187,
+                    139.424551,
+                    200
                 )
-                .SetExpirationDuration(Geofences.Constants.GEOFENCE_EXPIRATION_IN_MILLISECONDS)
+                .SetExpirationDuration(Geofence.NeverExpire)
                 .SetTransitionTypes(Geofence.GeofenceTransitionEnter | Geofence.GeofenceTransitionExit)
                 .Build());
         }
@@ -287,12 +314,14 @@ namespace HLRegionChecker.Droid
             if (task.IsSuccessful)
             {
                 string message = GeofenceAdded.HasValue && GeofenceAdded.Value ? "Geofence Added" : "Geofence Removed";
+                ShowSnackbar("ジオフェンスの登録完了");
                 System.Diagnostics.Debug.WriteLine(message);
             }
             else
             {
                 // Get the status code for the error and log it using a user-friendly message.
                 string errorMessage = Geofences.GeofenceErrorMessages.GetErrorString(this, task.Exception);
+                ShowSnackbar($"Error: {errorMessage}");
                 System.Diagnostics.Debug.WriteLine(errorMessage);
             }
         }
@@ -332,7 +361,7 @@ namespace HLRegionChecker.Droid
         {
             Intent intent = new Intent();
             intent.SetAction(Settings.ActionApplicationDetailsSettings);
-            var uri = Android.Net.Uri.FromParts("package", BuildConfig.ApplicationId, null);
+            var uri = Android.Net.Uri.FromParts("package", Activity.PackageName, null);
             intent.SetData(uri);
             intent.SetFlags(ActivityFlags.NewTask);
             Activity.StartActivity(intent);

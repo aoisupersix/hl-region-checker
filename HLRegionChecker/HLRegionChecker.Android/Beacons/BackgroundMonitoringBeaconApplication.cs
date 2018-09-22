@@ -36,9 +36,9 @@ namespace HLRegionChecker.Droid
         private void UpdateStatus(int stateId)
         {
             //パーミッション確認
-            var permissionWriteState = ContextCompat.CheckSelfPermission(this, Manifest.Permission.WriteExternalStorage);
-            if (permissionWriteState != (int)Permission.Granted)
-                return;
+            //var permissionWriteState = ContextCompat.CheckSelfPermission(this, Manifest.Permission.WriteExternalStorage);
+            //if (permissionWriteState != (int)Permission.Granted)
+            //    return;
 
             var memId = UserDataModel.Instance.MemberId;
             if (memId == UserDataModel.DefaultMemberId)

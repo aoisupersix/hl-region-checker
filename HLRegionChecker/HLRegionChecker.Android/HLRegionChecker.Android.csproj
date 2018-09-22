@@ -50,8 +50,8 @@
     <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AltBeacon_2.15.1">
-      <HintPath>.\AltBeacon_2.15.1.dll</HintPath>
+    <Reference Include="AltBeacon_2.15">
+      <HintPath>.\AltBeacon_2.15.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Android" />
     <Reference Include="System" />
