@@ -4429,6 +4429,9 @@ namespace HLRegionChecker.Droid
 			// aapt resource value: 0x7f08002c
 			public const int mr_user_route_category_name = 2131230764;
 			
+			// aapt resource value: 0x7f080062
+			public const int notificationchannel_description = 2131230818;
+			
 			// aapt resource value: 0x7f08004e
 			public const int password_toggle_content_description = 2131230798;
 			

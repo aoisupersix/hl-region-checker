@@ -9,6 +9,7 @@ using Android.OS;
 using Android.Runtime;
 using Android.Support.V4.App;
 using Android.Support.V4.Content;
+using Firebase;
 using Firebase.Database;
 using HLRegionChecker.Const;
 using HLRegionChecker.Droid.DependencyServices;
@@ -91,6 +92,11 @@ namespace HLRegionChecker.Droid
         public override void OnCreate()
         {
             base.OnCreate();
+
+            NotificationUtil.Instance.CreateNotificationChannel((NotificationManager)GetSystemService(NotificationService), this);
+
+            FirebaseApp.InitializeApp(this);
+            var db = FirebaseDatabase.Instance;
 
             InitBeaconManager();
             InitBeaconRegion();

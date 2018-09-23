@@ -67,12 +67,15 @@ namespace HLRegionChecker.Droid
         /// 通知チャンネルを生成します。
         /// </summary>
         /// <param name="notificationManager"></param>
-        public void CreateNotificationChannel(NotificationManager notificationManager)
+        public void CreateNotificationChannel(NotificationManager notificationManager, Android.Content.Context context)
         {
             this.notificationManager = notificationManager;
             if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
             {
-                var notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "Update notification of occupancy status", NotificationImportance.High);
+                var notificationChannel = new NotificationChannel(
+                    NOTIFICATION_CHANNEL_ID,
+                    context.GetString(Resource.String.notificationchannel_description),
+                    NotificationImportance.High);
 
                 // Configure the notification channel.
                 notificationChannel.Description = "Update notification of occupancy status";

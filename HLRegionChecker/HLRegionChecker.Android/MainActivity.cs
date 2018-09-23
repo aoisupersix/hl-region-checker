@@ -87,11 +87,6 @@ namespace HLRegionChecker.Droid
 
             base.OnCreate(bundle);
 
-            FirebaseApp.InitializeApp(this);
-            var db = FirebaseDatabase.Instance;
-
-            NotificationUtil.Instance.CreateNotificationChannel((NotificationManager)GetSystemService(NotificationService));
-
             global::Xamarin.Forms.Forms.Init(this, bundle);
             LoadApplication(new App(new AndroidInitializer()));
 
