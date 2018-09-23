@@ -110,7 +110,10 @@ namespace HLRegionChecker.Droid
             //    RequestStoragePermissions();
 
             if (!CheckLocationPermissions())
+            {
+                mPendingGeofenceTask = PendingGeofenceTask.ADD;
                 RequestLocationPermissions();
+            }
             else
                 AddGeofences();
         }
@@ -189,7 +192,7 @@ namespace HLRegionChecker.Droid
                 else if (grantResults[0] == (int)Permission.Granted)
                 {
                     Log.Info(TAG, "Permission granted.");
-                    if(mPendingGeofenceTask == PendingGeofenceTask.ADD)
+                    if (mPendingGeofenceTask == PendingGeofenceTask.ADD)
                         AddGeofences();
                     mPendingGeofenceTask = PendingGeofenceTask.NONE;
                 }
@@ -210,8 +213,8 @@ namespace HLRegionChecker.Droid
         GeofencingRequest GetGeofencingRequest()
         {
             GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
-            //builder.SetInitialTrigger(NO_INITIAL_TRIGGER);
-            builder.SetInitialTrigger(GeofencingRequest.InitialTriggerEnter);
+            builder.SetInitialTrigger(NO_INITIAL_TRIGGER);
+            //builder.SetInitialTrigger(GeofencingRequest.InitialTriggerEnter);
             builder.AddGeofences(mGeofenceList);
             return builder.Build();
         }
@@ -230,7 +233,8 @@ namespace HLRegionChecker.Droid
                 return;
             }
 
-            mGeofencingClient.AddGeofences(GetGeofencingRequest(), GetGeofencePendingIntent())
+            if (!GeofenceAdded.HasValue || !GeofenceAdded.Value)
+                mGeofencingClient.AddGeofences(GetGeofencingRequest(), GetGeofencePendingIntent())
                     .AddOnCompleteListener(this);
 
         }
@@ -310,11 +314,21 @@ namespace HLRegionChecker.Droid
 
         public void OnComplete(Task task)
         {
-            //mPendingGeofenceTask = PendingGeofenceTask.NONE;
+            mPendingGeofenceTask = PendingGeofenceTask.NONE;
             if (task.IsSuccessful)
             {
-                string message = GeofenceAdded.HasValue && GeofenceAdded.Value ? "Geofence Added" : "Geofence Removed";
-                ShowSnackbar("ジオフェンスの登録完了");
+                string message;
+                if(!GeofenceAdded.HasValue || !GeofenceAdded.Value )
+                {
+                    GeofenceAdded = true;
+                    message = "ジオフェンス登録完了";
+                }
+                else
+                {
+                    GeofenceAdded = false;
+                    message = "ジオフェンス削除完了";
+                }
+                ShowSnackbar(message);
                 System.Diagnostics.Debug.WriteLine(message);
             }
             else
