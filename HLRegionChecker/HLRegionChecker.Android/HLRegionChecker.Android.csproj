@@ -67,6 +67,7 @@
     <Compile Include="DependencyServices\AssemblyService_Droid.cs" />
     <Compile Include="DependencyServices\DbAdapter_Droid.cs" />
     <Compile Include="DependencyServices\WebBrowserService_Droid.cs" />
+    <Compile Include="Geofences\BootReceiver.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="NotificationUtil.cs" />
     <Compile Include="Renderers\LinkLabelRenderer_Droid.cs" />

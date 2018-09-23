@@ -12,6 +12,7 @@ using Android.Support.V4.Content;
 using Firebase.Database;
 using HLRegionChecker.Const;
 using HLRegionChecker.Droid.DependencyServices;
+using HLRegionChecker.Droid.Geofences;
 using HLRegionChecker.Models;
 
 namespace HLRegionChecker.Droid
@@ -110,6 +111,11 @@ namespace HLRegionChecker.Droid
                 .SetContentInfo(info);
 
             notificationManager.Notify(NOTIFICATION_ID, notificationBuilder.Build());
+        }
+
+        internal void CreateNotificationChannel(NotificationManager notificationManager, BootReceiver bootReceiver)
+        {
+            throw new NotImplementedException();
         }
     }
 }
