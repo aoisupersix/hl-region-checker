@@ -1,26 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">Hello World, Click Me!</string>
-    <string name="app_name">HLRegionChecker.Droid</string>
-    <!-- Error strings -->
-    <string name="geofence_not_available">エラー：ジオフェンスが有効ではありません。</string>
-    <string name="geofence_too_many_geofences">エラー：ジオフェンスが上限に達しました。</string>
-    <string name="geofence_too_many_pending_intents">
+  <string name="app_name">HLRegionChecker</string>
+  <!-- Error strings -->
+  <string name="geofence_not_available">エラー：ジオフェンスが有効ではありません。</string>
+  <string name="geofence_too_many_geofences">エラー：ジオフェンスが上限に達しました。</string>
+  <string name="geofence_too_many_pending_intents">
     エラー：ジオフェンスの呼び出しに多すぎるPendingIntentを指定しました。
   </string>
-    <string name="unknown_geofence_error">
+  <string name="unknown_geofence_error">
     エラー：不明なエラーでジオフェンスが利用できません。
   </string>
-    <string name="geofence_transition_invalid_type">
+  <string name="geofence_transition_invalid_type">
     Geofence transition error: invalid transition type %1$d
   </string>
-    <!-- Transition type strings -->
-    <string name="geofence_transition_entered">Entered</string>
-    <string name="geofence_transition_exited">Exited</string>
-    <string name="unknown_geofence_transition">Unknown Transition</string>
-    <string name="geofence_transition_notification_text">
+  <!-- Transition type strings -->
+  <string name="geofence_transition_entered">Entered</string>
+  <string name="geofence_transition_exited">Exited</string>
+  <string name="unknown_geofence_transition">Unknown Transition</string>
+  <string name="geofence_transition_notification_text">
     Click notification to return to app
   </string>
+  <string name="complete_add_geofence">ジオフェンス登録完了</string>
+  <string name="complete_remove_geofence">ジオフェンス削除完了</string>
   <string name="permission_rationale">学内領域取得のために位置情報を利用します。</string>
   <string name="notificationchannel_description">在室状況の更新通知</string>
 </resources>

@@ -4258,8 +4258,8 @@ namespace HLRegionChecker.Droid
 			// aapt resource value: 0x7f08003d
 			public const int abc_toolbar_collapse_description = 2131230781;
 			
-			// aapt resource value: 0x7f080057
-			public const int app_name = 2131230807;
+			// aapt resource value: 0x7f080056
+			public const int app_name = 2131230806;
 			
 			// aapt resource value: 0x7f08004b
 			public const int appbar_scrolling_view_behavior = 2131230795;
@@ -4321,6 +4321,12 @@ namespace HLRegionChecker.Droid
 			// aapt resource value: 0x7f080017
 			public const int common_signin_button_text_long = 2131230743;
 			
+			// aapt resource value: 0x7f080060
+			public const int complete_add_geofence = 2131230816;
+			
+			// aapt resource value: 0x7f080061
+			public const int complete_remove_geofence = 2131230817;
+			
 			// aapt resource value: 0x7f080002
 			public const int default_web_client_id = 2131230722;
 			
@@ -4330,26 +4336,26 @@ namespace HLRegionChecker.Droid
 			// aapt resource value: 0x7f080000
 			public const int gcm_defaultSenderId = 2131230720;
 			
+			// aapt resource value: 0x7f080057
+			public const int geofence_not_available = 2131230807;
+			
 			// aapt resource value: 0x7f080058
-			public const int geofence_not_available = 2131230808;
+			public const int geofence_too_many_geofences = 2131230808;
 			
 			// aapt resource value: 0x7f080059
-			public const int geofence_too_many_geofences = 2131230809;
-			
-			// aapt resource value: 0x7f08005a
-			public const int geofence_too_many_pending_intents = 2131230810;
-			
-			// aapt resource value: 0x7f08005d
-			public const int geofence_transition_entered = 2131230813;
-			
-			// aapt resource value: 0x7f08005e
-			public const int geofence_transition_exited = 2131230814;
+			public const int geofence_too_many_pending_intents = 2131230809;
 			
 			// aapt resource value: 0x7f08005c
-			public const int geofence_transition_invalid_type = 2131230812;
+			public const int geofence_transition_entered = 2131230812;
 			
-			// aapt resource value: 0x7f080060
-			public const int geofence_transition_notification_text = 2131230816;
+			// aapt resource value: 0x7f08005d
+			public const int geofence_transition_exited = 2131230813;
+			
+			// aapt resource value: 0x7f08005b
+			public const int geofence_transition_invalid_type = 2131230811;
+			
+			// aapt resource value: 0x7f08005f
+			public const int geofence_transition_notification_text = 2131230815;
 			
 			// aapt resource value: 0x7f080004
 			public const int google_api_key = 2131230724;
@@ -4362,9 +4368,6 @@ namespace HLRegionChecker.Droid
 			
 			// aapt resource value: 0x7f080006
 			public const int google_storage_bucket = 2131230726;
-			
-			// aapt resource value: 0x7f080056
-			public const int hello = 2131230806;
 			
 			// aapt resource value: 0x7f080018
 			public const int mr_button_content_description = 2131230744;
@@ -4429,8 +4432,8 @@ namespace HLRegionChecker.Droid
 			// aapt resource value: 0x7f08002c
 			public const int mr_user_route_category_name = 2131230764;
 			
-			// aapt resource value: 0x7f080062
-			public const int notificationchannel_description = 2131230818;
+			// aapt resource value: 0x7f080063
+			public const int notificationchannel_description = 2131230819;
 			
 			// aapt resource value: 0x7f08004e
 			public const int password_toggle_content_description = 2131230798;
@@ -4447,8 +4450,8 @@ namespace HLRegionChecker.Droid
 			// aapt resource value: 0x7f080052
 			public const int path_password_strike_through = 2131230802;
 			
-			// aapt resource value: 0x7f080061
-			public const int permission_rationale = 2131230817;
+			// aapt resource value: 0x7f080062
+			public const int permission_rationale = 2131230818;
 			
 			// aapt resource value: 0x7f08003e
 			public const int search_menu_title = 2131230782;
@@ -4456,11 +4459,11 @@ namespace HLRegionChecker.Droid
 			// aapt resource value: 0x7f080053
 			public const int status_bar_notification_info_overflow = 2131230803;
 			
-			// aapt resource value: 0x7f08005b
-			public const int unknown_geofence_error = 2131230811;
+			// aapt resource value: 0x7f08005a
+			public const int unknown_geofence_error = 2131230810;
 			
-			// aapt resource value: 0x7f08005f
-			public const int unknown_geofence_transition = 2131230815;
+			// aapt resource value: 0x7f08005e
+			public const int unknown_geofence_transition = 2131230814;
 			
 			static String()
 			{

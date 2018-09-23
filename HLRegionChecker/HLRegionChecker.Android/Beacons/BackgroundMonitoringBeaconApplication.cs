@@ -9,6 +9,7 @@ using Android.OS;
 using Android.Runtime;
 using Android.Support.V4.App;
 using Android.Support.V4.Content;
+using Android.Util;
 using Firebase;
 using Firebase.Database;
 using HLRegionChecker.Const;
@@ -26,9 +27,13 @@ namespace HLRegionChecker.Droid
     /// </summary>
     public class BackgroundMonitoringBeaconApplication: Application, IBootstrapNotifier
     {
+        #region メンバ
+        protected string TAG = typeof(BackgroundMonitoringBeaconApplication).Name;
+
         private BeaconManager _beaconManager;
         private RegionBootstrap _regionBootstrap;
         private BackgroundPowerSaver _backgroundPowerSaver;
+        #endregion
 
         /// <summary>
         /// ステータス情報を更新します。
@@ -36,11 +41,6 @@ namespace HLRegionChecker.Droid
         /// <param name="stateId">更新するステータスID</param>
         private void UpdateStatus(int stateId)
         {
-            //パーミッション確認
-            //var permissionWriteState = ContextCompat.CheckSelfPermission(this, Manifest.Permission.WriteExternalStorage);
-            //if (permissionWriteState != (int)Permission.Granted)
-            //    return;
-
             var memId = UserDataModel.Instance.MemberId;
             if (memId == UserDataModel.DefaultMemberId)
                 return;
@@ -53,9 +53,6 @@ namespace HLRegionChecker.Droid
             //更新
             var memRef = FirebaseDatabase.Instance.GetReference("members");
             memRef.Child(memId.ToString()).UpdateChildren(childDict);
-
-            //var adapter = (IDbAdapter)(new DbAdapter_Droid());
-            //adapter.UpdateStatus(memId.Value, stateId, true);
         }
 
         /// <summary>
@@ -93,8 +90,10 @@ namespace HLRegionChecker.Droid
         {
             base.OnCreate();
 
+            //通知チャンネル登録
             NotificationUtil.Instance.CreateNotificationChannel((NotificationManager)GetSystemService(NotificationService), this);
 
+            //Firebase初期化
             FirebaseApp.InitializeApp(this);
             var db = FirebaseDatabase.Instance;
 
@@ -118,7 +117,7 @@ namespace HLRegionChecker.Droid
         /// <param name="p0"></param>
         public void DidEnterRegion(Org.Altbeacon.Beacon.Region p0)
         {
-            Console.WriteLine("Enter [{0}] Region", p0.UniqueId);
+            Log.Info(TAG, "Enter [{0}] Region", p0.UniqueId);
             Firebase.FirebaseApp.InitializeApp(this.ApplicationContext);
 
             if (p0.UniqueId.Equals(Const.Region.研究室.GetIdentifier()))
@@ -135,7 +134,7 @@ namespace HLRegionChecker.Droid
         /// <param name="p0"></param>
         public void DidExitRegion(Org.Altbeacon.Beacon.Region p0)
         {
-            Console.WriteLine("Exit [{0}] Region", p0.UniqueId);
+            Log.Info(TAG, "Exit [{0}] Region", p0.UniqueId);
 
             if (p0.UniqueId.Equals(Const.Region.研究室.GetIdentifier()))
             {

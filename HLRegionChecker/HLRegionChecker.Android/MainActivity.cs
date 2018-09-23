@@ -33,15 +33,13 @@ namespace HLRegionChecker.Droid
         protected string TAG = typeof(MainActivity).Name;
 
         /// <summary>
-        /// ストレージパーミッションコード
-        /// </summary>
-        public int REQUEST_EXTERNAL_STORAGE_CODE = 1;
-
-        /// <summary>
         /// 位置情報パーミッションコード
         /// </summary>
         public int REQUEST_FINE_LOCATION_CODE = 34;
 
+        /// <summary>
+        /// ジオフェンスの初期トリガー打ち消し用
+        /// </summary>
         public int NO_INITIAL_TRIGGER = 0;
 
         private enum PendingGeofenceTask
@@ -55,7 +53,6 @@ namespace HLRegionChecker.Droid
         private PendingGeofenceTask mPendingGeofenceTask = PendingGeofenceTask.NONE;
 
         public const string PROPERTY_KEY_LOCATION_UPDATES_REQUESTED = "location-updates-requested";
-
         #endregion
 
         /// <summary>
@@ -101,9 +98,6 @@ namespace HLRegionChecker.Droid
         {
             base.OnStart();
 
-            //if (!CheckStoragePermissions())
-            //    RequestStoragePermissions();
-
             if (!CheckLocationPermissions())
             {
                 mPendingGeofenceTask = PendingGeofenceTask.ADD;
@@ -114,37 +108,6 @@ namespace HLRegionChecker.Droid
         }
 
         #region パーミッション関係メソッド
-
-        /// <summary>
-        /// ストレージの利用が許可されているのか確認します。
-        /// </summary>
-        /// <returns><c>true</c>, if permissions was checked, <c>false</c> otherwise.</returns>
-        bool CheckStoragePermissions()
-        {
-            var permissionWriteState = ContextCompat.CheckSelfPermission(this, Manifest.Permission.WriteExternalStorage);
-            return permissionWriteState == (int)Permission.Granted;
-        }
-
-        /// <summary>
-        /// ストレージの許可リクエストを行います。
-        /// </summary>
-        void RequestStoragePermissions()
-        {
-            var shouldProvideRationale = ActivityCompat.ShouldShowRequestPermissionRationale(this, Manifest.Permission.WriteExternalStorage);
-
-            if (shouldProvideRationale)
-            {
-                Log.Info(TAG, "Displaying permission rationale to provide additional context.");
-                var listener = (View.IOnClickListener)new RequestStoragePermissionsClickListener { Activity = this };
-                ShowSnackbar(Resource.String.permission_rationale, Android.Resource.String.Ok, listener);
-            }
-            else
-            {
-                Log.Info(TAG, "Requesting external storage permission");
-                ActivityCompat.RequestPermissions(this, new[] { Manifest.Permission.WriteExternalStorage }, REQUEST_EXTERNAL_STORAGE_CODE);
-            }
-        }
-
         /// <summary>
         /// 位置情報の利用が許可されているのか確認します。
         /// </summary>
@@ -175,6 +138,12 @@ namespace HLRegionChecker.Droid
             }
         }
 
+        /// <summary>
+        /// パーミッションの結果処理用
+        /// </summary>
+        /// <param name="requestCode"></param>
+        /// <param name="permissions"></param>
+        /// <param name="grantResults"></param>
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Permission[] grantResults)
         {
             Log.Info(TAG, "onRequestPermissionResult");
@@ -198,7 +167,6 @@ namespace HLRegionChecker.Droid
                 }
             }
         }
-
         #endregion
 
         /// <summary>
@@ -243,6 +211,7 @@ namespace HLRegionChecker.Droid
             {
                 ShowSnackbar("Permission Denied");
                 System.Diagnostics.Debug.WriteLine("Permission Denied");
+                mPendingGeofenceTask = PendingGeofenceTask.REMOVE;
                 RequestLocationPermissions();
                 return;
             }
@@ -316,12 +285,12 @@ namespace HLRegionChecker.Droid
                 if(!GeofenceAdded.HasValue || !GeofenceAdded.Value )
                 {
                     GeofenceAdded = true;
-                    message = "ジオフェンス登録完了";
+                    message = GetString(Resource.String.complete_add_geofence);
                 }
                 else
                 {
                     GeofenceAdded = false;
-                    message = "ジオフェンス削除完了";
+                    message = GetString(Resource.String.complete_remove_geofence);
                 }
                 ShowSnackbar(message);
                 System.Diagnostics.Debug.WriteLine(message);
@@ -337,7 +306,7 @@ namespace HLRegionChecker.Droid
     }
 
     /// <summary>
-    /// ストレージ利用許可のリスナー
+    /// 位置情報利用許可のリスナー
     /// </summary>
     public class RequestLocationPermissionsClickListener : Java.Lang.Object, View.IOnClickListener
     {
@@ -346,19 +315,6 @@ namespace HLRegionChecker.Droid
         public void OnClick(View v)
         {
             RequestPermissions(Activity, new[] { Manifest.Permission.AccessFineLocation }, Activity.REQUEST_FINE_LOCATION_CODE);
-        }
-    }
-
-    /// <summary>
-    /// 位置情報利用許可のリスナー
-    /// </summary>
-    public class RequestStoragePermissionsClickListener : Java.Lang.Object, View.IOnClickListener
-    {
-        public MainActivity Activity { get; set; }
-
-        public void OnClick(View v)
-        {
-            RequestPermissions(Activity, new[] { Manifest.Permission.AccessFineLocation }, Activity.REQUEST_EXTERNAL_STORAGE_CODE);
         }
     }
 
