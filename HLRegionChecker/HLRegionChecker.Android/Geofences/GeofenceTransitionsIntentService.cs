@@ -74,12 +74,12 @@ namespace HLRegionChecker.Droid.Geofences
 
                 if (geofenceTransition == Geofence.GeofenceTransitionEnter)
                 {
-                    NotificationUtil.Instance.SendNotification(this, "Geofence:侵入", geofenceTransitionDetails, geofenceTransitionDetails);
+                    NotificationUtil.Instance.SendNotification(this, "学内領域に侵入", "ステータスを「学内」に更新しました。", "ステータス自動更新");
                     UpdateStatus(Status.学内.GetStatusId());
                 }
                 else
                 {
-                    NotificationUtil.Instance.SendNotification(this, "Geofence:退出", geofenceTransitionDetails, geofenceTransitionDetails);
+                    NotificationUtil.Instance.SendNotification(this, "学内領域から退出", "ステータスを「帰宅」に更新しました。", "ステータス自動更新");
                     UpdateStatus(Status.帰宅.GetStatusId());
                 }
             }
