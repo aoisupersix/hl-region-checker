@@ -17,7 +17,7 @@ using HLRegionChecker.Const;
 namespace HLRegionChecker.Droid.Geofences
 {
     [BroadcastReceiver(Enabled = true)]
-    [IntentFilter(new[] { Android.Content.Intent.ActionBootCompleted })]
+    [IntentFilter(new[] { Android.Content.Intent.ActionBootCompleted, Android.Content.Intent.CategoryDefault })]
     /// <summary>
     /// ブート時にジオフェンスを登録するブロードキャストレシーバ
     /// </summary>

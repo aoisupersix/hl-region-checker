@@ -34,11 +34,6 @@ namespace HLRegionChecker.Droid.Geofences
         /// <param name="stateId">更新するステータスID</param>
         private void UpdateStatus(int stateId)
         {
-            //パーミッション確認
-            var permissionWriteState = ContextCompat.CheckSelfPermission(this, Manifest.Permission.WriteExternalStorage);
-            if (permissionWriteState != (int)Permission.Granted)
-                return;
-
             var memId = UserDataModel.Instance.MemberId;
             if (memId == UserDataModel.DefaultMemberId)
                 return;
@@ -51,13 +46,11 @@ namespace HLRegionChecker.Droid.Geofences
             //更新
             var memRef = FirebaseDatabase.Instance.GetReference("members");
             memRef.Child(memId.ToString()).UpdateChildren(childDict);
-
-            //var adapter = (IDbAdapter)(new DbAdapter_Droid());
-            //adapter.UpdateStatus(memId.Value, stateId, true);
         }
 
         protected override void OnHandleIntent(Intent intent)
         {
+            NotificationUtil.Instance.CreateNotificationChannel((NotificationManager)GetSystemService(NotificationService), this);
             var geofencingEvent = GeofencingEvent.FromIntent(intent);
             if (geofencingEvent.HasError)
             {

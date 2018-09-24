@@ -242,8 +242,8 @@ namespace HLRegionChecker.Droid
             mGeofenceList.Add(new GeofenceBuilder()
                 .SetRequestId(Region.学内.GetIdentifier())
                 .SetCircularRegion(
-                    35.817187,
-                    139.424551,
+                    35.817243,
+                    139.424534,
                     200
                 )
                 .SetExpirationDuration(Geofence.NeverExpire)
