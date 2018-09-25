@@ -16,15 +16,18 @@ using HLRegionChecker.Const;
 
 namespace HLRegionChecker.Droid.Geofences
 {
-    [Service]
+    [BroadcastReceiver(Enabled = true, Exported = true)]
+    [IntentFilter( new[]{ "org.hykwlab.hlregionchecker_droid.geofence.ACTION_RECEIVE_GEOFENCE" })]
     /// <summary>
     /// ジオフェンスに侵入/退出した際の処理クラス
     /// </summary>
-    public class GeofenceTransitionsIntentService : IntentService
+    public class GeofenceTransitionsIntentService : BroadcastReceiver
     {
         private const string TAG = "GeofenceTransitionsIS";
 
-        public GeofenceTransitionsIntentService() : base(TAG)
+        private Android.Content.Context mContext;
+
+        public GeofenceTransitionsIntentService()
         {
         }
 
@@ -48,15 +51,16 @@ namespace HLRegionChecker.Droid.Geofences
             memRef.Child(memId.ToString()).UpdateChildren(childDict);
         }
 
-        protected override void OnHandleIntent(Intent intent)
+        public override void OnReceive(Context context, Intent intent)
         {
-            NotificationUtil.Instance.CreateNotificationChannel((NotificationManager)GetSystemService(NotificationService), this);
+            //NotificationUtil.Instance.CreateNotificationChannel((NotificationManager)context.GetSystemService(NotificationService), context);
             var geofencingEvent = GeofencingEvent.FromIntent(intent);
+            mContext = context;
             if (geofencingEvent.HasError)
             {
-                var errorMessage = GeofenceErrorMessages.GetErrorString(this, geofencingEvent.ErrorCode);
+                var errorMessage = GeofenceErrorMessages.GetErrorString(context, geofencingEvent.ErrorCode);
                 Log.Error(TAG, errorMessage);
-                NotificationUtil.Instance.SendNotification(this, "GeofenceError", "エラーです。", errorMessage);
+                NotificationUtil.Instance.SendNotification(context, "GeofenceError", "エラーです。", errorMessage);
                 return;
             }
 
@@ -68,25 +72,25 @@ namespace HLRegionChecker.Droid.Geofences
 
                 IList<IGeofence> triggeringGeofences = geofencingEvent.TriggeringGeofences;
 
-                string geofenceTransitionDetails = GetGeofenceTransitionDetails(this, geofenceTransition, triggeringGeofences);
+                string geofenceTransitionDetails = GetGeofenceTransitionDetails(context, geofenceTransition, triggeringGeofences);
 
                 Log.Info(TAG, geofenceTransitionDetails);
 
                 if (geofenceTransition == Geofence.GeofenceTransitionEnter)
                 {
-                    NotificationUtil.Instance.SendNotification(this, "学内領域に侵入", "ステータスを「学内」に更新しました。", "ステータス自動更新");
+                    NotificationUtil.Instance.SendNotification(context, "学内領域に侵入", "ステータスを「学内」に更新しました。", "ステータス自動更新");
                     UpdateStatus(Status.学内.GetStatusId());
                 }
                 else
                 {
-                    NotificationUtil.Instance.SendNotification(this, "学内領域から退出", "ステータスを「帰宅」に更新しました。", "ステータス自動更新");
+                    NotificationUtil.Instance.SendNotification(context, "学内領域から退出", "ステータスを「帰宅」に更新しました。", "ステータス自動更新");
                     UpdateStatus(Status.帰宅.GetStatusId());
                 }
             }
             else
             {
                 // Log the error.
-                Log.Error(TAG, GetString(Resource.String.geofence_transition_invalid_type, new[] { new Java.Lang.Integer(geofenceTransition) }));
+                Log.Error(TAG, context.GetString(Resource.String.geofence_transition_invalid_type, new[] { new Java.Lang.Integer(geofenceTransition) }));
             }
         }
 
@@ -109,11 +113,11 @@ namespace HLRegionChecker.Droid.Geofences
             switch (transitionType)
             {
                 case Geofence.GeofenceTransitionEnter:
-                    return GetString(Resource.String.geofence_transition_entered);
+                    return mContext.GetString(Resource.String.geofence_transition_entered);
                 case Geofence.GeofenceTransitionExit:
-                    return GetString(Resource.String.geofence_transition_exited);
+                    return mContext.GetString(Resource.String.geofence_transition_exited);
                 default:
-                    return GetString(Resource.String.unknown_geofence_transition);
+                    return mContext.GetString(Resource.String.unknown_geofence_transition);
             }
         }
     }

@@ -230,8 +230,11 @@ namespace HLRegionChecker.Droid
             {
                 return mGeofencePendingIntent;
             }
+            //var intent = new Intent(this, typeof(Geofences.GeofenceTransitionsIntentService));
             var intent = new Intent(this, typeof(Geofences.GeofenceTransitionsIntentService));
-            return PendingIntent.GetService(this, 0, intent, PendingIntentFlags.UpdateCurrent);
+            intent.SetAction("org.hykwlab.hlregionchecker_droid.geofence.ACTION_RECEIVE_GEOFENCE");
+            SendBroadcast(intent);
+            return PendingIntent.GetBroadcast(this, 0, intent, PendingIntentFlags.UpdateCurrent);
         }
 
         /// <summary>
