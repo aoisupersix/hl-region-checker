@@ -16,15 +16,15 @@ using HLRegionChecker.Const;
 
 namespace HLRegionChecker.Droid.Geofences
 {
-    [BroadcastReceiver(Enabled = true)]
-    [IntentFilter(new[] { Android.Content.Intent.ActionBootCompleted, Android.Content.Intent.CategoryDefault })]
+    [BroadcastReceiver(Enabled = true, Exported = true, Permission = "android.permission.RECEIVE_BOOT_COMPLETED")]
+    [IntentFilter(new[] { Intent.ActionBootCompleted })]
     /// <summary>
     /// ブート時にジオフェンスを登録するブロードキャストレシーバ
     /// </summary>
     public class BootReceiver : BroadcastReceiver, IOnCompleteListener
     {
         #region メンバ
-        protected string TAG = typeof(BootReceiver).Name;
+        protected string TAG = typeof(BootReceiver).Name + "hykwlabtest";
 
         /// <summary>
         /// ジオフェンスの初期トリガー打ち消し用
@@ -100,6 +100,7 @@ namespace HLRegionChecker.Droid.Geofences
         {
             Log.Info(TAG, "Boot intent received.");
             System.Diagnostics.Debug.WriteLine("Boot intent received");
+            NotificationUtil.Instance.SendNotification(context, "BootTrigger", "", "");
 
             //ジオフェンスの初期化
             mContext = context;
