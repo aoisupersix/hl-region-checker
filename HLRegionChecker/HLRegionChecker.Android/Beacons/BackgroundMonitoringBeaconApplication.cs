@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.Remoting.Contexts;
 using Android;
 using Android.App;
+using Android.Content;
 using Android.Content.PM;
 using Android.Graphics;
 using Android.OS;
@@ -63,7 +64,18 @@ namespace HLRegionChecker.Droid
             _beaconManager = BeaconManager.GetInstanceForApplication(this);
             _beaconManager.BeaconParsers.Clear();
             _beaconManager.BeaconParsers.Add(new BeaconParser().SetBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
-            _beaconManager.SetEnableScheduledScanJobs(true);
+
+            Notification.Builder builder = new Notification.Builder(this);
+            builder.SetSmallIcon(Resource.Mipmap.appicon);
+            builder.SetContentTitle("Scanning for Beacons");
+            var intent = new Intent(this, typeof(MainActivity));
+            PendingIntent pendingIntent = PendingIntent.GetActivity(
+                this, 0, intent, PendingIntentFlags.UpdateCurrent
+            );
+            builder.SetContentIntent(pendingIntent);
+            _beaconManager.EnableForegroundServiceScanning(builder.Build(), 456);
+            _beaconManager.SetEnableScheduledScanJobs(false);
+            //_beaconManager.SetEnableScheduledScanJobs(true);
         }
 
         /// <summary>
