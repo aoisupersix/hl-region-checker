@@ -40,7 +40,7 @@ namespace HLRegionChecker.ViewModels
         /// <summary>
         /// アプリ名
         /// </summary>
-        public string AppName { get; } = DependencyService.Get<IAssemblyService>().GetPackageName();
+        public string AppName { get; } = DependencyService.Get<IAssemblyService>().GetAppName();
 
         /// <summary>
         /// バージョンコード

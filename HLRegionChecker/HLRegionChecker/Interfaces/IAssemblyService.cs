@@ -13,6 +13,12 @@ namespace HLRegionChecker.Interfaces
         string GetPackageName();
 
         /// <summary>
+        /// アプリ名を取得します。
+        /// </summary>
+        /// <returns></returns>
+        string GetAppName();
+
+        /// <summary>
         /// バージョン名を取得します。
         /// </summary>
         /// <returns></returns>

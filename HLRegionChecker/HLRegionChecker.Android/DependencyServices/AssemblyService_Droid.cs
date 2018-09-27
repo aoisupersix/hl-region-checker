@@ -27,6 +27,12 @@ namespace HLRegionChecker.Droid.DependencyServices
             return context.PackageManager.GetPackageInfo(context.PackageName, 0).PackageName;
         }
 
+        public string GetAppName()
+        {
+            var context = Android.App.Application.Context;
+            return context.GetString(Resource.String.app_name);
+        }
+
         public string GetVersionName()
         {
             var context = Android.App.Application.Context;

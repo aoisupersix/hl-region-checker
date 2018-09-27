@@ -19,6 +19,11 @@ namespace HLRegionChecker.iOS.DependencyServices
             return NSBundle.MainBundle.InfoDictionary["CFBundleDisplayName"].ToString();
         }
 
+        public string GetAppName()
+        {
+            return NSBundle.MainBundle.InfoDictionary["CFBundleDisplayName"].ToString();
+        }
+
         public int GetVersionCode()
         {
             return int.Parse(NSBundle.MainBundle.InfoDictionary["CFBundleShortVersionString"].ToString());
