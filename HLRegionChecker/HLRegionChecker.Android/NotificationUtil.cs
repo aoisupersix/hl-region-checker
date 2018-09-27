@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.Remoting.Contexts;
 using Android;
 using Android.App;
+using Android.Content;
 using Android.Content.PM;
 using Android.Graphics;
 using Android.OS;
@@ -64,6 +65,15 @@ namespace HLRegionChecker.Droid
         {
         }
 
+        private PendingIntent GetPendingIntent(Android.Content.Context context)
+        {
+            var intent = new Intent(context, typeof(MainActivity));
+            PendingIntent pendingIntent = PendingIntent.GetActivity(
+                context, 0, intent, PendingIntentFlags.UpdateCurrent);
+
+            return pendingIntent;
+        }
+
         /// <summary>
         /// 通知チャンネルを生成します。
         /// </summary>
@@ -108,6 +118,7 @@ namespace HLRegionChecker.Droid
                 //.SetPriority(Notification.PRIORITY_MAX)
                 .SetContentTitle(title)
                 .SetContentText(body)
+                .SetContentIntent(GetPendingIntent(context))
                 .SetContentInfo(info);
 
             notificationManager.Notify(NOTIFICATION_ID, notificationBuilder.Build());
