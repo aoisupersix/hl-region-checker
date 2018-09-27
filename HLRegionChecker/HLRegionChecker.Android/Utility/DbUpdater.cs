@@ -17,7 +17,7 @@ namespace HLRegionChecker.Droid.Utility
     /// <summary>
     /// Droid固有のDB更新
     /// </summary>
-    public static class StatusUpdater
+    public static class DbUpdater
     {
         /// <summary>
         /// ステータス情報を更新します。
