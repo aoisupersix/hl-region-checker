@@ -72,7 +72,9 @@
     <Compile Include="Geofences\BootReceiver.cs" />
     <Compile Include="Geofences\RegisterGeofences.cs" />
     <Compile Include="MainActivity.cs" />
-    <Compile Include="Utility\NotificationUtil.cs" />
+    <Compile Include="Notification\FcmReceivedService.cs" />
+    <Compile Include="Notification\FirebaseIIDService.cs" />
+    <Compile Include="Notification\NotificationUtil.cs" />
     <Compile Include="Renderers\LinkLabelRenderer_Droid.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -130,6 +132,9 @@
     </PackageReference>
     <PackageReference Include="Xamarin.Android.Support.v7.MediaRouter">
       <Version>27.0.2.1</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.Firebase.Messaging">
+      <Version>60.1142.1</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Forms">
       <Version>3.1.0.583944</Version>

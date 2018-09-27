@@ -16,7 +16,7 @@ using Firebase.Database;
 using HLRegionChecker.Const;
 using HLRegionChecker.Droid.DependencyServices;
 using HLRegionChecker.Droid.Utility;
-using HLRegionChecker.Models;
+using HLRegionChecker.Droid.Notification;
 using Org.Altbeacon.Beacon;
 using Org.Altbeacon.Beacon.Powersave;
 using Org.Altbeacon.Beacon.Startup;
@@ -46,7 +46,7 @@ namespace HLRegionChecker.Droid
             _beaconManager.BeaconParsers.Clear();
             _beaconManager.BeaconParsers.Add(new BeaconParser().SetBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
 
-            Notification.Builder builder = new Notification.Builder(this);
+            Android.App.Notification.Builder builder = new Android.App.Notification.Builder(this);
             builder.SetSmallIcon(Resource.Mipmap.appicon);
             builder.SetContentTitle("Scanning for Beacons");
             var intent = new Intent(this, typeof(MainActivity));

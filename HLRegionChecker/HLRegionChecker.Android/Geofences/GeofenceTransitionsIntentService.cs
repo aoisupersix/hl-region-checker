@@ -14,6 +14,7 @@ using Android;
 using Firebase.Database;
 using HLRegionChecker.Const;
 using HLRegionChecker.Droid.Utility;
+using HLRegionChecker.Droid.Notification;
 
 namespace HLRegionChecker.Droid.Geofences
 {

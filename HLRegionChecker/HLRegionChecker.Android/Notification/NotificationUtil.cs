@@ -16,7 +16,7 @@ using HLRegionChecker.Droid.DependencyServices;
 using HLRegionChecker.Droid.Geofences;
 using HLRegionChecker.Models;
 
-namespace HLRegionChecker.Droid
+namespace HLRegionChecker.Droid.Notification
 {
     /// <summary>
     /// 通知用クラス
