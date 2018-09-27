@@ -23,6 +23,7 @@ using Firebase;
 using Firebase.Database;
 using HLRegionChecker.Const;
 using Android.Runtime;
+using HLRegionChecker.Droid.Geofences;
 
 namespace HLRegionChecker.Droid
 {
@@ -37,20 +38,14 @@ namespace HLRegionChecker.Droid
         /// </summary>
         public int REQUEST_FINE_LOCATION_CODE = 34;
 
-        /// <summary>
-        /// ジオフェンスの初期トリガー打ち消し用
-        /// </summary>
-        public int NO_INITIAL_TRIGGER = 0;
-
         private enum PendingGeofenceTask
         {
             ADD, REMOVE, NONE
         }
 
-        private GeofencingClient mGeofencingClient;
-        private IList<IGeofence> mGeofenceList;
-        private PendingIntent mGeofencePendingIntent;
         private PendingGeofenceTask mPendingGeofenceTask = PendingGeofenceTask.NONE;
+
+        private RegisterGeofences _registerGeofences;
 
         public const string PROPERTY_KEY_LOCATION_UPDATES_REQUESTED = "location-updates-requested";
         #endregion
@@ -88,10 +83,7 @@ namespace HLRegionChecker.Droid
             LoadApplication(new App(new AndroidInitializer()));
 
             //ジオフェンスの初期化
-            mGeofenceList = new List<IGeofence>();
-            mGeofencePendingIntent = null;
-            PopulateGeofenceList();
-            mGeofencingClient = LocationServices.GetGeofencingClient(this);
+            _registerGeofences = new RegisterGeofences(this, this);
         }
 
         protected override void OnStart()
@@ -170,19 +162,6 @@ namespace HLRegionChecker.Droid
         #endregion
 
         /// <summary>
-        /// GeofencingRequestを生成して返します。
-        /// </summary>
-        /// <returns>The geofencing request.</returns>
-        GeofencingRequest GetGeofencingRequest()
-        {
-            GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
-            builder.SetInitialTrigger(NO_INITIAL_TRIGGER);
-            //builder.SetInitialTrigger(GeofencingRequest.InitialTriggerEnter);
-            builder.AddGeofences(mGeofenceList);
-            return builder.Build();
-        }
-
-        /// <summary>
         /// ジオフェンスを追加します。
         /// </summary>
         void AddGeofences()
@@ -197,60 +176,7 @@ namespace HLRegionChecker.Droid
             }
 
             if (!GeofenceAdded.HasValue || !GeofenceAdded.Value)
-                mGeofencingClient.AddGeofences(GetGeofencingRequest(), GetGeofencePendingIntent())
-                    .AddOnCompleteListener(this);
-
-        }
-
-        /// <summary>
-        /// ジオフェンスを削除します。
-        /// </summary>
-        void RemoveGeofences()
-        {
-            if (!CheckLocationPermissions())
-            {
-                ShowSnackbar("Permission Denied");
-                System.Diagnostics.Debug.WriteLine("Permission Denied");
-                mPendingGeofenceTask = PendingGeofenceTask.REMOVE;
-                RequestLocationPermissions();
-                return;
-            }
-
-            mGeofencingClient.RemoveGeofences(GetGeofencePendingIntent()).AddOnCompleteListener(this);
-        }
-
-        /// <summary>
-        /// GeofencePendingIntentを生成して返します。
-        /// </summary>
-        /// <returns>The geofence pending intent.</returns>
-        PendingIntent GetGeofencePendingIntent()
-        {
-            // Reuse the PendingIntent if we already have it.
-            if (mGeofencePendingIntent != null)
-            {
-                return mGeofencePendingIntent;
-            }
-            var intent = new Intent(this, typeof(Geofences.GeofenceTransitionsIntentService));
-            intent.SetAction("org.hykwlab.hlregionchecker_droid.geofence.ACTION_RECEIVE_GEOFENCE");
-            SendBroadcast(intent);
-            return PendingIntent.GetBroadcast(this, 0, intent, PendingIntentFlags.UpdateCurrent);
-        }
-
-        /// <summary>
-        /// ジオフェンスのリストを設定します。
-        /// </summary>
-        void PopulateGeofenceList()
-        {
-            mGeofenceList.Add(new GeofenceBuilder()
-                .SetRequestId(Region.学内.GetIdentifier())
-                .SetCircularRegion(
-                    35.817243,
-                    139.424534,
-                    200
-                )
-                .SetExpirationDuration(Geofence.NeverExpire)
-                .SetTransitionTypes(Geofence.GeofenceTransitionEnter | Geofence.GeofenceTransitionExit)
-                .Build());
+                _registerGeofences.AddGeofences();
         }
 
         /// <summary>
