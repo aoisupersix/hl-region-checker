@@ -62,7 +62,9 @@ namespace HLRegionChecker.Droid.Geofences
                 return mGeofencePendingIntent;
             }
             var intent = new Intent(mContext, typeof(Geofences.GeofenceTransitionsIntentService));
-            return PendingIntent.GetService(mContext, 0, intent, PendingIntentFlags.UpdateCurrent);
+            intent.SetAction("org.hykwlab.hlregionchecker_droid.geofence.ACTION_RECEIVE_GEOFENCE");
+            mContext.SendBroadcast(intent);
+            return PendingIntent.GetBroadcast(mContext, 0, intent, PendingIntentFlags.UpdateCurrent);
         }
 
         /// <summary>
@@ -99,8 +101,6 @@ namespace HLRegionChecker.Droid.Geofences
         public override void OnReceive(Context context, Intent intent)
         {
             Log.Info(TAG, "Boot intent received.");
-            System.Diagnostics.Debug.WriteLine("Boot intent received");
-            NotificationUtil.Instance.SendNotification(context, "BootTrigger", "", "");
 
             //ジオフェンスの初期化
             mContext = context;
@@ -108,6 +108,8 @@ namespace HLRegionChecker.Droid.Geofences
             mGeofencePendingIntent = null;
             PopulateGeofenceList();
             mGeofencingClient = LocationServices.GetGeofencingClient(context);
+
+            AddGeofences();
         }
 
         /// <summary>
@@ -124,7 +126,7 @@ namespace HLRegionChecker.Droid.Geofences
             else
             {
                 // Get the status code for the error and log it using a user-friendly message.
-                string errorMessage = Geofences.GeofenceErrorMessages.GetErrorString(mContext, task.Exception);
+                var errorMessage = Geofences.GeofenceErrorMessages.GetErrorString(mContext, task.Exception);
                 Log.Info(TAG, errorMessage);
             }
         }
