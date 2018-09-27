@@ -72,7 +72,7 @@
     <Compile Include="Geofences\BootReceiver.cs" />
     <Compile Include="Geofences\RegisterGeofences.cs" />
     <Compile Include="MainActivity.cs" />
-    <Compile Include="NotificationUtil.cs" />
+    <Compile Include="Utility\NotificationUtil.cs" />
     <Compile Include="Renderers\LinkLabelRenderer_Droid.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -81,6 +81,7 @@
     <Compile Include="Geofences\LocationResultHelper.cs" />
     <Compile Include="Geofences\GeofenceErrorMessages.cs" />
     <Compile Include="Geofences\Constants.cs" />
+    <Compile Include="Utility\StatusUpdater.cs" />
   </ItemGroup>
   <ItemGroup>
     <GoogleServicesJson Include="google-services.json" />

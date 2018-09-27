@@ -15,6 +15,7 @@ using Firebase;
 using Firebase.Database;
 using HLRegionChecker.Const;
 using HLRegionChecker.Droid.DependencyServices;
+using HLRegionChecker.Droid.Utility;
 using HLRegionChecker.Models;
 using Org.Altbeacon.Beacon;
 using Org.Altbeacon.Beacon.Powersave;
@@ -35,26 +36,6 @@ namespace HLRegionChecker.Droid
         private RegionBootstrap _regionBootstrap;
         private BackgroundPowerSaver _backgroundPowerSaver;
         #endregion
-
-        /// <summary>
-        /// ステータス情報を更新します。
-        /// </summary>
-        /// <param name="stateId">更新するステータスID</param>
-        private void UpdateStatus(int stateId)
-        {
-            var memId = UserDataModel.Instance.MemberId;
-            if (memId == UserDataModel.DefaultMemberId)
-                return;
-
-            //ステータスの更新処理
-            var childDict = new Dictionary<string, Java.Lang.Object>();
-            childDict.Add("status", stateId);
-            childDict.Add("last_update_is_auto", true);
-
-            //更新
-            var memRef = FirebaseDatabase.Instance.GetReference("members");
-            memRef.Child(memId.ToString()).UpdateChildren(childDict);
-        }
 
         /// <summary>
         /// BeaconManagerの初期化処理
@@ -136,7 +117,7 @@ namespace HLRegionChecker.Droid
             {
                 //研究室に侵入
                 NotificationUtil.Instance.SendNotification(this, "研究室領域に侵入", "ステータスを「在室」に更新しました。", "ステータス自動更新");
-                UpdateStatus(Status.在室.GetStatusId());
+                StatusUpdater.UpdateStatus(Status.在室.GetStatusId());
             }
         }
 
@@ -152,7 +133,7 @@ namespace HLRegionChecker.Droid
             {
                 //研究室から退出
                 NotificationUtil.Instance.SendNotification(this, "研究室領域から退出", "ステータスを「学内」に更新しました。", "ステータス自動更新");
-                UpdateStatus(Status.学内.GetStatusId());
+                StatusUpdater.UpdateStatus(Status.学内.GetStatusId());
             }
         }
     }

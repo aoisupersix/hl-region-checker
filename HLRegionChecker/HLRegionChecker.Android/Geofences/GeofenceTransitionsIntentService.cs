@@ -13,6 +13,7 @@ using Android.Content.PM;
 using Android;
 using Firebase.Database;
 using HLRegionChecker.Const;
+using HLRegionChecker.Droid.Utility;
 
 namespace HLRegionChecker.Droid.Geofences
 {
@@ -29,26 +30,6 @@ namespace HLRegionChecker.Droid.Geofences
 
         public GeofenceTransitionsIntentService()
         {
-        }
-
-        /// <summary>
-        /// ステータス情報を更新します。
-        /// </summary>
-        /// <param name="stateId">更新するステータスID</param>
-        private void UpdateStatus(int stateId)
-        {
-            var memId = UserDataModel.Instance.MemberId;
-            if (memId == UserDataModel.DefaultMemberId)
-                return;
-
-            //ステータスの更新処理
-            var childDict = new Dictionary<string, Java.Lang.Object>();
-            childDict.Add("status", stateId);
-            childDict.Add("last_update_is_auto", true);
-
-            //更新
-            var memRef = FirebaseDatabase.Instance.GetReference("members");
-            memRef.Child(memId.ToString()).UpdateChildren(childDict);
         }
 
         public override void OnReceive(Context context, Intent intent)
@@ -79,12 +60,12 @@ namespace HLRegionChecker.Droid.Geofences
                 if (geofenceTransition == Geofence.GeofenceTransitionEnter)
                 {
                     NotificationUtil.Instance.SendNotification(context, "学内領域に侵入", "ステータスを「学内」に更新しました。", "ステータス自動更新");
-                    UpdateStatus(Status.学内.GetStatusId());
+                    StatusUpdater.UpdateStatus(Status.学内.GetStatusId());
                 }
                 else
                 {
                     NotificationUtil.Instance.SendNotification(context, "学内領域から退出", "ステータスを「帰宅」に更新しました。", "ステータス自動更新");
-                    UpdateStatus(Status.帰宅.GetStatusId());
+                    StatusUpdater.UpdateStatus(Status.帰宅.GetStatusId());
                 }
             }
             else
