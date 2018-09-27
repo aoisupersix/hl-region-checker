@@ -24,74 +24,11 @@ namespace HLRegionChecker.Droid.Geofences
     public class BootReceiver : BroadcastReceiver, IOnCompleteListener
     {
         #region メンバ
-        protected string TAG = typeof(BootReceiver).Name + "hykwlabtest";
+        protected string TAG = typeof(BootReceiver).Name;
 
-        /// <summary>
-        /// ジオフェンスの初期トリガー打ち消し用
-        /// </summary>
-        public int NO_INITIAL_TRIGGER = 0;
-
-        private GeofencingClient mGeofencingClient;
-        private IList<IGeofence> mGeofenceList;
-        private PendingIntent mGeofencePendingIntent;
-        private Android.Content.Context mContext;
+        private RegisterGeofences _registerGeofences;
+        private Android.Content.Context _context;
         #endregion
-
-        /// <summary>
-        /// GeofencingRequestを生成して返します。
-        /// </summary>
-        /// <returns>The geofencing request.</returns>
-        GeofencingRequest GetGeofencingRequest()
-        {
-            GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
-            builder.SetInitialTrigger(NO_INITIAL_TRIGGER);
-            //builder.SetInitialTrigger(GeofencingRequest.InitialTriggerEnter);
-            builder.AddGeofences(mGeofenceList);
-            return builder.Build();
-        }
-
-        /// <summary>
-        /// GeofencePendingIntentを生成して返します。
-        /// </summary>
-        /// <returns>The geofence pending intent.</returns>
-        PendingIntent GetGeofencePendingIntent()
-        {
-            // Reuse the PendingIntent if we already have it.
-            if (mGeofencePendingIntent != null)
-            {
-                return mGeofencePendingIntent;
-            }
-            var intent = new Intent(mContext, typeof(Geofences.GeofenceTransitionsIntentService));
-            intent.SetAction("org.hykwlab.hlregionchecker_droid.geofence.ACTION_RECEIVE_GEOFENCE");
-            mContext.SendBroadcast(intent);
-            return PendingIntent.GetBroadcast(mContext, 0, intent, PendingIntentFlags.UpdateCurrent);
-        }
-
-        /// <summary>
-        /// ジオフェンスのリストを設定します。
-        /// </summary>
-        void PopulateGeofenceList()
-        {
-            mGeofenceList.Add(new GeofenceBuilder()
-                .SetRequestId(Region.学内.GetIdentifier())
-                .SetCircularRegion(
-                    35.817187,
-                    139.424551,
-                    200
-                )
-                .SetExpirationDuration(Geofence.NeverExpire)
-                .SetTransitionTypes(Geofence.GeofenceTransitionEnter | Geofence.GeofenceTransitionExit)
-                .Build());
-        }
-
-        /// <summary>
-        /// ジオフェンスを追加します。
-        /// </summary>
-        void AddGeofences()
-        {
-            mGeofencingClient.AddGeofences(GetGeofencingRequest(), GetGeofencePendingIntent())
-                .AddOnCompleteListener(this);
-        }
 
         /// <summary>
         /// レシーバ起動
@@ -102,14 +39,10 @@ namespace HLRegionChecker.Droid.Geofences
         {
             Log.Info(TAG, "Boot intent received.");
 
-            //ジオフェンスの初期化
-            mContext = context;
-            mGeofenceList = new List<IGeofence>();
-            mGeofencePendingIntent = null;
-            PopulateGeofenceList();
-            mGeofencingClient = LocationServices.GetGeofencingClient(context);
-
-            AddGeofences();
+            //ジオフェンスの登録
+            _context = context;
+            _registerGeofences = new RegisterGeofences(context, this);
+            _registerGeofences.AddGeofences();
         }
 
         /// <summary>
@@ -120,13 +53,13 @@ namespace HLRegionChecker.Droid.Geofences
         {
             if (task.IsSuccessful)
             {
-                var message = mContext.GetString(Resource.String.complete_add_geofence);
+                var message = _context.GetString(Resource.String.complete_add_geofence);
                 Log.Info(TAG, message);
             }
             else
             {
                 // Get the status code for the error and log it using a user-friendly message.
-                var errorMessage = Geofences.GeofenceErrorMessages.GetErrorString(mContext, task.Exception);
+                var errorMessage = Geofences.GeofenceErrorMessages.GetErrorString(_context, task.Exception);
                 Log.Info(TAG, errorMessage);
             }
         }
