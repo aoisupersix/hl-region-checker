@@ -91,6 +91,10 @@ namespace HLRegionChecker.Droid
             FirebaseApp.InitializeApp(this);
             var db = FirebaseDatabase.Instance;
 
+            //デバイスID登録
+            if(UserDataModel.Instance.DeviceId == null)
+                UserDataModel.Instance.DeviceId = Android.Provider.Settings.Secure.GetString(ContentResolver, Android.Provider.Settings.Secure.AndroidId);
+
             InitBeaconManager();
             InitBeaconRegion();
             _backgroundPowerSaver = new BackgroundPowerSaver(this);

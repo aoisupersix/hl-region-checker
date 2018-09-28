@@ -1,5 +1,6 @@
 ﻿using Foundation;
 using HLRegionChecker.iOS.Manager;
+using HLRegionChecker.Models;
 using Prism;
 using Prism.Ioc;
 using System;
@@ -39,6 +40,10 @@ namespace HLRegionChecker.iOS
         {
             //Firebaseの初期化
             Firebase.Core.App.Configure();
+            //デバイス識別子登録
+            var devId = UIKit.UIDevice.CurrentDevice.IdentifierForVendor.ToString();
+            if (UserDataModel.Instance.DeviceId == null || UserDataModel.Instance.DeviceId != devId)
+                UserDataModel.Instance.DeviceId = devId;
 
             return base.WillFinishLaunching(uiApplication, launchOptions);
         }
