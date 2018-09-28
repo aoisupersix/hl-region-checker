@@ -34,14 +34,6 @@ namespace HLRegionChecker.Droid.Notification
         void SendRegistrationToServer(string token)
         {
             var deviceId = Android.Provider.Settings.Secure.GetString(ContentResolver, Android.Provider.Settings.Secure.AndroidId);
-
-            //ステータスの更新処理
-            var childDict = new Dictionary<string, Java.Lang.Object>();
-            childDict.Add("fcm_token", token);
-
-            //更新
-            var memRef = FirebaseDatabase.Instance.GetReference("devices");
-            memRef.Child(deviceId).UpdateChildren(childDict);
         }
     }
 }

@@ -13,8 +13,9 @@ using Android.Content.PM;
 using Android;
 using Firebase.Database;
 using HLRegionChecker.Const;
-using HLRegionChecker.Droid.Utility;
 using HLRegionChecker.Droid.Notification;
+using HLRegionChecker.Interfaces;
+using HLRegionChecker.Droid.DependencyServices;
 
 namespace HLRegionChecker.Droid.Geofences
 {
@@ -61,12 +62,14 @@ namespace HLRegionChecker.Droid.Geofences
                 if (geofenceTransition == Geofence.GeofenceTransitionEnter)
                 {
                     NotificationUtil.Instance.SendNotification(context, "学内領域に侵入", "ステータスを「学内」に更新しました。", "ステータス自動更新");
-                    DbUpdater.UpdateStatus(Status.学内.GetStatusId());
+                    IDbAdapter dbAdapter = new DbAdapter_Droid();
+                    dbAdapter.UpdateStatus(UserDataModel.Instance.MemberId, Status.学内.GetStatusId(), true);
                 }
                 else
                 {
                     NotificationUtil.Instance.SendNotification(context, "学内領域から退出", "ステータスを「帰宅」に更新しました。", "ステータス自動更新");
-                    DbUpdater.UpdateStatus(Status.帰宅.GetStatusId());
+                    IDbAdapter dbAdapter = new DbAdapter_Droid();
+                    dbAdapter.UpdateStatus(UserDataModel.Instance.MemberId, Status.帰宅.GetStatusId(), true);
                 }
             }
             else

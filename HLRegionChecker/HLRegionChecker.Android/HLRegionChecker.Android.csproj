@@ -83,7 +83,6 @@
     <Compile Include="Geofences\LocationResultHelper.cs" />
     <Compile Include="Geofences\GeofenceErrorMessages.cs" />
     <Compile Include="Geofences\Constants.cs" />
-    <Compile Include="Utility\DbUpdater.cs" />
   </ItemGroup>
   <ItemGroup>
     <GoogleServicesJson Include="google-services.json" />
