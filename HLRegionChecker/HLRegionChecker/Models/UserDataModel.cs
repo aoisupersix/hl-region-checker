@@ -57,13 +57,19 @@ namespace HLRegionChecker.Models
         #endregion
 
         /// <summary>
-        /// 永続化用のキー
+        /// メンバーID永続化用のキー
         /// </summary>
         private const string PROPERTY_KEY_MEMBER_ID = "memberid";
+
+        /// <summary>
+        /// メンバーID永続化用のキー
+        /// </summary>
+        private const string PROPERTY_KEY_DEVICE_ID = "deviceid";
 
         public static readonly int DefaultMemberId = -1;
 
         private int _memberId;
+        private string _deviceId;
 
         /// <summary>
         /// メンバーID
@@ -76,6 +82,22 @@ namespace HLRegionChecker.Models
                 AppSettings.AddOrUpdateValue(PROPERTY_KEY_MEMBER_ID, value);
                 _memberId = value;
                 SetProperty(ref _memberId, value);
+            }
+        }
+
+        /// <summary>
+        /// デバイスID
+        /// Android、iOSの各デバイスで起動時に初期化すること
+        /// IDが存在しない場合はnullを返します。
+        /// </summary>
+        public string DeviceId
+        {
+            get => AppSettings.GetValueOrDefault(PROPERTY_KEY_DEVICE_ID, null);
+            set
+            {
+                AppSettings.AddOrUpdateValue(PROPERTY_KEY_DEVICE_ID, value);
+                _deviceId = value;
+                SetProperty(ref _deviceId, value);
             }
         }
     }
