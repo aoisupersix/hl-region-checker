@@ -12,6 +12,8 @@ using Android.Views;
 using Android.Widget;
 using Firebase.Database;
 using Firebase.Iid;
+using HLRegionChecker.Droid.DependencyServices;
+using HLRegionChecker.Interfaces;
 using Xamarin.Forms;
 
 namespace HLRegionChecker.Droid.Notification
@@ -33,7 +35,8 @@ namespace HLRegionChecker.Droid.Notification
         }
         void SendRegistrationToServer(string token)
         {
-            var deviceId = Android.Provider.Settings.Secure.GetString(ContentResolver, Android.Provider.Settings.Secure.AndroidId);
+            IDbAdapter dbAdapter = new DbAdapter_Droid();
+            dbAdapter.UpdateDeviceInfo(fcmToken: token);
         }
     }
 }

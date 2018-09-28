@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HLRegionChecker.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -48,6 +49,13 @@ namespace HLRegionChecker.Interfaces
         /// <param name="stateId">更新ステータスID</param>
         /// <param name="autoUpdateFlg">自動更新か？</param>
         void UpdateStatus(int memberId, int stateId, bool autoUpdateFlg);
+
+        /// <summary>
+        /// デバイス情報を更新します。
+        /// </summary>
+        /// <param name="fcmToken">プッシュ通知用のトークン</param>
+        /// <param name="memberId">デバイスに指定されているメンバーID</param>
+        void UpdateDeviceInfo(string fcmToken = null, int memberId = -1);
 
         /// <summary>
         /// データベースの初期値を取得した際のイベントハンドラです。

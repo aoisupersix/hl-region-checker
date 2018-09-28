@@ -169,5 +169,40 @@ namespace HLRegionChecker.iOS.DependencyServices
             var memRef = rootRef.GetChild("members");
             memRef.GetChild(memberId.ToString()).UpdateChildValues(childDict);
         }
+
+        void IDbAdapter.UpdateDeviceInfo(string fcmToken, int memberId)
+        {
+            var devId = UserDataModel.Instance.DeviceId;
+            if (devId == null)
+                return;
+
+            //更新情報の用意
+            var keys =  new List<Object>
+            {
+                "last_update_date"
+            };
+            var vals = new List<Object>
+            {
+                NSObject.FromObject(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"))
+            };
+
+            if(fcmToken != null)
+            {
+                keys.Add("fcm_token");
+                vals.Add(fcmToken);
+            }
+            if(memberId != -1)
+            {
+                keys.Add("member_id");
+                vals.Add(memberId);
+            }
+
+            var childDict = NSDictionary.FromObjectsAndKeys(vals.ToArray(), keys.ToArray(), keys.Count());
+
+            //更新
+            var rootRef = Database.DefaultInstance.GetRootReference();
+            var devRef = rootRef.GetChild("devices");
+            devRef.GetChild(devId).UpdateChildValues(childDict);
+        }
     }
 }

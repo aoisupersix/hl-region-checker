@@ -189,6 +189,23 @@ namespace HLRegionChecker.Models
         }
 
         /// <summary>
+        /// デバイス情報を更新します。
+        /// </summary>
+        public void UpdateDeviceInfo()
+        {
+            _dbAdapter.UpdateDeviceInfo();
+        }
+
+        /// <summary>
+        /// デバイス情報を更新します。
+        /// </summary>
+        /// <param name="memberId">デバイスで指定されているメンバーID</param>
+        public void UpdateDeviceInfo(int memberId)
+        {
+            _dbAdapter.UpdateDeviceInfo(memberId: memberId);
+        }
+
+        /// <summary>
         /// Dbのイベントハンドラを削除します。
         /// </summary>
         public void Detach()

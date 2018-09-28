@@ -82,6 +82,7 @@ namespace HLRegionChecker.Models
                 AppSettings.AddOrUpdateValue(PROPERTY_KEY_MEMBER_ID, value);
                 _memberId = value;
                 SetProperty(ref _memberId, value);
+                DbModel.Instance.UpdateDeviceInfo(value);
             }
         }
 
@@ -98,6 +99,7 @@ namespace HLRegionChecker.Models
                 AppSettings.AddOrUpdateValue(PROPERTY_KEY_DEVICE_ID, value);
                 _deviceId = value;
                 SetProperty(ref _deviceId, value);
+                DbModel.Instance.UpdateDeviceInfo();
             }
         }
     }

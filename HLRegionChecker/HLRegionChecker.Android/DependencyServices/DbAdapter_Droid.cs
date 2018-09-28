@@ -198,6 +198,28 @@ namespace HLRegionChecker.Droid.DependencyServices
             var memRef = FirebaseDatabase.Instance.GetReference("members");
             memRef.Child(memberId.ToString()).UpdateChildren(childDict);
         }
+
+        /// <summary>
+        /// デバイス情報を更新します。
+        /// </summary>
+        /// <param name="fcmToken">プッシュ通知用のトークン</param>
+        /// <param name="memberId">デバイスに指定されているメンバーID</param>
+        void IDbAdapter.UpdateDeviceInfo(string fcmToken, int memberId)
+        {
+            var devId = UserDataModel.Instance.DeviceId;
+            if (devId == null)
+                return;
+
+            //更新情報の用意
+            var childDict = new Dictionary<string, Java.Lang.Object>();
+            if(fcmToken != null) childDict.Add("fcm_token", fcmToken);
+            if(memberId != -1) childDict.Add("member_id", memberId);
+            childDict.Add("last_update_date", DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
+
+            //更新
+            var devRef = FirebaseDatabase.Instance.GetReference("devices");
+            devRef.Child(devId).UpdateChildren(childDict);
+        }
         #endregion インタフェース実装
     }
 
