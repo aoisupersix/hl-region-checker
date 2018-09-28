@@ -53,13 +53,13 @@ namespace HLRegionChecker.Droid
         /// <summary>
         /// ジオフェンスが追加されているか？
         /// </summary>
-        public bool? GeofenceAdded
+        public bool GeofenceAdded
         {
             get
             {
                 if (Xamarin.Forms.Application.Current.Properties.ContainsKey(PROPERTY_KEY_LOCATION_UPDATES_REQUESTED))
-                    return Xamarin.Forms.Application.Current.Properties[PROPERTY_KEY_LOCATION_UPDATES_REQUESTED] as bool?;
-                return null;
+                    return Xamarin.Forms.Application.Current.Properties[PROPERTY_KEY_LOCATION_UPDATES_REQUESTED] is bool;
+                return false;
             }
             set
             {
@@ -175,7 +175,7 @@ namespace HLRegionChecker.Droid
                 return;
             }
 
-            if (!GeofenceAdded.HasValue || !GeofenceAdded.Value)
+            if (!GeofenceAdded)
                 _registerGeofences.AddGeofences();
         }
 
@@ -210,7 +210,7 @@ namespace HLRegionChecker.Droid
             if (task.IsSuccessful)
             {
                 string message;
-                if(!GeofenceAdded.HasValue || !GeofenceAdded.Value )
+                if(!GeofenceAdded)
                 {
                     GeofenceAdded = true;
                     message = GetString(Resource.String.complete_add_geofence);
