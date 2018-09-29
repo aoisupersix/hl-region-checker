@@ -214,7 +214,6 @@ namespace HLRegionChecker.Droid.DependencyServices
             var childDict = new Dictionary<string, Java.Lang.Object>();
             if(fcmToken != null) childDict.Add("fcm_token", fcmToken);
             if(memberId != -1) childDict.Add("member_id", memberId);
-            childDict.Add("last_update_date", DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
 
             //更新
             var devRef = FirebaseDatabase.Instance.GetReference("devices");

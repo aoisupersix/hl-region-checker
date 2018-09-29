@@ -6,6 +6,7 @@ namespace HLRegionChecker.Regions
 {
     /// <summary>
     /// 領域の実際の定義
+    /// ジオフェンス定義の識別子名はfunctionsと連動させること。
     /// </summary>
     public class RegionList
     {

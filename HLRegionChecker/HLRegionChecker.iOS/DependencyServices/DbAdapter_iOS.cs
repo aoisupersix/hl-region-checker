@@ -177,14 +177,8 @@ namespace HLRegionChecker.iOS.DependencyServices
                 return;
 
             //更新情報の用意
-            var keys =  new List<Object>
-            {
-                "last_update_date"
-            };
-            var vals = new List<Object>
-            {
-                NSObject.FromObject(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"))
-            };
+            var keys = new List<Object>();
+            var vals = new List<Object>();
 
             if(fcmToken != null)
             {
