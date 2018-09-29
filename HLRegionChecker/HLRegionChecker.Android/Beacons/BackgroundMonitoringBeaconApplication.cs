@@ -122,7 +122,7 @@ namespace HLRegionChecker.Droid
             {
                 //研究室に侵入
                 NotificationUtil.Instance.SendNotification(this, "研究室領域に侵入", "ステータスを「在室」に更新しました。", "ステータス自動更新");
-                IDbAdapter dbAdapter = new DbAdapter_Droid();
+                var dbAdapter = new DbAdapter_Droid();
                 dbAdapter.UpdateStatus(UserDataModel.Instance.MemberId, Status.在室.GetStatusId(), true);
             }
         }
@@ -139,7 +139,7 @@ namespace HLRegionChecker.Droid
             {
                 //研究室から退出
                 NotificationUtil.Instance.SendNotification(this, "研究室領域から退出", "ステータスを「学内」に更新しました。", "ステータス自動更新");
-                IDbAdapter dbAdapter = new DbAdapter_Droid();
+                var dbAdapter = new DbAdapter_Droid();
                 dbAdapter.UpdateStatus(UserDataModel.Instance.MemberId, Status.学内.GetStatusId(), true);
             }
         }

@@ -90,7 +90,7 @@ namespace HLRegionChecker.iOS.DependencyServices
         /// <summary>
         /// 初期化処理を行います。
         /// </summary>
-        void IDbAdapter.InitDb()
+        public void InitDb()
         {
             var rootRef = Database.DefaultInstance.GetRootReference();
             rootRef.ObserveSingleEvent(DataEventType.Value, (datasnapshot, prevChild) =>
@@ -123,7 +123,7 @@ namespace HLRegionChecker.iOS.DependencyServices
         /// <summary>
         /// デタッチ処理を行います。
         /// </summary>
-        void IDbAdapter.Disappear()
+        public void Disappear()
         {
             var rootRef = Database.DefaultInstance.GetRootReference();
             var memRef = rootRef.GetChild("members").Reference;
@@ -134,7 +134,7 @@ namespace HLRegionChecker.iOS.DependencyServices
         /// ステータス情報をIDから取得します。
         /// </summary>
         /// <param name="stateId">ステータスID</param>
-        StateModel? IDbAdapter.GetStatusForId(int stateId)
+        public StateModel? GetStatusForId(int stateId)
         {
             return _states.Where(x => x.Id == stateId).First();
         }
@@ -144,7 +144,7 @@ namespace HLRegionChecker.iOS.DependencyServices
         /// </summary>
         /// <param name="memberId">更新するメンバーのID</param>
         /// <param name="stateId">更新ステータスID</param>
-        void IDbAdapter.UpdateStatus(int memberId, int stateId, bool autoUpdateFlg)
+        public void UpdateStatus(int memberId, int stateId, bool autoUpdateFlg)
         {
             //ステータスIDが含まれているかのチェック
             if (_states != null && !_states.Select(x => x.Id).Contains(stateId))
@@ -170,7 +170,7 @@ namespace HLRegionChecker.iOS.DependencyServices
             memRef.GetChild(memberId.ToString()).UpdateChildValues(childDict);
         }
 
-        void IDbAdapter.UpdateDeviceInfo(string fcmToken, int memberId)
+        public void UpdateDeviceInfo(string fcmToken, int memberId)
         {
             var devId = UserDataModel.Instance.DeviceId;
             if (devId == null)

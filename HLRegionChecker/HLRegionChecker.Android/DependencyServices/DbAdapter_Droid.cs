@@ -118,7 +118,7 @@ namespace HLRegionChecker.Droid.DependencyServices
         /// <summary>
         /// 初期化処理を行います。
         /// </summary>
-        void IDbAdapter.InitDb()
+        public void InitDb()
         {
             //初期化処理登録
             FirebaseDatabase.Instance.Reference.Root.AddValueEventListener(_initDataNotifier);
@@ -156,7 +156,7 @@ namespace HLRegionChecker.Droid.DependencyServices
         /// <summary>
         /// デタッチ処理を行います。
         /// </summary>
-        void IDbAdapter.Disappear()
+        public void Disappear()
         {
             Members.Dispose();
             States.Dispose();
@@ -173,7 +173,7 @@ namespace HLRegionChecker.Droid.DependencyServices
         /// ステータス情報をIDから取得します。
         /// </summary>
         /// <param name="stateId">ステータスID</param>
-        StateModel? IDbAdapter.GetStatusForId(int stateId)
+        public StateModel? GetStatusForId(int stateId)
         {
             return States.Value.Where(x => x.Id == stateId).First();
         }
@@ -183,7 +183,7 @@ namespace HLRegionChecker.Droid.DependencyServices
         /// </summary>
         /// <param name="memberId">更新するメンバーのID</param>
         /// <param name="stateId">更新ステータスID</param>
-        void IDbAdapter.UpdateStatus(int memberId, int stateId, bool autoUpdateFlg)
+        public void UpdateStatus(int memberId, int stateId, bool autoUpdateFlg)
         {
             //ステータスIDが含まれているかのチェック
             if (States.Value != null && !States.Value.Select(x => x.Id).Contains(stateId))
@@ -204,7 +204,7 @@ namespace HLRegionChecker.Droid.DependencyServices
         /// </summary>
         /// <param name="fcmToken">プッシュ通知用のトークン</param>
         /// <param name="memberId">デバイスに指定されているメンバーID</param>
-        void IDbAdapter.UpdateDeviceInfo(string fcmToken, int memberId)
+        public void UpdateDeviceInfo(string fcmToken, int memberId)
         {
             var devId = UserDataModel.Instance.DeviceId;
             if (devId == null)

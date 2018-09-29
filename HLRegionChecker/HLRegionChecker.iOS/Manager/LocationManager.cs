@@ -80,7 +80,7 @@ namespace HLRegionChecker.iOS.Manager
                 return;
 
             //ステータスの更新処理
-            var adapter = (IDbAdapter)(new DbAdapter_iOS());
+            var adapter = new DbAdapter_iOS();
             adapter.UpdateStatus(memId, stateId, true);
         }
 
