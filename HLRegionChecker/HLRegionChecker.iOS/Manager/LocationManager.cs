@@ -1,5 +1,6 @@
 ﻿using System;
-using System.ComponentModel;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Foundation;
 using CoreLocation;
@@ -10,7 +11,6 @@ using HLRegionChecker.Models;
 using HLRegionChecker.Interfaces;
 using HLRegionChecker.iOS.Notification;
 using Firebase.Database;
-using System.Collections.Generic;
 using HLRegionChecker.Regions;
 
 namespace HLRegionChecker.iOS.Manager
@@ -98,7 +98,8 @@ namespace HLRegionChecker.iOS.Manager
         {
             // 領域定義の初期化
             研究室領域 = new CLBeaconRegion(new NSUuid(RegionList.研究室.Uuid), (ushort)RegionList.研究室.Major, (ushort)RegionList.研究室.Minor, RegionList.研究室.Identifier);
-            // TODO: 学内領域
+            学内領域 = RegionList.CampusAllRegions
+                .Select(r => new CLCircularRegion(new CLLocationCoordinate2D(r.Latitude, r.Longitude), r.Radius, r.Identifier));
         }
 
         /// <summary>
@@ -123,9 +124,12 @@ namespace HLRegionChecker.iOS.Manager
                 //ジオフェンス領域の有効化
                 if (CLLocationManager.IsMonitoringAvailable(typeof(CLCircularRegion)))
                 {
-                    LocationManager.REGION_CAMPUS.NotifyOnEntry = true;
-                    LocationManager.REGION_CAMPUS.NotifyOnExit = true;
-                    manager.StartMonitoring(LocationManager.REGION_CAMPUS);
+                    foreach(var gr in 学内領域)
+                    {
+                        gr.NotifyOnEntry = true;
+                        gr.NotifyOnExit = true;
+                        manager.StartMonitoring(gr);
+                    }
                 }
             }
             else
@@ -161,11 +165,13 @@ namespace HLRegionChecker.iOS.Manager
                 UpdateStatus(Status.在室.GetStatusId());
                 PushNotificationManager.Send("研究室領域に侵入", "ステータスを「在室」に更新しました。"); // TODO: プッシュ通知対応後に消す
             }
-            else if (region.Identifier.Equals(Region.学内.GetIdentifier()))
+            else
             {
                 //学内領域に侵入
-                UpdateStatus(Status.学内.GetStatusId());
-                PushNotificationManager.Send("学内領域に侵入", "ステータスを「学内」に更新しました。"); // TODO: プッシュ通知対応後に消す
+                var gregion = RegionList.CampusAllRegions.Where(r => r.Identifier.Equals(region.Identifier)).First();
+                var dbAdapter = new DbAdapter_iOS();
+                dbAdapter.UpdateGeofenceStatus(UserDataModel.Instance.DeviceId, gregion.DbIdentifierName, true);
+                PushNotificationManager.Send($"学内領域({gregion.DbIdentifierName})に侵入", "ジオフェンスステータスを更新しました。"); // TODO: プッシュ通知対応後に消す
             }
         }
 
@@ -187,8 +193,10 @@ namespace HLRegionChecker.iOS.Manager
             else if (region.Identifier.Equals(Region.学内.GetIdentifier()))
             {
                 //学内領域から退出
-                UpdateStatus(Status.帰宅.GetStatusId());
-                PushNotificationManager.Send("学内領域から退出", "ステータスを「帰宅」に更新しました。"); // TODO: プッシュ通知対応後に消す
+                var gregion = RegionList.CampusAllRegions.Where(r => r.Identifier.Equals(region.Identifier)).First();
+                var dbAdapter = new DbAdapter_iOS();
+                dbAdapter.UpdateGeofenceStatus(UserDataModel.Instance.DeviceId, gregion.DbIdentifierName, false);
+                PushNotificationManager.Send($"学内領域({gregion.DbIdentifierName})から退出", "ジオフェンスステータスを更新しました。"); // TODO: プッシュ通知対応後に消す
             }
         }
     }
