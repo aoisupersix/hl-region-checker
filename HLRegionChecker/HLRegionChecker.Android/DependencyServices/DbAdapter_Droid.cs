@@ -201,6 +201,24 @@ namespace HLRegionChecker.Droid.DependencyServices
         }
 
         /// <summary>
+        /// 引数に与えられたデバイスのジオフェンス状態を更新します。
+        /// ステータス判定と更新はジオフェンス状態に基づいて、サーバサイドで行われます。
+        /// </summary>
+        /// <param name="deviceIdentifier">デバイス識別子</param>
+        /// <param name="dbGeofenceIdentifier">データベースのジオフェンス識別子</param>
+        /// <param name="inTheArea">領域の範囲内かどうか（true: 領域内, false: 領域外)</param>
+        public void UpdateGeofenceStatus(string deviceIdentifier, string dbGeofenceIdentifier, bool inTheArea)
+        {
+            // 更新情報の用意
+            var childDict = new Dictionary<string, Java.Lang.Object>();
+            childDict.Add(dbGeofenceIdentifier, inTheArea);
+
+            // 更新
+            var devRef = FirebaseDatabase.Instance.GetReference("devices");
+            devRef.Child(deviceIdentifier).Child("geofence_status").UpdateChildren(childDict);
+        }
+
+        /// <summary>
         /// デバイス情報を更新します。
         /// </summary>
         /// <param name="fcmToken">プッシュ通知用のトークン</param>

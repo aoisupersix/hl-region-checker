@@ -52,6 +52,15 @@ namespace HLRegionChecker.Interfaces
         void UpdateStatus(int memberId, int stateId, bool autoUpdateFlg);
 
         /// <summary>
+        /// 引数に与えられたデバイスのジオフェンス状態を更新します。
+        /// ステータス判定と更新はジオフェンス状態に基づいて、サーバサイドで行われます。
+        /// </summary>
+        /// <param name="deviceIdentifier">デバイス識別子</param>
+        /// <param name="dbGeofenceIdentifier">データベースのジオフェンス識別子</param>
+        /// <param name="inTheArea">領域の範囲内かどうか（true: 領域内, false: 領域外)</param>
+        void UpdateGeofenceStatus(string deviceIdentifier, string dbGeofenceIdentifier, bool inTheArea);
+
+        /// <summary>
         /// デバイス情報を更新します。
         /// </summary>
         /// <param name="fcmToken">プッシュ通知用のトークン</param>

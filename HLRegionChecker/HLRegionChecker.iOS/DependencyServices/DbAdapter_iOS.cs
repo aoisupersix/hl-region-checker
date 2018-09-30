@@ -151,8 +151,8 @@ namespace HLRegionChecker.iOS.DependencyServices
             if (_states != null && !_states.Select(x => x.Id).Contains(stateId))
                 return;
             
-            //更新情報の用意
-            //最終更新はFirebaseFunctionsで行うのでここでは行わない。
+            // 更新情報の用意
+            // 最終更新はFirebaseFunctionsで行うのでここでは行わない。
             var keys = new[]
             {
                 "status",
@@ -165,19 +165,44 @@ namespace HLRegionChecker.iOS.DependencyServices
             };
             var childDict = NSDictionary.FromObjectsAndKeys(vals, keys, keys.Length);
 
-            //更新
+            // 更新
             var rootRef = Database.DefaultInstance.GetRootReference();
             var memRef = rootRef.GetChild("members");
             memRef.GetChild(memberId.ToString()).UpdateChildValues(childDict);
         }
 
+        /// <summary>
+        /// 引数に与えられたデバイスのジオフェンス状態を更新します。
+        /// ステータス判定と更新はジオフェンス状態に基づいて、サーバサイドで行われます。
+        /// </summary>
+        /// <param name="deviceIdentifier">デバイス識別子</param>
+        /// <param name="dbGeofenceIdentifier">データベースのジオフェンス識別子</param>
+        /// <param name="inTheArea">領域の範囲内かどうか（true: 領域内, false: 領域外)</param>
+        public void UpdateGeofenceStatus(string deviceIdentifier, string dbGeofenceIdentifier, bool inTheArea)
+        {
+            // 更新情報の用意
+            var keys = new[] { dbGeofenceIdentifier };
+            var vals = new[] { NSObject.FromObject(inTheArea) };
+            var childDict = NSDictionary.FromObjectsAndKeys(vals, keys, keys.Length);
+
+            // 更新
+            var rootRef = Database.DefaultInstance.GetRootReference();
+            var devRef = rootRef.GetChild("devices");
+            devRef.GetChild(deviceIdentifier).GetChild("geofence_status").UpdateChildValues(childDict);
+        }
+
+        /// <summary>
+        /// デバイス情報を更新します。
+        /// </summary>
+        /// <param name="fcmToken">プッシュ通知用のトークン</param>
+        /// <param name="memberId">デバイスに指定されているメンバーID</param>
         public void UpdateDeviceInfo(string fcmToken, int memberId)
         {
             var devId = UserDataModel.Instance.DeviceId;
             if (devId == null)
                 return;
 
-            //更新情報の用意
+            // 更新情報の用意
             var keys = new List<Object>();
             var vals = new List<Object>();
 
@@ -194,7 +219,7 @@ namespace HLRegionChecker.iOS.DependencyServices
 
             var childDict = NSDictionary.FromObjectsAndKeys(vals.ToArray(), keys.ToArray(), keys.Count());
 
-            //更新
+            // 更新
             var rootRef = Database.DefaultInstance.GetRootReference();
             var devRef = rootRef.GetChild("devices");
             devRef.GetChild(devId).UpdateChildValues(childDict);
