@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 
 namespace HLRegionChecker.Regions
 {
@@ -10,6 +10,19 @@ namespace HLRegionChecker.Regions
     /// </summary>
     public class RegionList
     {
+
+        public static RegionBase GetRegionFromIdentifier(string identifier)
+        {
+            if (identifier.Equals(研究室.Identifier))
+                return 研究室;
+
+            var region = CampusAllRegions.Where(r => identifier.Equals(r.Identifier));
+            if (!region.Any())
+                return null;
+
+            return region.First(); // 識別子は一意なので必ず一つに定まるはず
+        }
+
         /// <summary>
         /// 研究室のビーコン領域
         /// </summary>
