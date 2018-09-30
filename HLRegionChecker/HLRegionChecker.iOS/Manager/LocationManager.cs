@@ -10,6 +10,8 @@ using HLRegionChecker.Models;
 using HLRegionChecker.Interfaces;
 using HLRegionChecker.iOS.Notification;
 using Firebase.Database;
+using System.Collections.Generic;
+using HLRegionChecker.Regions;
 
 namespace HLRegionChecker.iOS.Manager
 {
@@ -23,8 +25,6 @@ namespace HLRegionChecker.iOS.Manager
         /// クラスのインスタンス
         /// </summary>
         private static readonly LocationManager _instance = new LocationManager();
-
-
 
         /// <summary>
         /// HLRegionCheckerで利用するビーコンのUUID
@@ -70,6 +70,16 @@ namespace HLRegionChecker.iOS.Manager
     public class LocationDelegate : CLLocationManagerDelegate
     {
         /// <summary>
+        /// 研究室のビーコン領域定義
+        /// </summary>
+        public CLBeaconRegion 研究室領域;
+
+        /// <summary>
+        /// 学内のジオフェンス領域定義
+        /// </summary>
+        public IEnumerable<CLCircularRegion> 学内領域;
+
+        /// <summary>
         /// ステータス情報を更新します。
         /// </summary>
         /// <param name="stateId">更新するステータスID</param>
@@ -84,6 +94,13 @@ namespace HLRegionChecker.iOS.Manager
             adapter.UpdateStatus(memId, stateId, true);
         }
 
+        public LocationDelegate()
+        {
+            // 領域定義の初期化
+            研究室領域 = new CLBeaconRegion(new NSUuid(RegionList.研究室.Uuid), (ushort)RegionList.研究室.Major, (ushort)RegionList.研究室.Minor, RegionList.研究室.Identifier);
+            // TODO: 学内領域
+        }
+
         /// <summary>
         /// 位置情報利用の認証状態が変わった際に、位置情報のモニタリングを開始します。
         /// </summary>
@@ -96,11 +113,11 @@ namespace HLRegionChecker.iOS.Manager
                 //iBeacon領域判定の有効化
                 if (CLLocationManager.IsMonitoringAvailable(typeof(CLBeaconRegion)))
                 {
-                    LocationManager.REGION_LABORATORY.NotifyEntryStateOnDisplay = false;
-                    LocationManager.REGION_LABORATORY.NotifyOnEntry = true;
-                    LocationManager.REGION_LABORATORY.NotifyOnExit = true;
+                    研究室領域.NotifyEntryStateOnDisplay = false;
+                    研究室領域.NotifyOnEntry = true;
+                    研究室領域.NotifyOnExit = true;
 
-                    manager.StartMonitoring(LocationManager.REGION_LABORATORY);
+                    manager.StartMonitoring(研究室領域);
                 }
 
                 //ジオフェンス領域の有効化
@@ -138,17 +155,17 @@ namespace HLRegionChecker.iOS.Manager
         {
             Console.WriteLine("Enter [{0}] Region", region.Identifier);
 
-            if (region.Identifier.Equals(Region.研究室.GetIdentifier()))
+            if (region.Identifier.Equals(RegionList.研究室.Identifier))
             {
                 //研究室領域に侵入
                 UpdateStatus(Status.在室.GetStatusId());
-                PushNotificationManager.Send("研究室領域に侵入", "ステータスを「在室」に更新しました。");
+                PushNotificationManager.Send("研究室領域に侵入", "ステータスを「在室」に更新しました。"); // TODO: プッシュ通知対応後に消す
             }
             else if (region.Identifier.Equals(Region.学内.GetIdentifier()))
             {
                 //学内領域に侵入
                 UpdateStatus(Status.学内.GetStatusId());
-                PushNotificationManager.Send("学内領域に侵入", "ステータスを「学内」に更新しました。");
+                PushNotificationManager.Send("学内領域に侵入", "ステータスを「学内」に更新しました。"); // TODO: プッシュ通知対応後に消す
             }
         }
 
@@ -161,17 +178,17 @@ namespace HLRegionChecker.iOS.Manager
         {
             Console.WriteLine("Exit [{0}] Region", region.Identifier);
 
-            if (region.Identifier.Equals(Region.研究室.GetIdentifier()))
+            if (region.Identifier.Equals(RegionList.研究室.Identifier))
             {
                 //研究室領域から退出
                 UpdateStatus(Status.学内.GetStatusId());
-                PushNotificationManager.Send("研究室領域から退出", "ステータスを「学内」に更新しました。");
+                PushNotificationManager.Send("研究室領域から退出", "ステータスを「学内」に更新しました。"); // TODO: プッシュ通知対応後に消す
             }
             else if (region.Identifier.Equals(Region.学内.GetIdentifier()))
             {
                 //学内領域から退出
                 UpdateStatus(Status.帰宅.GetStatusId());
-                PushNotificationManager.Send("学内領域から退出", "ステータスを「帰宅」に更新しました。");
+                PushNotificationManager.Send("学内領域から退出", "ステータスを「帰宅」に更新しました。"); // TODO: プッシュ通知対応後に消す
             }
         }
     }
