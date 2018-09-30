@@ -180,6 +180,7 @@ namespace HLRegionChecker.Droid.DependencyServices
 
         /// <summary>
         /// 引数に与えられたメンバーのステータスを更新します。
+        /// 手動更新とビーコンの自動更新以外（つまりはジオフェンス領域の判定）はサーバサイドで判定するので、このメソッドから更新しないでください。
         /// </summary>
         /// <param name="memberId">更新するメンバーのID</param>
         /// <param name="stateId">更新ステータスID</param>
