@@ -24,6 +24,11 @@ namespace HLRegionChecker.Regions
         /// </summary>
         public double Radius { get; set; }
 
+        /// <summary>
+        /// DB上のカラム名
+        /// </summary>
+        public string DbIdentifierName { get => Identifier.Replace(BundleIdentifier, "").Replace(".", ""); }
+
         public GeofenceRegion(string identifier, double lat, double lon, double rad) : base(identifier)
         {
             Latitude = lat;

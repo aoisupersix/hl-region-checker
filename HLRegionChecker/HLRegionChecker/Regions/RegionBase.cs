@@ -11,6 +11,11 @@ namespace HLRegionChecker.Regions
     public class RegionBase
     {
         /// <summary>
+        /// バンドル識別子
+        /// </summary>
+        public static string BundleIdentifier = "org.hykwlab.hlregionchecker";
+
+        /// <summary>
         /// 識別子
         /// </summary>
         public string Identifier { get; set; }
