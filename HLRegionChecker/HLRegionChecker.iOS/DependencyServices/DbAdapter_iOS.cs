@@ -217,6 +217,9 @@ namespace HLRegionChecker.iOS.DependencyServices
                 vals.Add(memberId);
             }
 
+            if (!keys.Any())
+                return;
+
             var childDict = NSDictionary.FromObjectsAndKeys(vals.ToArray(), keys.ToArray(), keys.Count());
 
             // 更新

@@ -234,6 +234,9 @@ namespace HLRegionChecker.Droid.DependencyServices
             if(fcmToken != null) childDict.Add("fcm_token", fcmToken);
             if(memberId != -1) childDict.Add("member_id", memberId);
 
+            if (!childDict.Any())
+                return;
+
             //更新
             var devRef = FirebaseDatabase.Instance.GetReference("devices");
             devRef.Child(devId).UpdateChildren(childDict);
