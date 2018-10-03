@@ -24,6 +24,8 @@ namespace HLRegionChecker.iOS
         /// </summary>
         private void RegisterForNotifications()
         {
+            Messaging.SharedInstance.Delegate = new FcmDelegate();
+
             UNUserNotificationCenter.Current.RequestAuthorization(
                 UNAuthorizationOptions.Alert |
                 UNAuthorizationOptions.Badge |
@@ -37,21 +39,13 @@ namespace HLRegionChecker.iOS
                 var alertsAllowed = (settings.AlertSetting == UNNotificationSetting.Enabled);
             });
             UNUserNotificationCenter.Current.Delegate = new Notification.UserNotificationCenterDelegate();
-            Messaging.SharedInstance.Delegate = new MessagingDelegate();
             UIApplication.SharedApplication.RegisterForRemoteNotifications();
         }
 
         public override bool WillFinishLaunching(UIApplication uiApplication, NSDictionary launchOptions)
         {
-            global::Xamarin.Forms.Forms.Init();
-
             //Firebaseの初期化
             Firebase.Core.App.Configure();
-            //デバイス識別子登録
-            var devId = UIKit.UIDevice.CurrentDevice.IdentifierForVendor.ToString();
-            if (UserDataModel.Instance.DeviceId == null || UserDataModel.Instance.DeviceId != devId)
-                UserDataModel.Instance.DeviceId = devId;
-
             return base.WillFinishLaunching(uiApplication, launchOptions);
         }
 
@@ -64,7 +58,13 @@ namespace HLRegionChecker.iOS
         //
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
+            global::Xamarin.Forms.Forms.Init();
             LoadApplication(new App(new iOSInitializer()));
+
+            //デバイス識別子登録
+            var devId = UIKit.UIDevice.CurrentDevice.IdentifierForVendor.ToString();
+            if (UserDataModel.Instance.DeviceId == null || UserDataModel.Instance.DeviceId != devId)
+                UserDataModel.Instance.DeviceId = devId;
 
             //位置情報利用の許可
             LocationManager.GetInstance().RequestAlwaysAuthorization();
@@ -79,7 +79,6 @@ namespace HLRegionChecker.iOS
     {
         public override void DidReceiveRegistrationToken(Messaging messaging, string fcmToken)
         {
-            base.DidReceiveRegistrationToken(messaging, fcmToken);
             System.Diagnostics.Debug.WriteLine("Refreshed token: " + fcmToken);
             SendRegistrationToServer(fcmToken);
         }
