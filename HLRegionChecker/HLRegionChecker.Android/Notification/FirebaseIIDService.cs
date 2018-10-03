@@ -33,7 +33,8 @@ namespace HLRegionChecker.Droid.Notification
             Log.Debug(TAG, "Refreshed token: " + refreshedToken);
             SendRegistrationToServer(refreshedToken);
         }
-        void SendRegistrationToServer(string token)
+
+        private void SendRegistrationToServer(string token)
         {
             IDbAdapter dbAdapter = new DbAdapter_Droid();
             dbAdapter.UpdateDeviceInfo(fcmToken: token);

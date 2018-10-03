@@ -1,4 +1,7 @@
-﻿using Foundation;
+﻿using Firebase.CloudMessaging;
+using Foundation;
+using HLRegionChecker.Interfaces;
+using HLRegionChecker.iOS.DependencyServices;
 using HLRegionChecker.iOS.Manager;
 using HLRegionChecker.Models;
 using Prism;
@@ -34,10 +37,14 @@ namespace HLRegionChecker.iOS
                 var alertsAllowed = (settings.AlertSetting == UNNotificationSetting.Enabled);
             });
             UNUserNotificationCenter.Current.Delegate = new Notification.UserNotificationCenterDelegate();
+            Messaging.SharedInstance.Delegate = new MessagingDelegate();
+            UIApplication.SharedApplication.RegisterForRemoteNotifications();
         }
 
         public override bool WillFinishLaunching(UIApplication uiApplication, NSDictionary launchOptions)
         {
+            global::Xamarin.Forms.Forms.Init();
+
             //Firebaseの初期化
             Firebase.Core.App.Configure();
             //デバイス識別子登録
@@ -57,7 +64,6 @@ namespace HLRegionChecker.iOS
         //
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
-            global::Xamarin.Forms.Forms.Init();
             LoadApplication(new App(new iOSInitializer()));
 
             //位置情報利用の許可
@@ -66,6 +72,22 @@ namespace HLRegionChecker.iOS
             RegisterForNotifications();
 
             return base.FinishedLaunching(app, options);
+        }
+    }
+
+    public class FcmDelegate : MessagingDelegate
+    {
+        public override void DidReceiveRegistrationToken(Messaging messaging, string fcmToken)
+        {
+            base.DidReceiveRegistrationToken(messaging, fcmToken);
+            System.Diagnostics.Debug.WriteLine("Refreshed token: " + fcmToken);
+            SendRegistrationToServer(fcmToken);
+        }
+
+        private void SendRegistrationToServer(string token)
+        {
+            IDbAdapter dbAdapter = new DbAdapter_iOS();
+            dbAdapter.UpdateDeviceInfo(fcmToken: token);
         }
     }
 
