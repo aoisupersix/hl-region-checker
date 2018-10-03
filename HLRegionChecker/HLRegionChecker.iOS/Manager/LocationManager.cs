@@ -190,7 +190,7 @@ namespace HLRegionChecker.iOS.Manager
                 UpdateStatus(Status.学内.GetStatusId());
                 PushNotificationManager.Send("研究室領域から退出", "ステータスを「学内」に更新しました。"); // TODO: プッシュ通知対応後に消す
             }
-            else if (region.Identifier.Equals(Region.学内.GetIdentifier()))
+            else
             {
                 //学内領域から退出
                 var gregion = RegionList.CampusAllRegions.Where(r => r.Identifier.Equals(region.Identifier)).First();
