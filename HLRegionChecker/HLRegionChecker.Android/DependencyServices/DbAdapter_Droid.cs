@@ -118,7 +118,7 @@ namespace HLRegionChecker.Droid.DependencyServices
         /// <summary>
         /// 初期化処理を行います。
         /// </summary>
-        void IDbAdapter.InitDb()
+        public void InitDb()
         {
             //初期化処理登録
             FirebaseDatabase.Instance.Reference.Root.AddValueEventListener(_initDataNotifier);
@@ -156,7 +156,7 @@ namespace HLRegionChecker.Droid.DependencyServices
         /// <summary>
         /// デタッチ処理を行います。
         /// </summary>
-        void IDbAdapter.Disappear()
+        public void Disappear()
         {
             Members.Dispose();
             States.Dispose();
@@ -173,17 +173,18 @@ namespace HLRegionChecker.Droid.DependencyServices
         /// ステータス情報をIDから取得します。
         /// </summary>
         /// <param name="stateId">ステータスID</param>
-        StateModel? IDbAdapter.GetStatusForId(int stateId)
+        public StateModel? GetStatusForId(int stateId)
         {
             return States.Value.Where(x => x.Id == stateId).First();
         }
 
         /// <summary>
         /// 引数に与えられたメンバーのステータスを更新します。
+        /// 手動更新とビーコンの自動更新以外（つまりはジオフェンス領域の判定）はサーバサイドで判定するので、このメソッドから更新しないでください。
         /// </summary>
         /// <param name="memberId">更新するメンバーのID</param>
         /// <param name="stateId">更新ステータスID</param>
-        void IDbAdapter.UpdateStatus(int memberId, int stateId, bool autoUpdateFlg)
+        public void UpdateStatus(int memberId, int stateId, bool autoUpdateFlg)
         {
             //ステータスIDが含まれているかのチェック
             if (States.Value != null && !States.Value.Select(x => x.Id).Contains(stateId))
@@ -200,11 +201,29 @@ namespace HLRegionChecker.Droid.DependencyServices
         }
 
         /// <summary>
+        /// 引数に与えられたデバイスのジオフェンス状態を更新します。
+        /// ステータス判定と更新はジオフェンス状態に基づいて、サーバサイドで行われます。
+        /// </summary>
+        /// <param name="deviceIdentifier">デバイス識別子</param>
+        /// <param name="dbGeofenceIdentifier">データベースのジオフェンス識別子</param>
+        /// <param name="inTheArea">領域の範囲内かどうか（true: 領域内, false: 領域外)</param>
+        public void UpdateGeofenceStatus(string deviceIdentifier, string dbGeofenceIdentifier, bool inTheArea)
+        {
+            // 更新情報の用意
+            var childDict = new Dictionary<string, Java.Lang.Object>();
+            childDict.Add(dbGeofenceIdentifier, inTheArea);
+
+            // 更新
+            var devRef = FirebaseDatabase.Instance.GetReference("devices");
+            devRef.Child(deviceIdentifier).Child("geofence_status").UpdateChildren(childDict);
+        }
+
+        /// <summary>
         /// デバイス情報を更新します。
         /// </summary>
         /// <param name="fcmToken">プッシュ通知用のトークン</param>
         /// <param name="memberId">デバイスに指定されているメンバーID</param>
-        void IDbAdapter.UpdateDeviceInfo(string fcmToken, int memberId)
+        public void UpdateDeviceInfo(string fcmToken, int memberId)
         {
             var devId = UserDataModel.Instance.DeviceId;
             if (devId == null)
@@ -214,7 +233,9 @@ namespace HLRegionChecker.Droid.DependencyServices
             var childDict = new Dictionary<string, Java.Lang.Object>();
             if(fcmToken != null) childDict.Add("fcm_token", fcmToken);
             if(memberId != -1) childDict.Add("member_id", memberId);
-            childDict.Add("last_update_date", DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
+
+            if (!childDict.Any())
+                return;
 
             //更新
             var devRef = FirebaseDatabase.Instance.GetReference("devices");

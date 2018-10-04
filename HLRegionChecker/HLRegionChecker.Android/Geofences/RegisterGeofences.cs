@@ -139,16 +139,20 @@ namespace HLRegionChecker.Droid.Geofences
         private void PopulateGeofenceList()
         {
             Geofences = new List<IGeofence>();
-            Geofences.Add(new GeofenceBuilder()
-                .SetRequestId(Region.学内.GetIdentifier())
-                .SetCircularRegion(
-                    35.817187,
-                    139.424551,
-                    200
-                )
-                .SetExpirationDuration(Geofence.NeverExpire)
-                .SetTransitionTypes(Geofence.GeofenceTransitionEnter | Geofence.GeofenceTransitionExit)
-                .Build());
+
+            foreach(var region in Regions.RegionList.CampusAllRegions)
+            {
+                Geofences.Add(new GeofenceBuilder()
+                    .SetRequestId(region.Identifier)
+                    .SetCircularRegion(
+                        region.Latitude,
+                        region.Longitude,
+                        (float)region.Radius
+                    )
+                    .SetExpirationDuration(Geofence.NeverExpire)
+                    .SetTransitionTypes(Geofence.GeofenceTransitionEnter | Geofence.GeofenceTransitionExit)
+                    .Build());
+            }
         }
     }
 }

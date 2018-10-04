@@ -90,7 +90,7 @@ namespace HLRegionChecker.iOS.DependencyServices
         /// <summary>
         /// 初期化処理を行います。
         /// </summary>
-        void IDbAdapter.InitDb()
+        public void InitDb()
         {
             var rootRef = Database.DefaultInstance.GetRootReference();
             rootRef.ObserveSingleEvent(DataEventType.Value, (datasnapshot, prevChild) =>
@@ -123,7 +123,7 @@ namespace HLRegionChecker.iOS.DependencyServices
         /// <summary>
         /// デタッチ処理を行います。
         /// </summary>
-        void IDbAdapter.Disappear()
+        public void Disappear()
         {
             var rootRef = Database.DefaultInstance.GetRootReference();
             var memRef = rootRef.GetChild("members").Reference;
@@ -134,24 +134,25 @@ namespace HLRegionChecker.iOS.DependencyServices
         /// ステータス情報をIDから取得します。
         /// </summary>
         /// <param name="stateId">ステータスID</param>
-        StateModel? IDbAdapter.GetStatusForId(int stateId)
+        public StateModel? GetStatusForId(int stateId)
         {
             return _states.Where(x => x.Id == stateId).First();
         }
 
         /// <summary>
         /// 引数に与えられたメンバーのステータスを更新します。
+        /// 手動更新とビーコンの自動更新以外（つまりはジオフェンス領域の判定）はサーバサイドで判定するので、このメソッドから更新しないでください。
         /// </summary>
         /// <param name="memberId">更新するメンバーのID</param>
         /// <param name="stateId">更新ステータスID</param>
-        void IDbAdapter.UpdateStatus(int memberId, int stateId, bool autoUpdateFlg)
+        public void UpdateStatus(int memberId, int stateId, bool autoUpdateFlg)
         {
             //ステータスIDが含まれているかのチェック
             if (_states != null && !_states.Select(x => x.Id).Contains(stateId))
                 return;
             
-            //更新情報の用意
-            //最終更新はFirebaseFunctionsで行うのでここでは行わない。
+            // 更新情報の用意
+            // 最終更新はFirebaseFunctionsで行うのでここでは行わない。
             var keys = new[]
             {
                 "status",
@@ -164,27 +165,46 @@ namespace HLRegionChecker.iOS.DependencyServices
             };
             var childDict = NSDictionary.FromObjectsAndKeys(vals, keys, keys.Length);
 
-            //更新
+            // 更新
             var rootRef = Database.DefaultInstance.GetRootReference();
             var memRef = rootRef.GetChild("members");
             memRef.GetChild(memberId.ToString()).UpdateChildValues(childDict);
         }
 
-        void IDbAdapter.UpdateDeviceInfo(string fcmToken, int memberId)
+        /// <summary>
+        /// 引数に与えられたデバイスのジオフェンス状態を更新します。
+        /// ステータス判定と更新はジオフェンス状態に基づいて、サーバサイドで行われます。
+        /// </summary>
+        /// <param name="deviceIdentifier">デバイス識別子</param>
+        /// <param name="dbGeofenceIdentifier">データベースのジオフェンス識別子</param>
+        /// <param name="inTheArea">領域の範囲内かどうか（true: 領域内, false: 領域外)</param>
+        public void UpdateGeofenceStatus(string deviceIdentifier, string dbGeofenceIdentifier, bool inTheArea)
+        {
+            // 更新情報の用意
+            var keys = new[] { dbGeofenceIdentifier };
+            var vals = new[] { NSObject.FromObject(inTheArea) };
+            var childDict = NSDictionary.FromObjectsAndKeys(vals, keys, keys.Length);
+
+            // 更新
+            var rootRef = Database.DefaultInstance.GetRootReference();
+            var devRef = rootRef.GetChild("devices");
+            devRef.GetChild(deviceIdentifier).GetChild("geofence_status").UpdateChildValues(childDict);
+        }
+
+        /// <summary>
+        /// デバイス情報を更新します。
+        /// </summary>
+        /// <param name="fcmToken">プッシュ通知用のトークン</param>
+        /// <param name="memberId">デバイスに指定されているメンバーID</param>
+        public void UpdateDeviceInfo(string fcmToken, int memberId)
         {
             var devId = UserDataModel.Instance.DeviceId;
             if (devId == null)
                 return;
 
-            //更新情報の用意
-            var keys =  new List<Object>
-            {
-                "last_update_date"
-            };
-            var vals = new List<Object>
-            {
-                NSObject.FromObject(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"))
-            };
+            // 更新情報の用意
+            var keys = new List<Object>();
+            var vals = new List<Object>();
 
             if(fcmToken != null)
             {
@@ -197,9 +217,12 @@ namespace HLRegionChecker.iOS.DependencyServices
                 vals.Add(memberId);
             }
 
+            if (!keys.Any())
+                return;
+
             var childDict = NSDictionary.FromObjectsAndKeys(vals.ToArray(), keys.ToArray(), keys.Count());
 
-            //更新
+            // 更新
             var rootRef = Database.DefaultInstance.GetRootReference();
             var devRef = rootRef.GetChild("devices");
             devRef.GetChild(devId).UpdateChildValues(childDict);

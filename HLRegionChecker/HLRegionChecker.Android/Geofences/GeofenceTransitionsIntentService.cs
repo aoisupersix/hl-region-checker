@@ -36,7 +36,6 @@ namespace HLRegionChecker.Droid.Geofences
 
         public override void OnReceive(Context context, Intent intent)
         {
-            //NotificationUtil.Instance.CreateNotificationChannel((NotificationManager)context.GetSystemService(NotificationService), context);
             var geofencingEvent = GeofencingEvent.FromIntent(intent);
             mContext = context;
             if (geofencingEvent.HasError)
@@ -54,22 +53,22 @@ namespace HLRegionChecker.Droid.Geofences
             {
 
                 IList<IGeofence> triggeringGeofences = geofencingEvent.TriggeringGeofences;
-
+                var updateGeofenceStatus = geofenceTransition == Geofence.GeofenceTransitionEnter;
                 string geofenceTransitionDetails = GetGeofenceTransitionDetails(context, geofenceTransition, triggeringGeofences);
-
                 Log.Info(TAG, geofenceTransitionDetails);
 
-                if (geofenceTransition == Geofence.GeofenceTransitionEnter)
+                var triggerRegions = triggeringGeofences
+                    .Select(g => Regions.RegionList.GetRegionFromIdentifier(g.RequestId))
+                    .Where(r => r != null)
+                    .Select(r => (Regions.GeofenceRegion)r)
+                    .ToList()
+                    ;
+
+                // 更新
+                var dbAdapter = new DbAdapter_Droid();
+                foreach (var region in triggerRegions)
                 {
-                    NotificationUtil.Instance.SendNotification(context, "学内領域に侵入", "ステータスを「学内」に更新しました。", "ステータス自動更新");
-                    IDbAdapter dbAdapter = new DbAdapter_Droid();
-                    dbAdapter.UpdateStatus(UserDataModel.Instance.MemberId, Status.学内.GetStatusId(), true);
-                }
-                else
-                {
-                    NotificationUtil.Instance.SendNotification(context, "学内領域から退出", "ステータスを「帰宅」に更新しました。", "ステータス自動更新");
-                    IDbAdapter dbAdapter = new DbAdapter_Droid();
-                    dbAdapter.UpdateStatus(UserDataModel.Instance.MemberId, Status.帰宅.GetStatusId(), true);
+                    dbAdapter.UpdateGeofenceStatus(UserDataModel.Instance.DeviceId, region.DbIdentifierName, updateGeofenceStatus);
                 }
             }
             else

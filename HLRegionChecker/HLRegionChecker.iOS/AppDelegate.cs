@@ -1,4 +1,7 @@
-﻿using Foundation;
+﻿using Firebase.CloudMessaging;
+using Foundation;
+using HLRegionChecker.Interfaces;
+using HLRegionChecker.iOS.DependencyServices;
 using HLRegionChecker.iOS.Manager;
 using HLRegionChecker.Models;
 using Prism;
@@ -21,6 +24,8 @@ namespace HLRegionChecker.iOS
         /// </summary>
         private void RegisterForNotifications()
         {
+            Messaging.SharedInstance.Delegate = new FcmDelegate();
+
             UNUserNotificationCenter.Current.RequestAuthorization(
                 UNAuthorizationOptions.Alert |
                 UNAuthorizationOptions.Badge |
@@ -34,17 +39,13 @@ namespace HLRegionChecker.iOS
                 var alertsAllowed = (settings.AlertSetting == UNNotificationSetting.Enabled);
             });
             UNUserNotificationCenter.Current.Delegate = new Notification.UserNotificationCenterDelegate();
+            UIApplication.SharedApplication.RegisterForRemoteNotifications();
         }
 
         public override bool WillFinishLaunching(UIApplication uiApplication, NSDictionary launchOptions)
         {
             //Firebaseの初期化
             Firebase.Core.App.Configure();
-            //デバイス識別子登録
-            var devId = UIKit.UIDevice.CurrentDevice.IdentifierForVendor.ToString();
-            if (UserDataModel.Instance.DeviceId == null || UserDataModel.Instance.DeviceId != devId)
-                UserDataModel.Instance.DeviceId = devId;
-
             return base.WillFinishLaunching(uiApplication, launchOptions);
         }
 
@@ -60,12 +61,32 @@ namespace HLRegionChecker.iOS
             global::Xamarin.Forms.Forms.Init();
             LoadApplication(new App(new iOSInitializer()));
 
+            //デバイス識別子登録
+            var devId = UIKit.UIDevice.CurrentDevice.IdentifierForVendor.ToString();
+            if (UserDataModel.Instance.DeviceId == null || UserDataModel.Instance.DeviceId != devId)
+                UserDataModel.Instance.DeviceId = devId;
+
             //位置情報利用の許可
             LocationManager.GetInstance().RequestAlwaysAuthorization();
             //プッシュ通知の許可
             RegisterForNotifications();
 
             return base.FinishedLaunching(app, options);
+        }
+    }
+
+    public class FcmDelegate : MessagingDelegate
+    {
+        public override void DidReceiveRegistrationToken(Messaging messaging, string fcmToken)
+        {
+            System.Diagnostics.Debug.WriteLine("Refreshed token: " + fcmToken);
+            SendRegistrationToServer(fcmToken);
+        }
+
+        private void SendRegistrationToServer(string token)
+        {
+            IDbAdapter dbAdapter = new DbAdapter_iOS();
+            dbAdapter.UpdateDeviceInfo(fcmToken: token);
         }
     }
 

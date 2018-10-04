@@ -24,6 +24,7 @@ using Firebase.Database;
 using HLRegionChecker.Const;
 using Android.Runtime;
 using HLRegionChecker.Droid.Geofences;
+using HLRegionChecker.Models;
 
 namespace HLRegionChecker.Droid
 {
@@ -82,7 +83,12 @@ namespace HLRegionChecker.Droid
             global::Xamarin.Forms.Forms.Init(this, bundle);
             LoadApplication(new App(new AndroidInitializer()));
 
-            //ジオフェンスの初期化
+            // デバイスID登録
+            // この処理はDependencyServiceを使うのでForms.Initの前に呼び出してはいけない
+            if (UserDataModel.Instance.DeviceId == null)
+                UserDataModel.Instance.DeviceId = Android.Provider.Settings.Secure.GetString(ContentResolver, Android.Provider.Settings.Secure.AndroidId);
+
+            // ジオフェンスの初期化
             _registerGeofences = new RegisterGeofences(this, this);
         }
 

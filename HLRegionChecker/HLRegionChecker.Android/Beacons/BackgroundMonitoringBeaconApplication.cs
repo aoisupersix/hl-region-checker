@@ -47,6 +47,7 @@ namespace HLRegionChecker.Droid
             _beaconManager.BeaconParsers.Clear();
             _beaconManager.BeaconParsers.Add(new BeaconParser().SetBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
 
+            // 以下フォアグラウンドサービス用
             //Android.App.Notification.Builder builder = new Android.App.Notification.Builder(this);
             //builder.SetSmallIcon(Resource.Mipmap.appicon);
             //builder.SetContentTitle("Scanning for Beacons");
@@ -57,6 +58,8 @@ namespace HLRegionChecker.Droid
             //builder.SetContentIntent(pendingIntent);
             //_beaconManager.EnableForegroundServiceScanning(builder.Build(), 456);
             //_beaconManager.SetEnableScheduledScanJobs(false);
+
+            // スケジューラ用
             _beaconManager.SetEnableScheduledScanJobs(true);
         }
 
@@ -65,10 +68,10 @@ namespace HLRegionChecker.Droid
         /// </summary>
         private void InitBeaconRegion()
         {
-            var uuid = Identifier.Parse(RegionConst.BEACON_UUID);
-            var major = Identifier.Parse(RegionConst.BEACON_MAJOR.ToString());
-            var minor = Identifier.Parse(RegionConst.BEACON_MINOR.ToString());
-            var region = new Org.Altbeacon.Beacon.Region(Const.Region.研究室.GetIdentifier(), uuid, major, minor);
+            var uuid = Identifier.Parse(Regions.RegionList.研究室.Uuid);
+            var major = Identifier.Parse(Regions.RegionList.研究室.Major.ToString());
+            var minor = Identifier.Parse(Regions.RegionList.研究室.Minor.ToString());
+            var region = new Org.Altbeacon.Beacon.Region(Regions.RegionList.研究室.Identifier, uuid, major, minor);
             _regionBootstrap = new RegionBootstrap(this, region);
         }
 
@@ -90,10 +93,6 @@ namespace HLRegionChecker.Droid
             //Firebase初期化
             FirebaseApp.InitializeApp(this);
             var db = FirebaseDatabase.Instance;
-
-            //デバイスID登録
-            if(UserDataModel.Instance.DeviceId == null)
-                UserDataModel.Instance.DeviceId = Android.Provider.Settings.Secure.GetString(ContentResolver, Android.Provider.Settings.Secure.AndroidId);
 
             InitBeaconManager();
             InitBeaconRegion();
@@ -118,11 +117,10 @@ namespace HLRegionChecker.Droid
             Log.Info(TAG, "Enter [{0}] Region", p0.UniqueId);
             Firebase.FirebaseApp.InitializeApp(this.ApplicationContext);
 
-            if (p0.UniqueId.Equals(Const.Region.研究室.GetIdentifier()))
+            if (p0.UniqueId.Equals(Regions.RegionList.研究室.Identifier))
             {
                 //研究室に侵入
-                NotificationUtil.Instance.SendNotification(this, "研究室領域に侵入", "ステータスを「在室」に更新しました。", "ステータス自動更新");
-                IDbAdapter dbAdapter = new DbAdapter_Droid();
+                var dbAdapter = new DbAdapter_Droid();
                 dbAdapter.UpdateStatus(UserDataModel.Instance.MemberId, Status.在室.GetStatusId(), true);
             }
         }
@@ -135,11 +133,10 @@ namespace HLRegionChecker.Droid
         {
             Log.Info(TAG, "Exit [{0}] Region", p0.UniqueId);
 
-            if (p0.UniqueId.Equals(Const.Region.研究室.GetIdentifier()))
+            if (p0.UniqueId.Equals(Regions.RegionList.研究室.Identifier))
             {
                 //研究室から退出
-                NotificationUtil.Instance.SendNotification(this, "研究室領域から退出", "ステータスを「学内」に更新しました。", "ステータス自動更新");
-                IDbAdapter dbAdapter = new DbAdapter_Droid();
+                var dbAdapter = new DbAdapter_Droid();
                 dbAdapter.UpdateStatus(UserDataModel.Instance.MemberId, Status.学内.GetStatusId(), true);
             }
         }
