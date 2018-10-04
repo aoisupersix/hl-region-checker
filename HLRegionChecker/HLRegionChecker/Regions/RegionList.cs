@@ -31,17 +31,17 @@ namespace HLRegionChecker.Regions
         /// <summary>
         /// 駐輪場付近のジオフェンス領域
         /// </summary>
-        public static GeofenceRegion キャンパス駐輪場 = new GeofenceRegion("org.hykwlab.hlregionchecker.region-campus-1", 35.63123, 139.28226, 100);
+        public static GeofenceRegion キャンパス駐輪場 = new GeofenceRegion("org.hykwlab.hlregionchecker.region-campus-1", "体育寮付近", 35.63123, 139.28226, 100);
 
         /// <summary>
         /// グランド・A館付近のジオフェンス領域
         /// </summary>
-        public static GeofenceRegion キャンパスグラウンド = new GeofenceRegion("org.hykwlab.hlregionchecker.region-campus-2", 35.62977, 139.28065, 200);
+        public static GeofenceRegion キャンパスグラウンド = new GeofenceRegion("org.hykwlab.hlregionchecker.region-campus-2", "グラウンド・A館付近", 35.62977, 139.28065, 200);
 
         /// <summary>
         /// D館・工学部棟付近のジオフェンス領域
         /// </summary>
-        public static GeofenceRegion キャンパス工学部棟 = new GeofenceRegion("org.hykwlab.hlregionchecker.region-campus-3", 35.62561, 139.27954, 400);
+        public static GeofenceRegion キャンパス工学部棟 = new GeofenceRegion("org.hykwlab.hlregionchecker.region-campus-3", "工学部棟付近", 35.62561, 139.27954, 400);
 
         /// <summary>
         /// 学内領域
