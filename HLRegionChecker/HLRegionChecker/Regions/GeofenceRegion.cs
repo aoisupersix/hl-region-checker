@@ -27,12 +27,12 @@ namespace HLRegionChecker.Regions
         /// <summary>
         /// 領域の表示名（名前と識別子名）
         /// </summary>
-        public string DisplayName => $"{Name}({Identifier})";
+        public string DisplayName => $"{Name}({DbIdentifierName})";
 
         /// <summary>
         /// 領域の情報
         /// </summary>
-        public string Description => $"緯度:{Latitude},経度:{Longitude},半径:{Radius}";
+        public string Description => $"Lat:{Latitude},Lon:{Longitude},Radius:{Radius}";
 
         /// <summary>
         /// DB上のカラム名

@@ -57,6 +57,12 @@
                     <TextCell Height="60"
                               Text="{Binding GeofenceName1}"
                               Detail="{Binding GeofenceDescription1}" />
+                    <TextCell Height="60"
+                              Text="{Binding GeofenceName2}"
+                              Detail="{Binding GeofenceDescription2}" />
+                    <TextCell Height="60"
+                              Text="{Binding GeofenceName3}"
+                              Detail="{Binding GeofenceDescription3}" />
                 </TableSection>
             </TableRoot>
         </TableView.Root>

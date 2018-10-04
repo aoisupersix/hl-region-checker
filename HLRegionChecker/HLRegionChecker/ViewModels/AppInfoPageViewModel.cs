@@ -1,5 +1,6 @@
 ﻿using HLRegionChecker.Const;
 using HLRegionChecker.Interfaces;
+using HLRegionChecker.Regions;
 using Prism.Commands;
 using Prism.Navigation;
 using System;
@@ -71,6 +72,36 @@ namespace HLRegionChecker.ViewModels
         /// ビーコン(研究室）識別子
         /// </summary>
         public string BeaconIdentifier { get; } = Region.研究室.GetIdentifier();
+
+        /// <summary>
+        /// キャンパス1領域名
+        /// </summary>
+        public string GeofenceName1 => RegionList.キャンパス駐輪場.DisplayName;
+
+        /// <summary>
+        /// キャンパス1説明
+        /// </summary>
+        public string GeofenceDescription1 => RegionList.キャンパス駐輪場.Description;
+
+        /// <summary>
+        /// キャンパス2領域名
+        /// </summary>
+        public string GeofenceName2 => RegionList.キャンパスグラウンド.DisplayName;
+
+        /// <summary>
+        /// キャンパス2説明
+        /// </summary>
+        public string GeofenceDescription2 => RegionList.キャンパスグラウンド.Description;
+
+        /// <summary>
+        /// キャンパス3領域名
+        /// </summary>
+        public string GeofenceName3 => RegionList.キャンパス工学部棟.DisplayName;
+
+        /// <summary>
+        /// キャンパス3説明
+        /// </summary>
+        public string GeofenceDescription3 => RegionList.キャンパス工学部棟.Description;
         #endregion
 
         public AppInfoPageViewModel(INavigationService navigationService) : base(navigationService)
