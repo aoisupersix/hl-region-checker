@@ -42,7 +42,7 @@ namespace HLRegionChecker.Droid.Geofences
             {
                 var errorMessage = GeofenceErrorMessages.GetErrorString(context, geofencingEvent.ErrorCode);
                 Log.Error(TAG, errorMessage);
-                NotificationUtil.Instance.SendNotification(context, "GeofenceError", "エラーです。", errorMessage);
+                NotificationUtil.Instance.SendNotification(context, NotificationUtil.STATUS_NOTIFICATION_CHANNEL_ID, "GeofenceError", "エラーです。", errorMessage);
                 return;
             }
 

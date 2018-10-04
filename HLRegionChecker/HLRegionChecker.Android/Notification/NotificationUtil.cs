@@ -35,9 +35,14 @@ namespace HLRegionChecker.Droid.Notification
         private NotificationManager notificationManager;
 
         /// <summary>
-        /// チャンネルID
+        /// ステータス通知チャンネルID
         /// </summary>
-        public const string NOTIFICATION_CHANNEL_ID = "hlregionchecker_notification_channel";
+        public const string STATUS_NOTIFICATION_CHANNEL_ID = "hlregionchecker_statusNotification_channel";
+
+        /// <summary>
+        /// フォアグラウンド通知チャンネルID
+        /// </summary>
+        public const string SERVICE_NOTIFICATION_CHANNEL_ID = "hlregionchecker_serviceNotification_channel";
 
         /// <summary>
         /// 通知ID
@@ -83,32 +88,46 @@ namespace HLRegionChecker.Droid.Notification
             this.notificationManager = notificationManager;
             if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
             {
-                var notificationChannel = new NotificationChannel(
-                    NOTIFICATION_CHANNEL_ID,
+                // ステータス通知チャンネル
+                var statusNotificationChannel = new NotificationChannel(
+                    STATUS_NOTIFICATION_CHANNEL_ID,
+                    context.GetString(Resource.String.notificationchannel_description),
+                    NotificationImportance.High);
+                statusNotificationChannel.Description = "Update notification of occupancy status";
+                statusNotificationChannel.EnableLights(true);
+                statusNotificationChannel.LightColor = Color.Red;
+                //notificationChannel.SetVibrationPattern(new long[]{ 0, 1000, 500, 1000});
+                //notificationChannel.EnableVibration(true);
+                notificationManager.CreateNotificationChannel(statusNotificationChannel);
+
+                // フォアグラウンド通知チャンネル
+                var serviceNotificationChannel = new NotificationChannel(
+                    SERVICE_NOTIFICATION_CHANNEL_ID,
                     context.GetString(Resource.String.notificationchannel_description),
                     NotificationImportance.High);
 
                 // Configure the notification channel.
-                notificationChannel.Description = "Update notification of occupancy status";
-                notificationChannel.EnableLights(true);
-                notificationChannel.LightColor = Color.Red;
+                serviceNotificationChannel.Description = "Update notification of occupancy status";
+                serviceNotificationChannel.EnableLights(true);
+                serviceNotificationChannel.LightColor = Color.Red;
                 //notificationChannel.SetVibrationPattern(new long[]{ 0, 1000, 500, 1000});
                 //notificationChannel.EnableVibration(true);
-                notificationManager.CreateNotificationChannel(notificationChannel);
+                notificationManager.CreateNotificationChannel(serviceNotificationChannel);
             }
         }
 
         /// <summary>
-        /// プッシュ通知を送信します。
+        /// 通知を生成して返します。
         /// </summary>
-        /// <param name="title">通知タイトル</param>
-        /// <param name="body">通知本文</param>
-        public void SendNotification(Android.Content.Context context, string title, string body, string info)
+        /// <param name="context"></param>
+        /// <param name="notificationChannelId"></param>
+        /// <param name="title"></param>
+        /// <param name="body"></param>
+        /// <param name="info"></param>
+        /// <returns></returns>
+        public Android.App.Notification CreateNotification(Android.Content.Context context, string notificationChannelId, string title, string body, string info)
         {
-            if (notificationManager == null)
-                return;
-
-            var notificationBuilder = new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID);
+            var notificationBuilder = new NotificationCompat.Builder(context, notificationChannelId);
 
             notificationBuilder.SetAutoCancel(true)
                 .SetDefaults(1)
@@ -121,7 +140,20 @@ namespace HLRegionChecker.Droid.Notification
                 .SetContentIntent(GetPendingIntent(context))
                 .SetContentInfo(info);
 
-            notificationManager.Notify(NOTIFICATION_ID, notificationBuilder.Build());
+            return notificationBuilder.Build();
+        }
+
+        /// <summary>
+        /// プッシュ通知を送信します。
+        /// </summary>
+        /// <param name="title">通知タイトル</param>
+        /// <param name="body">通知本文</param>
+        public void SendNotification(Android.Content.Context context, string notificationChannelId,string title, string body, string info)
+        {
+            if (notificationManager == null)
+                return;
+
+            notificationManager.Notify(NOTIFICATION_ID, CreateNotification(context, notificationChannelId, title, body, info));
         }
 
         internal void CreateNotificationChannel(NotificationManager notificationManager, BootReceiver bootReceiver)

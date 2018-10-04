@@ -122,6 +122,9 @@ namespace HLRegionChecker.Droid
                 //研究室に侵入
                 var dbAdapter = new DbAdapter_Droid();
                 dbAdapter.UpdateStatus(UserDataModel.Instance.MemberId, Status.在室.GetStatusId(), true);
+
+                var intent = new Intent(this, typeof(Beacons.BeaconMonitoringService));
+                StartForegroundService(intent);
             }
         }
 

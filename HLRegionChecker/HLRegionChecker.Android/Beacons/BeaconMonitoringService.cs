@@ -39,10 +39,11 @@ namespace HLRegionChecker.Droid.Beacons
                 .SetContentTitle(Resources.GetString(Resource.String.app_name))
                 .SetContentText("ビーコン領域を監視中")
                 .SetSmallIcon(Resource.Mipmap.appicon)
+                .SetChannelId(NotificationUtil.SERVICE_NOTIFICATION_CHANNEL_ID)
                 .SetOngoing(true)
                 .Build();
 
-            StartForeground(NotificationUtil.NOTIFICATION_ID, notification);
+            StartForeground(1, notification);
 
             return base.OnStartCommand(intent, flags, startId);
         }

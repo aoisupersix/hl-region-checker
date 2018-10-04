@@ -27,7 +27,7 @@ namespace HLRegionChecker.Droid.Notification
         public override void OnMessageReceived(RemoteMessage message)
         {
             var notify = message.GetNotification();
-            NotificationUtil.Instance.SendNotification(this, notify.Title, notify.Body, "FCM通知");
+            NotificationUtil.Instance.SendNotification(this, NotificationUtil.STATUS_NOTIFICATION_CHANNEL_ID, notify.Title, notify.Body, "FCM通知");
         }
     }
 }
