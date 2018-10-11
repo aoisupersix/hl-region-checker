@@ -41,7 +41,7 @@ namespace HLRegionChecker.Regions
         /// <summary>
         /// D館・工学部棟付近のジオフェンス領域
         /// </summary>
-        public static GeofenceRegion キャンパス工学部棟 = new GeofenceRegion("org.hykwlab.hlregionchecker.region-campus-3", "工学部棟付近", 35.62561, 139.27954, 400);
+        public static GeofenceRegion キャンパス工学部棟 = new GeofenceRegion("org.hykwlab.hlregionchecker.region-campus-3", "工学部棟付近", 35.62561, 139.27954, 370);
 
         /// <summary>
         /// 学内領域
