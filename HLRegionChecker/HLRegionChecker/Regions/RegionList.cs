@@ -36,7 +36,7 @@ namespace HLRegionChecker.Regions
         /// <summary>
         /// グランド・A館付近のジオフェンス領域
         /// </summary>
-        public static GeofenceRegion キャンパスグラウンド = new GeofenceRegion("org.hykwlab.hlregionchecker.region-campus-2", "グラウンド・A館付近", 35.62977, 139.28065, 200);
+        public static GeofenceRegion キャンパスグラウンド = new GeofenceRegion("org.hykwlab.hlregionchecker.region-campus-2", "グラウンド・A館付近", 35.62977, 139.28065, 170);
 
         /// <summary>
         /// D館・工学部棟付近のジオフェンス領域
