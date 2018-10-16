@@ -217,6 +217,10 @@ namespace HLRegionChecker.iOS.DependencyServices
                 vals.Add(memberId);
             }
 
+            //OS情報
+            keys.Add("os");
+            vals.Add("iOS");
+
             if (!keys.Any())
                 return;
 

@@ -233,6 +233,7 @@ namespace HLRegionChecker.Droid.DependencyServices
             var childDict = new Dictionary<string, Java.Lang.Object>();
             if(fcmToken != null) childDict.Add("fcm_token", fcmToken);
             if(memberId != -1) childDict.Add("member_id", memberId);
+            childDict.Add("os", "Droid"); //OSはAndroid
 
             if (!childDict.Any())
                 return;
