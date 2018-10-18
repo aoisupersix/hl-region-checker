@@ -242,6 +242,28 @@ namespace HLRegionChecker.Droid.DependencyServices
             var devRef = FirebaseDatabase.Instance.GetReference("devices");
             devRef.Child(devId).UpdateChildren(childDict);
         }
+
+        /// <summary>
+        /// デバイスログを追加します。
+        /// </summary>
+        /// <param name="message">ログメッセージ</param>
+        public void AddDeviceLog(string message)
+        {
+            var devId = UserDataModel.Instance.DeviceId;
+            if (devId == null)
+                return;
+
+            // 更新情報の用意
+            var childDict = new Dictionary<string, Java.Lang.Object>()
+            {
+                { "date", DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") },
+                { "message", message }
+            };
+
+            // 更新
+            var devRef = FirebaseDatabase.Instance.GetReference("devices");
+            devRef.Child(devId).Child("Logs").Push().UpdateChildren(childDict);
+        }
         #endregion インタフェース実装
     }
 

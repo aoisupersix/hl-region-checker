@@ -213,9 +213,9 @@ namespace HLRegionChecker.Droid
         public void OnComplete(Task task)
         {
             mPendingGeofenceTask = PendingGeofenceTask.NONE;
+            string message;
             if (task.IsSuccessful)
             {
-                string message;
                 if(!GeofenceAdded)
                 {
                     GeofenceAdded = true;
@@ -232,10 +232,13 @@ namespace HLRegionChecker.Droid
             else
             {
                 // Get the status code for the error and log it using a user-friendly message.
-                string errorMessage = Geofences.GeofenceErrorMessages.GetErrorString(this, task.Exception);
-                ShowSnackbar($"Error: {errorMessage}");
-                System.Diagnostics.Debug.WriteLine(errorMessage);
+                message = Geofences.GeofenceErrorMessages.GetErrorString(this, task.Exception);
+                ShowSnackbar($"Error: {message}");
+                System.Diagnostics.Debug.WriteLine(message);
             }
+
+            var adapter = new DependencyServices.DbAdapter_Droid();
+            adapter.AddDeviceLog("ジオフェンス登録処理：" + message);
         }
     }
 

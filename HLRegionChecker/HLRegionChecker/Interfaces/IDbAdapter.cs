@@ -68,6 +68,12 @@ namespace HLRegionChecker.Interfaces
         void UpdateDeviceInfo(string fcmToken = null, int memberId = -1);
 
         /// <summary>
+        /// デバイスログを追加します。
+        /// </summary>
+        /// <param name="message">ログメッセージ</param>
+        void AddDeviceLog(string message);
+
+        /// <summary>
         /// データベースの初期値を取得した際のイベントハンドラです。
         /// </summary>
         event DbInitializeEventHandler InitializedDb;
