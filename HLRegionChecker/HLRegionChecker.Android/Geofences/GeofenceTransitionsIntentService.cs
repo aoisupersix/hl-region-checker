@@ -37,6 +37,7 @@ namespace HLRegionChecker.Droid.Geofences
         public override void OnReceive(Context context, Intent intent)
         {
             var geofencingEvent = GeofencingEvent.FromIntent(intent);
+            var dbAdapter = new DbAdapter_Droid();
             mContext = context;
             if (geofencingEvent.HasError)
             {
@@ -65,9 +66,9 @@ namespace HLRegionChecker.Droid.Geofences
                     ;
 
                 // 更新
-                var dbAdapter = new DbAdapter_Droid();
                 foreach (var region in triggerRegions)
                 {
+                    dbAdapter.AddDeviceLog($"ジオフェンス[ ${region.DbIdentifierName} ]状態更新：${geofenceTransition.ToString()}");
                     dbAdapter.UpdateGeofenceStatus(UserDataModel.Instance.DeviceId, region.DbIdentifierName, updateGeofenceStatus);
                 }
             }
@@ -75,6 +76,7 @@ namespace HLRegionChecker.Droid.Geofences
             {
                 // Log the error.
                 Log.Error(TAG, context.GetString(Resource.String.geofence_transition_invalid_type, new[] { new Java.Lang.Integer(geofenceTransition) }));
+                dbAdapter.AddDeviceLog($"ジオフェンスエラー：${context.GetString(Resource.String.geofence_transition_invalid_type, new[] { new Java.Lang.Integer(geofenceTransition) })}");
             }
         }
 
