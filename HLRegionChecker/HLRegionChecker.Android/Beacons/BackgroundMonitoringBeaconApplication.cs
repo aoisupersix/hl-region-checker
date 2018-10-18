@@ -102,6 +102,7 @@ namespace HLRegionChecker.Droid
             //Firebase初期化
             FirebaseApp.InitializeApp(this);
             var db = FirebaseDatabase.Instance;
+            FirebaseDatabase.Instance.SetPersistenceEnabled(true); //オフライン機能の有効化
 
             InitBeaconManager();
             InitBeaconRegion();
