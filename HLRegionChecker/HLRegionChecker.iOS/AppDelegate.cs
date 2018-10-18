@@ -47,6 +47,7 @@ namespace HLRegionChecker.iOS
             //Firebaseの初期化
             Firebase.Core.App.Configure();
             Firebase.Database.Database.DefaultInstance.PersistenceEnabled = true; //オフライン機能の有効化
+
             return base.WillFinishLaunching(uiApplication, launchOptions);
         }
 

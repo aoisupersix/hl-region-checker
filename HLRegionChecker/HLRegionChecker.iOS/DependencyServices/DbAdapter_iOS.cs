@@ -231,5 +231,31 @@ namespace HLRegionChecker.iOS.DependencyServices
             var devRef = rootRef.GetChild("devices");
             devRef.GetChild(devId).UpdateChildValues(childDict);
         }
+
+        /// <summary>
+        /// デバイスログを追加します。
+        /// </summary>
+        /// <param name="message">ログメッセージ</param>
+        public void AddDeviceLog(string message)
+        {
+            var devId = UserDataModel.Instance.DeviceId;
+            if (devId == null)
+                return;
+
+            // 更新情報の用意
+            var keys = new List<Object>() { "date", "message" };
+            var vals = new List<Object>()
+            {
+                DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"),
+                message
+            };
+
+            var childDict = NSDictionary.FromObjectsAndKeys(vals.ToArray(), keys.ToArray(), keys.Count());
+
+            // 更新
+            var rootRef = Database.DefaultInstance.GetRootReference();
+            var devRef = rootRef.GetChild("devices");
+            devRef.GetChild(devId).GetChild("Logs").GetChildByAutoId().UpdateChildValues(childDict);
+        }
     }
 }
