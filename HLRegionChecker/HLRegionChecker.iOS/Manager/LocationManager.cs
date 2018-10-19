@@ -110,7 +110,7 @@ namespace HLRegionChecker.iOS.Manager
         public override void AuthorizationChanged(CLLocationManager manager, CLAuthorizationStatus status)
         {
             var adapter = new DbAdapter_iOS();
-            adapter.AddDeviceLog($"位置情報の認証状態が[ ${status.ToString()} ]に更新"); // TODO ステータス名表示に
+            adapter.AddDeviceLog($"位置情報の認証状態が[{status.ToString()}]に更新"); // TODO ステータス名表示に
 
             if (status == CLAuthorizationStatus.AuthorizedAlways || status == CLAuthorizationStatus.AuthorizedWhenInUse)
             {
@@ -162,7 +162,7 @@ namespace HLRegionChecker.iOS.Manager
         {
             Console.WriteLine("Enter [{0}] Region", region.Identifier);
             var adapter = new DbAdapter_iOS();
-            adapter.AddDeviceLog($"領域[ ${region.Identifier} ]に侵入");
+            adapter.AddDeviceLog($"領域[{region.Identifier}]に侵入");
 
             if (region.Identifier.Equals(RegionList.研究室.Identifier))
             {
@@ -189,7 +189,7 @@ namespace HLRegionChecker.iOS.Manager
         {
             Console.WriteLine("Exit [{0}] Region", region.Identifier);
             var adapter = new DbAdapter_iOS();
-            adapter.AddDeviceLog($"領域[ ${region.Identifier} ]から退出");
+            adapter.AddDeviceLog($"領域[{region.Identifier}]から退出");
 
             if (region.Identifier.Equals(RegionList.研究室.Identifier))
             {

@@ -68,7 +68,7 @@ namespace HLRegionChecker.Droid.Geofences
                 // 更新
                 foreach (var region in triggerRegions)
                 {
-                    dbAdapter.AddDeviceLog($"ジオフェンス[ ${region.DbIdentifierName} ]状態更新：${geofenceTransition.ToString()}");
+                    dbAdapter.AddDeviceLog($"ジオフェンス[{region.DbIdentifierName}]状態更新：{geofenceTransition.ToString()}");
                     dbAdapter.UpdateGeofenceStatus(UserDataModel.Instance.DeviceId, region.DbIdentifierName, updateGeofenceStatus);
                 }
             }
@@ -76,7 +76,7 @@ namespace HLRegionChecker.Droid.Geofences
             {
                 // Log the error.
                 Log.Error(TAG, context.GetString(Resource.String.geofence_transition_invalid_type, new[] { new Java.Lang.Integer(geofenceTransition) }));
-                dbAdapter.AddDeviceLog($"ジオフェンスエラー：${context.GetString(Resource.String.geofence_transition_invalid_type, new[] { new Java.Lang.Integer(geofenceTransition) })}");
+                dbAdapter.AddDeviceLog($"ジオフェンスエラー：{context.GetString(Resource.String.geofence_transition_invalid_type, new[] { new Java.Lang.Integer(geofenceTransition) })}");
             }
         }
 
