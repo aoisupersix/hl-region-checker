@@ -68,7 +68,8 @@ namespace HLRegionChecker.Droid.Geofences
                 // 更新
                 foreach (var region in triggerRegions)
                 {
-                    dbAdapter.AddDeviceLog($"ジオフェンス[{region.DbIdentifierName}]状態更新：{geofenceTransition.ToString()}");
+                    var statusText = geofenceTransition == Geofence.GeofenceTransitionEnter ? "侵入" : "退出";
+                    dbAdapter.AddDeviceLog($"ジオフェンス[{region.DbIdentifierName}]の状態を[{statusText}]に更新");
                     dbAdapter.UpdateGeofenceStatus(UserDataModel.Instance.DeviceId, region.DbIdentifierName, updateGeofenceStatus);
                 }
             }
