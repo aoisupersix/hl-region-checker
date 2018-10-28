@@ -64,8 +64,8 @@ namespace HLRegionChecker.Droid
                 .SetContentIntent(pendingIntent);
 
             _beaconManager.EnableForegroundServiceScanning(builder.Build(), 456);
-            _beaconManager.BackgroundBetweenScanPeriod = 0;
-            _beaconManager.BackgroundScanPeriod = 1100;
+            //_beaconManager.BackgroundBetweenScanPeriod = 0;
+            //_beaconManager.BackgroundScanPeriod = 1100;
             _beaconManager.SetEnableScheduledScanJobs(false);
 
             var adapter = new DbAdapter_Droid();
