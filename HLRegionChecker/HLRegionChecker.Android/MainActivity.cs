@@ -39,35 +39,8 @@ namespace HLRegionChecker.Droid
         /// </summary>
         public int REQUEST_FINE_LOCATION_CODE = 34;
 
-        private enum PendingGeofenceTask
-        {
-            ADD, REMOVE, NONE
-        }
-
-        private PendingGeofenceTask mPendingGeofenceTask = PendingGeofenceTask.NONE;
-
         private RegisterGeofences _registerGeofences;
-
-        public const string PROPERTY_KEY_LOCATION_UPDATES_REQUESTED = "location-updates-requested";
         #endregion
-
-        /// <summary>
-        /// ジオフェンスが追加されているか？
-        /// </summary>
-        public bool GeofenceAdded
-        {
-            get
-            {
-                if (Xamarin.Forms.Application.Current.Properties.ContainsKey(PROPERTY_KEY_LOCATION_UPDATES_REQUESTED))
-                    return Xamarin.Forms.Application.Current.Properties[PROPERTY_KEY_LOCATION_UPDATES_REQUESTED] is bool;
-                return false;
-            }
-            set
-            {
-                Xamarin.Forms.Application.Current.Properties[PROPERTY_KEY_LOCATION_UPDATES_REQUESTED] = value;
-                Xamarin.Forms.Application.Current.SavePropertiesAsync();
-            }
-        }
 
         /// <summary>
         /// 初期化処理
@@ -98,11 +71,10 @@ namespace HLRegionChecker.Droid
 
             if (!CheckLocationPermissions())
             {
-                mPendingGeofenceTask = PendingGeofenceTask.ADD;
                 RequestLocationPermissions();
             }
             else
-                AddGeofences();
+                _registerGeofences.AddGeofences();
         }
 
         #region パーミッション関係メソッド
@@ -154,36 +126,15 @@ namespace HLRegionChecker.Droid
                 else if (grantResults[0] == (int)Permission.Granted)
                 {
                     Log.Info(TAG, "Permission granted.");
-                    if (mPendingGeofenceTask == PendingGeofenceTask.ADD)
-                        AddGeofences();
-                    mPendingGeofenceTask = PendingGeofenceTask.NONE;
+                    _registerGeofences.AddGeofences();
                 }
                 else
                 {
-                    //var listener = (View.IOnClickListener)new OnRequestPermissionsResultClickListener { Activity = this };
                     ShowSnackbar("設定から位置情報の利用を許可してください。");
                 }
             }
         }
         #endregion
-
-        /// <summary>
-        /// ジオフェンスを追加します。
-        /// </summary>
-        void AddGeofences()
-        {
-            if (!CheckLocationPermissions())
-            {
-                ShowSnackbar("Permission Denied");
-                System.Diagnostics.Debug.WriteLine("Permission Denied");
-                mPendingGeofenceTask = PendingGeofenceTask.ADD;
-                RequestLocationPermissions();
-                return;
-            }
-
-            if (!GeofenceAdded)
-                _registerGeofences.AddGeofences();
-        }
 
         /// <summary>
         /// スナックバーを表示します。
@@ -212,20 +163,10 @@ namespace HLRegionChecker.Droid
 
         public void OnComplete(Task task)
         {
-            mPendingGeofenceTask = PendingGeofenceTask.NONE;
             string message;
             if (task.IsSuccessful)
             {
-                if(!GeofenceAdded)
-                {
-                    GeofenceAdded = true;
-                    message = GetString(Resource.String.complete_add_geofence);
-                }
-                else
-                {
-                    GeofenceAdded = false;
-                    message = GetString(Resource.String.complete_remove_geofence);
-                }
+                message = GetString(Resource.String.complete_add_geofence);
                 ShowSnackbar(message);
                 System.Diagnostics.Debug.WriteLine(message);
             }
