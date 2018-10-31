@@ -179,7 +179,7 @@ namespace HLRegionChecker.Droid
             }
 
             var adapter = new DependencyServices.DbAdapter_Droid();
-            adapter.AddDeviceLog("ジオフェンス登録処理：" + message);
+            adapter.AddDeviceLog("ジオフェンス登録処理", message);
         }
     }
 

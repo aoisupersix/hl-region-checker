@@ -68,9 +68,6 @@ namespace HLRegionChecker.Droid
             //_beaconManager.BackgroundScanPeriod = 1100;
             _beaconManager.SetEnableScheduledScanJobs(false);
 
-            var adapter = new DbAdapter_Droid();
-            adapter.AddDeviceLog("BeaconManager初期化完了");
-
             // スケジューラ用
             //_beaconManager.SetEnableScheduledScanJobs(true);
         }
@@ -130,7 +127,7 @@ namespace HLRegionChecker.Droid
             Log.Info(TAG, "Enter [{0}] Region", p0.UniqueId);
             Firebase.FirebaseApp.InitializeApp(this.ApplicationContext);
             var adapter = new DbAdapter_Droid();
-            adapter.AddDeviceLog($"領域[{ p0.UniqueId}]に侵入");
+            adapter.AddDeviceLog("ビーコンに侵入：在室状況を[在室]に更新", p0.UniqueId);
 
             if (p0.UniqueId.Equals(Regions.RegionList.研究室.Identifier))
             {
@@ -151,7 +148,7 @@ namespace HLRegionChecker.Droid
         {
             Log.Info(TAG, "Exit [{0}] Region", p0.UniqueId);
             var adapter = new DbAdapter_Droid();
-            adapter.AddDeviceLog($"領域[{ p0.UniqueId}]から退出");
+            adapter.AddDeviceLog("ビーコンから退出：在室状況を[学内]に更新", p0.UniqueId);
 
             if (p0.UniqueId.Equals(Regions.RegionList.研究室.Identifier))
             {

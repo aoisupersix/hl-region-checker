@@ -42,7 +42,7 @@ namespace HLRegionChecker.Droid.Geofences
             if (geofencingEvent.HasError)
             {
                 var errorMessage = GeofenceErrorMessages.GetErrorString(context, geofencingEvent.ErrorCode);
-                Log.Error(TAG, errorMessage);
+                dbAdapter.AddDeviceLog("ジオフェンスエラー", errorMessage);
                 NotificationUtil.Instance.SendNotification(context, NotificationUtil.STATUS_NOTIFICATION_CHANNEL_ID, "GeofenceError", "エラーです。", errorMessage);
                 return;
             }
@@ -65,15 +65,16 @@ namespace HLRegionChecker.Droid.Geofences
                     .ToList()
                     ;
 
-                //緯度経度
+                //GPS情報
                 var lat = geofencingEvent.TriggeringLocation.Latitude;
                 var lng = geofencingEvent.TriggeringLocation.Longitude;
+                var accuracy = geofencingEvent.TriggeringLocation.Accuracy;
 
                 // 更新
                 foreach (var region in triggerRegions)
                 {
                     var statusText = geofenceTransition == Geofence.GeofenceTransitionEnter ? "侵入" : "退出";
-                    dbAdapter.AddDeviceLog($"ジオフェンス[{region.DbIdentifierName}]の状態を[{statusText}]に更新(lat:{lat},lng:{lng})");
+                    dbAdapter.AddDeviceLog($"ジオフェンス[{region.DbIdentifierName}]の状態を[{statusText}]に更新", $"lat:{lat},lng:{lng},accuracy:{accuracy}");
                     dbAdapter.UpdateGeofenceStatus(UserDataModel.Instance.DeviceId, region.DbIdentifierName, updateGeofenceStatus);
                 }
             }
@@ -81,7 +82,7 @@ namespace HLRegionChecker.Droid.Geofences
             {
                 // Log the error.
                 Log.Error(TAG, context.GetString(Resource.String.geofence_transition_invalid_type, new[] { new Java.Lang.Integer(geofenceTransition) }));
-                dbAdapter.AddDeviceLog($"ジオフェンスエラー：{context.GetString(Resource.String.geofence_transition_invalid_type, new[] { new Java.Lang.Integer(geofenceTransition) })}");
+                dbAdapter.AddDeviceLog("ジオフェンスエラー", context.GetString(Resource.String.geofence_transition_invalid_type, new[] { new Java.Lang.Integer(geofenceTransition) }));
             }
         }
 
