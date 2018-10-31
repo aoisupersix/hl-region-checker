@@ -106,7 +106,7 @@ namespace HLRegionChecker.iOS.Manager
         public override void AuthorizationChanged(CLLocationManager manager, CLAuthorizationStatus status)
         {
             var adapter = new DbAdapter_iOS();
-            adapter.AddDeviceLog($"位置情報の認証状態が[{status.ToString()}]に更新"); // TODO ステータス名表示に
+            adapter.AddDeviceLog($"位置情報の認証状態が更新", status.ToString()); // TODO ステータス名表示に
 
             if (status == CLAuthorizationStatus.AuthorizedAlways || status == CLAuthorizationStatus.AuthorizedWhenInUse)
             {
@@ -156,15 +156,12 @@ namespace HLRegionChecker.iOS.Manager
         /// <param name="region"></param>
         public override void RegionEntered(CLLocationManager manager, CLRegion region)
         {
-            Console.WriteLine("Enter [{0}] Region", region.Identifier);
             var adapter = new DbAdapter_iOS();
-            adapter.AddDeviceLog($"領域[{region.Identifier}]に侵入");
-
             if (region.Identifier.Equals(RegionList.研究室.Identifier))
             {
                 //研究室領域に侵入
                 UpdateStatus(Status.在室.GetStatusId());
-                adapter.AddDeviceLog("在室状況を「在室」に更新");
+                adapter.AddDeviceLog("在室状況を「在室」に更新", $"領域[{RegionList.研究室.Name}]に侵入");
             }
             else
             {
@@ -172,7 +169,7 @@ namespace HLRegionChecker.iOS.Manager
                 var gregion = RegionList.CampusAllRegions.Where(r => r.Identifier.Equals(region.Identifier)).First();
                 var dbAdapter = new DbAdapter_iOS();
                 dbAdapter.UpdateGeofenceStatus(UserDataModel.Instance.DeviceId, gregion.DbIdentifierName, true);
-                adapter.AddDeviceLog("ジオフェンス状態を更新");
+                adapter.AddDeviceLog("ジオフェンス状態を更新", $"領域[{gregion.Name}]に侵入");
 
                 manager.RequestLocation();
             }
@@ -187,21 +184,19 @@ namespace HLRegionChecker.iOS.Manager
         {
             Console.WriteLine("Exit [{0}] Region", region.Identifier);
             var adapter = new DbAdapter_iOS();
-            adapter.AddDeviceLog($"領域[{region.Identifier}]から退出");
 
             if (region.Identifier.Equals(RegionList.研究室.Identifier))
             {
                 //研究室領域から退出
                 UpdateStatus(Status.学内.GetStatusId());
-                adapter.AddDeviceLog("在室状況を「学内」に更新");
+                adapter.AddDeviceLog("在室状況を「学内」に更新", $"領域[{RegionList.研究室.Name}]から退出");
             }
             else
             {
                 //学内領域から退出
                 var gregion = RegionList.CampusAllRegions.Where(r => r.Identifier.Equals(region.Identifier)).First();
-                var dbAdapter = new DbAdapter_iOS();
-                dbAdapter.UpdateGeofenceStatus(UserDataModel.Instance.DeviceId, gregion.DbIdentifierName, false);
-                adapter.AddDeviceLog("ジオフェンス状態を更新");
+                adapter.UpdateGeofenceStatus(UserDataModel.Instance.DeviceId, gregion.DbIdentifierName, false);
+                adapter.AddDeviceLog("ジオフェンス状態を更新", $"領域[{gregion.Name}]から退出");
 
                 manager.RequestLocation();
             }
@@ -221,7 +216,7 @@ namespace HLRegionChecker.iOS.Manager
                 formatter.DateFormat = "yyyy-MM-dd HH:mm:ss";
                 formatter.TimeZone = NSTimeZone.SystemTimeZone;
                 var dateString = formatter.StringFor(location.Timestamp);
-                adapter.AddDeviceLog($"位置情報取得[lat:{location.Coordinate.Latitude},lng:{location.Coordinate.Longitude}] 取得時間：{dateString}");
+                adapter.AddDeviceLog($"位置情報取得：{dateString}", $"lat:{ location.Coordinate.Latitude},lng: { location.Coordinate.Longitude}");
             }
         }
 
@@ -233,7 +228,7 @@ namespace HLRegionChecker.iOS.Manager
         public override void Failed(CLLocationManager manager, NSError error)
         {
             var adapter = new DbAdapter_iOS();
-            adapter.AddDeviceLog($"位置情報の取得に失敗：{error.ToString()}");
+            adapter.AddDeviceLog($"位置情報の取得に失敗", error.ToString());
         }
     }
 }
