@@ -65,11 +65,15 @@ namespace HLRegionChecker.Droid.Geofences
                     .ToList()
                     ;
 
+                //緯度経度
+                var lat = geofencingEvent.TriggeringLocation.Latitude;
+                var lng = geofencingEvent.TriggeringLocation.Longitude;
+
                 // 更新
                 foreach (var region in triggerRegions)
                 {
                     var statusText = geofenceTransition == Geofence.GeofenceTransitionEnter ? "侵入" : "退出";
-                    dbAdapter.AddDeviceLog($"ジオフェンス[{region.DbIdentifierName}]の状態を[{statusText}]に更新");
+                    dbAdapter.AddDeviceLog($"ジオフェンス[{region.DbIdentifierName}]の状態を[{statusText}]に更新(lat:{lat},lng:{lng})");
                     dbAdapter.UpdateGeofenceStatus(UserDataModel.Instance.DeviceId, region.DbIdentifierName, updateGeofenceStatus);
                 }
             }
