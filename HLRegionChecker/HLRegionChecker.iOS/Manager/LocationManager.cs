@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Foundation;
 using CoreLocation;
 
 using HLRegionChecker.Const;
 using HLRegionChecker.iOS.DependencyServices;
 using HLRegionChecker.Models;
-using HLRegionChecker.Interfaces;
-using HLRegionChecker.iOS.Notification;
-using Firebase.Database;
 using HLRegionChecker.Regions;
 
 namespace HLRegionChecker.iOS.Manager
@@ -177,6 +173,8 @@ namespace HLRegionChecker.iOS.Manager
                 var dbAdapter = new DbAdapter_iOS();
                 dbAdapter.UpdateGeofenceStatus(UserDataModel.Instance.DeviceId, gregion.DbIdentifierName, true);
                 adapter.AddDeviceLog("ジオフェンス状態を更新");
+
+                manager.RequestLocation();
             }
         }
 
@@ -204,7 +202,38 @@ namespace HLRegionChecker.iOS.Manager
                 var dbAdapter = new DbAdapter_iOS();
                 dbAdapter.UpdateGeofenceStatus(UserDataModel.Instance.DeviceId, gregion.DbIdentifierName, false);
                 adapter.AddDeviceLog("ジオフェンス状態を更新");
+
+                manager.RequestLocation();
             }
+        }
+
+        /// <summary>
+        /// 位置情報取得時に緯度経度ログを送信します。
+        /// </summary>
+        /// <param name="manager"></param>
+        /// <param name="locations"></param>
+        public override void LocationsUpdated(CLLocationManager manager, CLLocation[] locations)
+        {
+            var adapter = new DbAdapter_iOS();
+            foreach(var location in locations)
+            {
+                var formatter = new NSDateFormatter();
+                formatter.DateFormat = "yyyy-MM-dd HH:mm:ss";
+                formatter.TimeZone = NSTimeZone.SystemTimeZone;
+                var dateString = formatter.StringFor(location.Timestamp);
+                adapter.AddDeviceLog($"位置情報取得[lat:{location.Coordinate.Latitude},lng:{location.Coordinate.Longitude}] 取得時間：{dateString}");
+            }
+        }
+
+        /// <summary>
+        /// 位置情報取得失敗時にログを送信します。
+        /// </summary>
+        /// <param name="manager"></param>
+        /// <param name="error"></param>
+        public override void Failed(CLLocationManager manager, NSError error)
+        {
+            var adapter = new DbAdapter_iOS();
+            adapter.AddDeviceLog($"位置情報の取得に失敗：{error.ToString()}");
         }
     }
 }
