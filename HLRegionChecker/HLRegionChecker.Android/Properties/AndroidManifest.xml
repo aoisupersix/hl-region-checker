@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="184" android:versionName="0.1" package="org.hykwlab.hlregionchecker_droid" android:installLocation="preferExternal">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="195" android:versionName="0.1.1" package="org.hykwlab.hlregionchecker_droid" android:installLocation="preferExternal">
 	<uses-sdk android:minSdkVersion="24" android:targetSdkVersion="27" />
 	<application android:label="HLRegionChecker" android:icon="@mipmap/appicon">
 		<!-- Beacons -->
