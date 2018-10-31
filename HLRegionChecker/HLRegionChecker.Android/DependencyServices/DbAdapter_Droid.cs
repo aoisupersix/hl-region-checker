@@ -247,7 +247,8 @@ namespace HLRegionChecker.Droid.DependencyServices
         /// デバイスログを追加します。
         /// </summary>
         /// <param name="message">ログメッセージ</param>
-        public void AddDeviceLog(string message)
+        /// <param name="extra">追加情報</param>
+        public void AddDeviceLog(string message, string extra = null)
         {
             var devId = UserDataModel.Instance.DeviceId;
             if (devId == null)
@@ -257,7 +258,8 @@ namespace HLRegionChecker.Droid.DependencyServices
             var childDict = new Dictionary<string, Java.Lang.Object>()
             {
                 { "date", DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") },
-                { "message", message }
+                { "message", message },
+                { "extra", extra ?? "" },
             };
 
             // 更新

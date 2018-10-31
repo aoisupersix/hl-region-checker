@@ -71,7 +71,8 @@ namespace HLRegionChecker.Interfaces
         /// デバイスログを追加します。
         /// </summary>
         /// <param name="message">ログメッセージ</param>
-        void AddDeviceLog(string message);
+        /// <param name="extra">追加情報</param>
+        void AddDeviceLog(string message, string extra = null);
 
         /// <summary>
         /// データベースの初期値を取得した際のイベントハンドラです。

@@ -236,18 +236,20 @@ namespace HLRegionChecker.iOS.DependencyServices
         /// デバイスログを追加します。
         /// </summary>
         /// <param name="message">ログメッセージ</param>
-        public void AddDeviceLog(string message)
+        /// <param name="extra">追加情報</param>
+        public void AddDeviceLog(string message, string extra = null)
         {
             var devId = UserDataModel.Instance.DeviceId;
             if (devId == null)
                 return;
 
             // 更新情報の用意
-            var keys = new List<Object>() { "date", "message" };
+            var keys = new List<Object>() { "date", "message", "extra" };
             var vals = new List<Object>()
             {
                 DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"),
-                message
+                message,
+                extra ?? "",
             };
 
             var childDict = NSDictionary.FromObjectsAndKeys(vals.ToArray(), keys.ToArray(), keys.Count());
