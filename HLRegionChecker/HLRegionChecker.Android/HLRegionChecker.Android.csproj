@@ -69,6 +69,7 @@
   <ItemGroup>
     <Compile Include="Beacons\BackgroundMonitoringBeaconApplication.cs" />
     <Compile Include="Beacons\BeaconMonitoringService.cs" />
+    <Compile Include="DependencyServices\RegisterGeofences_Droid.cs" />
     <Compile Include="DependencyServices\AssemblyService_Droid.cs" />
     <Compile Include="DependencyServices\DbAdapter_Droid.cs" />
     <Compile Include="DependencyServices\WebBrowserService_Droid.cs" />

@@ -106,7 +106,9 @@ namespace HLRegionChecker.ViewModels
                     Title = "ジオフェンス再登録",
                     OnSelectedAction = () =>
                     {
-                        pageDialogService.DisplayAlertAsync("test", "message", "cancel");
+                        var rgAdapter = Xamarin.Forms.DependencyService.Get<IRegisterGeofences>();
+                        rgAdapter.Register();
+                        pageDialogService.DisplayAlertAsync("完了", "ジオフェンスの再登録処理を行いました。", "OK");
                     }
                 });
             }
