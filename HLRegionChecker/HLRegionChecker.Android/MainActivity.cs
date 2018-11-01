@@ -73,7 +73,7 @@ namespace HLRegionChecker.Droid
             {
                 RequestLocationPermissions();
             }
-            else
+            else if (!RegisterGeofences.GeofenceAdded)
                 _registerGeofences.AddGeofences();
         }
 
@@ -126,7 +126,8 @@ namespace HLRegionChecker.Droid
                 else if (grantResults[0] == (int)Permission.Granted)
                 {
                     Log.Info(TAG, "Permission granted.");
-                    _registerGeofences.AddGeofences();
+                    if (!RegisterGeofences.GeofenceAdded)
+                        _registerGeofences.AddGeofences();
                 }
                 else
                 {

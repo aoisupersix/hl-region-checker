@@ -41,9 +41,29 @@ namespace HLRegionChecker.Droid.Geofences
         /// AppContext
         /// </summary>
         private Context _context;
+
+        public const string PROPERTY_KEY_LOCATION_UPDATES_REQUESTED = "location-updates-requested";
         #endregion
 
         #region プロパティ
+        /// <summary>
+        /// ジオフェンスが追加されているか？
+        /// </summary>
+        public static bool GeofenceAdded
+        {
+            get
+            {
+                if (Xamarin.Forms.Application.Current.Properties.ContainsKey(PROPERTY_KEY_LOCATION_UPDATES_REQUESTED))
+                    return Xamarin.Forms.Application.Current.Properties[PROPERTY_KEY_LOCATION_UPDATES_REQUESTED] is bool;
+                return false;
+            }
+            set
+            {
+                Xamarin.Forms.Application.Current.Properties[PROPERTY_KEY_LOCATION_UPDATES_REQUESTED] = value;
+                Xamarin.Forms.Application.Current.SavePropertiesAsync();
+            }
+        }
+
         /// <summary>
         /// 登録するジオフェンスリスト
         /// </summary>
@@ -109,8 +129,8 @@ namespace HLRegionChecker.Droid.Geofences
         private GeofencingRequest GetGeofencingRequest()
         {
             GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
-            builder.SetInitialTrigger(NO_INITIAL_TRIGGER);
-            //builder.SetInitialTrigger(GeofencingRequest.InitialTriggerEnter);
+            //builder.SetInitialTrigger(NO_INITIAL_TRIGGER);
+            builder.SetInitialTrigger(GeofencingRequest.InitialTriggerEnter);
             builder.AddGeofences(Geofences);
             return builder.Build();
         }
