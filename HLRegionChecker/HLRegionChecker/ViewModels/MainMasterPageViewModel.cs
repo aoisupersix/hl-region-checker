@@ -94,8 +94,22 @@ namespace HLRegionChecker.ViewModels
                     {
                         NavigationService.NavigateAsync("NavigationPage/StatusListPage/AppInfoPage", new NavigationParameters { { typeof(MainMasterPageViewModel).Name, this } });
                     }
-                },
+                }
             });
+
+            if (Device.RuntimePlatform == Device.Android)
+            {
+                // Droid専用メニュー
+                MenuItems.Add(new MenuItem
+                {
+                    Icon = null,
+                    Title = "ジオフェンス再登録",
+                    OnSelectedAction = () =>
+                    {
+                        pageDialogService.DisplayAlertAsync("test", "message", "cancel");
+                    }
+                });
+            }
 
             //メニューが選択された際の処理
             ItemSelectedCommand = new Command<MenuItem>((item) =>
