@@ -102,7 +102,7 @@ namespace HLRegionChecker.ViewModels
                 // Droid専用メニュー
                 MenuItems.Add(new MenuItem
                 {
-                    Icon = null,
+                    Icon = ImageSource.FromResource("HLRegionChecker.Resources.Icon_RegisterGeofences.png"),
                     Title = "ジオフェンス再登録",
                     OnSelectedAction = () =>
                     {

@@ -11,6 +11,7 @@
     <None Remove="Resources\Icon_IdentifierSelection.png" />
     <None Remove="Resources\Icon_Info.png" />
     <None Remove="Resources\Icon_Open.png" />
+    <None Remove="Resources\Icon_RegisterGeofences.png" />
     <None Remove="Resources\Icon_SelfUpdate.png" />
   </ItemGroup>
 
@@ -20,6 +21,7 @@
     <EmbeddedResource Include="Resources\Icon_IdentifierSelection.png" />
     <EmbeddedResource Include="Resources\Icon_Info.png" />
     <EmbeddedResource Include="Resources\Icon_Open.png" />
+    <EmbeddedResource Include="Resources\Icon_RegisterGeofences.png" />
     <EmbeddedResource Include="Resources\Icon_SelfUpdate.png" />
   </ItemGroup>
 
