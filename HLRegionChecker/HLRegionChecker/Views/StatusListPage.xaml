@@ -22,7 +22,7 @@
                   HasUnevenRows="True"
                   SeparatorVisibility="None">
             <ListView.Behaviors>
-                <b:ItemSelectedToCommandBehavior Command="{Binding ItemSelectedCommand}"/>
+                <b:EventToCommand Command="{Binding ItemSelectedCommand}" EventName="ItemSelected" />
             </ListView.Behaviors>
             <ListView.ItemTemplate>
                 <DataTemplate>

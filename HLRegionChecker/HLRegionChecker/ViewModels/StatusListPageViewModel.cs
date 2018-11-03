@@ -42,6 +42,7 @@ namespace HLRegionChecker.ViewModels
         public ReactiveProperty<int> SelectedItemId { get; }
 
         public Command<MemberModel> ItemSelectedCommand { get; }
+
         #endregion
 
         #region コンストラクタ
