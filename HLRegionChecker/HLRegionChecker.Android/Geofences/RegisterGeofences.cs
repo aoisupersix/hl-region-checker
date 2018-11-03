@@ -1,27 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 using Android.App;
-using Android.App.Job;
 using Android.Content;
 using Android.Gms.Location;
 using Android.Gms.Tasks;
-using Android.OS;
-using Android.Runtime;
-using Android.Support.V4.App;
-using Android.Util;
-using Android.Views;
-using Android.Widget;
-using HLRegionChecker.Const;
 using HLRegionChecker.Interfaces;
 
 namespace HLRegionChecker.Droid.Geofences
 {
     
     /// <summary>
-    /// ジオフェンスの登録を行う
+    /// ジオフェンスの登録を行うクラス
+    /// 既にジオフェンスの登録を行っているかどうかは呼び出し側からこのクラスの[GeofenceAdded]プロパティの値を参照して確認して下さい。
     /// </summary>
     public class RegisterGeofences: Java.Lang.Object, IOnCompleteListener
     {
@@ -58,7 +48,7 @@ namespace HLRegionChecker.Droid.Geofences
                     return Xamarin.Forms.Application.Current.Properties[PROPERTY_KEY_LOCATION_UPDATES_REQUESTED] is bool;
                 return false;
             }
-            set
+            private set
             {
                 Xamarin.Forms.Application.Current.Properties[PROPERTY_KEY_LOCATION_UPDATES_REQUESTED] = value;
                 Xamarin.Forms.Application.Current.SavePropertiesAsync();
@@ -170,6 +160,10 @@ namespace HLRegionChecker.Droid.Geofences
             }
         }
 
+        /// <summary>
+        /// ジオフェンス登録完了処理
+        /// </summary>
+        /// <param name="task"></param>
         public void OnComplete(Task task)
         {
             string message;
@@ -181,6 +175,7 @@ namespace HLRegionChecker.Droid.Geofences
                 message = _context.GetString(Resource.String.complete_add_geofence);
                 successful = true;
                 System.Diagnostics.Debug.WriteLine(message);
+                GeofenceAdded = true;
             }
             else
             {
@@ -188,6 +183,7 @@ namespace HLRegionChecker.Droid.Geofences
                 message = GeofenceErrorMessages.GetErrorString(_context, task.Exception);
                 successful = false;
                 System.Diagnostics.Debug.WriteLine(message);
+                GeofenceAdded = false;
             }
 
             adapter.AddDeviceLog("ジオフェンス登録処理", message);

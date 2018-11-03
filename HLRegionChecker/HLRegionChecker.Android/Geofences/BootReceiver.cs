@@ -13,6 +13,7 @@ using Android.Util;
 using Android.Views;
 using Android.Widget;
 using HLRegionChecker.Const;
+using HLRegionChecker.Interfaces;
 
 namespace HLRegionChecker.Droid.Geofences
 {
@@ -21,7 +22,7 @@ namespace HLRegionChecker.Droid.Geofences
     /// <summary>
     /// ブート時にジオフェンスを登録するブロードキャストレシーバ
     /// </summary>
-    public class BootReceiver : BroadcastReceiver, IOnCompleteListener
+    public class BootReceiver : BroadcastReceiver
     {
         #region メンバ
         protected string TAG = typeof(BootReceiver).Name;
@@ -41,27 +42,8 @@ namespace HLRegionChecker.Droid.Geofences
 
             //ジオフェンスの登録
             _context = context;
-            _registerGeofences = new RegisterGeofences(context, this);
+            _registerGeofences = new RegisterGeofences(context);
             _registerGeofences.AddGeofences();
-        }
-
-        /// <summary>
-        /// ジオフェンスの追加完了コールバック
-        /// </summary>
-        /// <param name="task"></param>
-        public void OnComplete(Task task)
-        {
-            if (task.IsSuccessful)
-            {
-                var message = _context.GetString(Resource.String.complete_add_geofence);
-                Log.Info(TAG, message);
-            }
-            else
-            {
-                // Get the status code for the error and log it using a user-friendly message.
-                var errorMessage = Geofences.GeofenceErrorMessages.GetErrorString(_context, task.Exception);
-                Log.Info(TAG, errorMessage);
-            }
         }
     }
 }
