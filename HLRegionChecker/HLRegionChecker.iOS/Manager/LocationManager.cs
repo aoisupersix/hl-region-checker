@@ -90,6 +90,17 @@ namespace HLRegionChecker.iOS.Manager
             adapter.UpdateStatus(memId, stateId, true);
         }
 
+        private void AddLocationLog(CLLocation location)
+        {
+            var adapter = new DbAdapter_iOS();
+
+            var formatter = new NSDateFormatter();
+            formatter.DateFormat = "yyyy-MM-dd HH:mm:ss";
+            formatter.TimeZone = NSTimeZone.SystemTimeZone;
+            var dateString = formatter.StringFor(location.Timestamp);
+            adapter.AddDeviceLog($"位置情報取得：{dateString}", $"lat:{ location.Coordinate.Latitude},lng: { location.Coordinate.Longitude}");
+        }
+
         public LocationDelegate()
         {
             // 領域定義の初期化
@@ -170,8 +181,7 @@ namespace HLRegionChecker.iOS.Manager
                 var dbAdapter = new DbAdapter_iOS();
                 dbAdapter.UpdateGeofenceStatus(UserDataModel.Instance.DeviceId, gregion.DbIdentifierName, true);
                 adapter.AddDeviceLog("ジオフェンス状態を更新", $"領域[{gregion.Name}]に侵入");
-
-                manager.RequestLocation();
+                AddLocationLog(manager.Location);
             }
         }
 
@@ -197,26 +207,7 @@ namespace HLRegionChecker.iOS.Manager
                 var gregion = RegionList.CampusAllRegions.Where(r => r.Identifier.Equals(region.Identifier)).First();
                 adapter.UpdateGeofenceStatus(UserDataModel.Instance.DeviceId, gregion.DbIdentifierName, false);
                 adapter.AddDeviceLog("ジオフェンス状態を更新", $"領域[{gregion.Name}]から退出");
-
-                manager.RequestLocation();
-            }
-        }
-
-        /// <summary>
-        /// 位置情報取得時に緯度経度ログを送信します。
-        /// </summary>
-        /// <param name="manager"></param>
-        /// <param name="locations"></param>
-        public override void LocationsUpdated(CLLocationManager manager, CLLocation[] locations)
-        {
-            var adapter = new DbAdapter_iOS();
-            foreach(var location in locations)
-            {
-                var formatter = new NSDateFormatter();
-                formatter.DateFormat = "yyyy-MM-dd HH:mm:ss";
-                formatter.TimeZone = NSTimeZone.SystemTimeZone;
-                var dateString = formatter.StringFor(location.Timestamp);
-                adapter.AddDeviceLog($"位置情報取得：{dateString}", $"lat:{ location.Coordinate.Latitude},lng: { location.Coordinate.Longitude}");
+                AddLocationLog(manager.Location);
             }
         }
 
