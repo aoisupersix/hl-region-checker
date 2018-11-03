@@ -21,23 +21,6 @@ namespace HLRegionChecker.iOS.Manager
         /// クラスのインスタンス
         /// </summary>
         private static readonly LocationManager _instance = new LocationManager();
-
-        /// <summary>
-        /// HLRegionCheckerで利用するビーコンのUUID
-        /// </summary>
-        public static readonly NSUuid BEACON_UUID = new NSUuid(RegionConst.BEACON_UUID);
-
-        /// <summary>
-        /// 工学部棟の中心緯度/経度
-        /// </summary>
-        public static readonly CLLocationCoordinate2D CAMPUS_CENTER_COORDINATE = new CLLocationCoordinate2D(RegionConst.CAMPUS_LATITUDE, RegionConst.CAMPUS_LONGITUDE);
-
-        /// <summary>
-        /// 研究室のビーコン領域
-        /// </summary>
-        public static readonly CLBeaconRegion REGION_LABORATORY = new CLBeaconRegion(BEACON_UUID, RegionConst.BEACON_MAJOR, RegionConst.BEACON_MINOR, Region.研究室.GetIdentifier());
-
-        public static readonly CLCircularRegion REGION_CAMPUS = new CLCircularRegion(CAMPUS_CENTER_COORDINATE, RegionConst.CAMPUS_RADIUS, Region.学内.GetIdentifier());
         #endregion
 
         #region メソッド
