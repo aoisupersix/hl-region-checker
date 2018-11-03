@@ -73,6 +73,18 @@ namespace HLRegionChecker.iOS.Manager
             adapter.UpdateStatus(memId, stateId, true);
         }
 
+        public LocationDelegate()
+        {
+            // 領域定義の初期化
+            研究室領域 = new CLBeaconRegion(new NSUuid(RegionList.研究室.Uuid), (ushort)RegionList.研究室.Major, (ushort)RegionList.研究室.Minor, RegionList.研究室.Identifier);
+            学内領域 = RegionList.CampusAllRegions
+                .Select(r => new CLCircularRegion(new CLLocationCoordinate2D(r.Latitude, r.Longitude), r.Radius, r.Identifier));
+        }
+
+        /// <summary>
+        /// 位置情報のログを送信します。
+        /// </summary>
+        /// <param name="location"></param>
         private void AddLocationLog(CLLocation location)
         {
             var adapter = new DbAdapter_iOS();
@@ -82,14 +94,6 @@ namespace HLRegionChecker.iOS.Manager
             formatter.TimeZone = NSTimeZone.SystemTimeZone;
             var dateString = formatter.StringFor(location.Timestamp);
             adapter.AddDeviceLog($"位置情報取得：{dateString}", $"lat:{ location.Coordinate.Latitude},lng: { location.Coordinate.Longitude}");
-        }
-
-        public LocationDelegate()
-        {
-            // 領域定義の初期化
-            研究室領域 = new CLBeaconRegion(new NSUuid(RegionList.研究室.Uuid), (ushort)RegionList.研究室.Major, (ushort)RegionList.研究室.Minor, RegionList.研究室.Identifier);
-            学内領域 = RegionList.CampusAllRegions
-                .Select(r => new CLCircularRegion(new CLLocationCoordinate2D(r.Latitude, r.Longitude), r.Radius, r.Identifier));
         }
 
         /// <summary>
