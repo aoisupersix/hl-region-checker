@@ -15,6 +15,7 @@ using Android.Util;
 using Android.Views;
 using Android.Widget;
 using HLRegionChecker.Const;
+using HLRegionChecker.Interfaces;
 
 namespace HLRegionChecker.Droid.Geofences
 {
@@ -22,7 +23,7 @@ namespace HLRegionChecker.Droid.Geofences
     /// <summary>
     /// ジオフェンスの登録を行う
     /// </summary>
-    public class RegisterGeofences
+    public class RegisterGeofences: Java.Lang.Object, IOnCompleteListener
     {
         #region メンバ
         protected string TAG = typeof(RegisterGeofences).Name;
@@ -77,7 +78,8 @@ namespace HLRegionChecker.Droid.Geofences
         /// <summary>
         /// ジオフェンス登録のコールバック
         /// </summary>
-        public IOnCompleteListener GeofencesRegisterCompleteListener { get; set; }
+        public IGeofenceRegisterCompleteListener CompleteListener { get; set; }
+
         #endregion
 
         #region コンストラクタ
@@ -97,11 +99,11 @@ namespace HLRegionChecker.Droid.Geofences
         /// </summary>
         /// <param name="context"></param>
         /// <param name="completeListener"></param>
-        public RegisterGeofences(Context context, IOnCompleteListener completeListener)
+        public RegisterGeofences(Context context, IGeofenceRegisterCompleteListener completeListener)
         {
             _context = context;
             _geofencingClient = LocationServices.GetGeofencingClient(context);
-            GeofencesRegisterCompleteListener = completeListener;
+            CompleteListener = completeListener;
             PopulateGeofenceList();
         }
         #endregion
@@ -111,15 +113,8 @@ namespace HLRegionChecker.Droid.Geofences
         /// </summary>
         public void AddGeofences()
         {
-            if (GeofencesRegisterCompleteListener != null)
-            {
-                _geofencingClient.AddGeofences(GetGeofencingRequest(), GetGeofencePendingIntent())
-                    .AddOnCompleteListener(GeofencesRegisterCompleteListener);
-            }
-            else
-            {
-                _geofencingClient.AddGeofences(GetGeofencingRequest(), GetGeofencePendingIntent());
-            }
+            _geofencingClient.AddGeofences(GetGeofencingRequest(), GetGeofencePendingIntent())
+                .AddOnCompleteListener(this);
         }
 
         /// <summary>
@@ -173,6 +168,32 @@ namespace HLRegionChecker.Droid.Geofences
                     .SetTransitionTypes(Geofence.GeofenceTransitionEnter | Geofence.GeofenceTransitionExit)
                     .Build());
             }
+        }
+
+        public void OnComplete(Task task)
+        {
+            string message;
+            bool successful;
+            var adapter = new DependencyServices.DbAdapter_Droid();
+
+            if (task.IsSuccessful)
+            {
+                message = _context.GetString(Resource.String.complete_add_geofence);
+                successful = true;
+                System.Diagnostics.Debug.WriteLine(message);
+            }
+            else
+            {
+                // Get the status code for the error and log it using a user-friendly message.
+                message = GeofenceErrorMessages.GetErrorString(_context, task.Exception);
+                successful = false;
+                System.Diagnostics.Debug.WriteLine(message);
+            }
+
+            adapter.AddDeviceLog("ジオフェンス登録処理", message);
+
+            if (CompleteListener != null)
+                CompleteListener.RegisterCompleted(successful, message);
         }
     }
 }

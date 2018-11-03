@@ -19,17 +19,15 @@ using Android.Support.V4.Content;
 using Android.Util;
 using Android.Views;
 using static Android.Support.V4.App.ActivityCompat;
-using Firebase;
-using Firebase.Database;
-using HLRegionChecker.Const;
 using Android.Runtime;
 using HLRegionChecker.Droid.Geofences;
 using HLRegionChecker.Models;
+using HLRegionChecker.Interfaces;
 
 namespace HLRegionChecker.Droid
 {
     [Activity(Label = "HLRegionChecker", Icon = "@mipmap/appicon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
-    public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity, IOnCompleteListener
+    public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity, IGeofenceRegisterCompleteListener
     {
         #region メンバ
         protected string TAG = typeof(MainActivity).Name;
@@ -162,26 +160,13 @@ namespace HLRegionChecker.Droid
                 .SetAction(GetString(actionStringId), listener).Show();
         }
 
-        public void OnComplete(Task task)
-        {
-            string message;
-            if (task.IsSuccessful)
-            {
-                message = GetString(Resource.String.complete_add_geofence);
-                ShowSnackbar(message);
-                System.Diagnostics.Debug.WriteLine(message);
-            }
-            else
-            {
-                // Get the status code for the error and log it using a user-friendly message.
-                message = Geofences.GeofenceErrorMessages.GetErrorString(this, task.Exception);
-                ShowSnackbar($"Error: {message}");
-                System.Diagnostics.Debug.WriteLine(message);
-            }
+        #region IGeofenceRegisterCompleteListener
 
-            var adapter = new DependencyServices.DbAdapter_Droid();
-            adapter.AddDeviceLog("ジオフェンス登録処理", message);
+        public void RegisterCompleted(bool successful, string message)
+        {
+            ShowSnackbar(message);
         }
+        #endregion
     }
 
     /// <summary>
