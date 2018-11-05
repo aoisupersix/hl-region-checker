@@ -3,18 +3,10 @@ using System.Collections.Generic;
 using Android.App;
 using Android.Content;
 using Android.Gms.Location;
-using Android.Locations;
-using Android.Support.V4.App;
-using Java.Lang;
 using Android.Util;
+
 using HLRegionChecker.Models;
-using Android.Support.V4.Content;
-using Android.Content.PM;
-using Android;
-using Firebase.Database;
-using HLRegionChecker.Const;
 using HLRegionChecker.Droid.Notification;
-using HLRegionChecker.Interfaces;
 using HLRegionChecker.Droid.DependencyServices;
 
 namespace HLRegionChecker.Droid.Geofences
@@ -24,13 +16,13 @@ namespace HLRegionChecker.Droid.Geofences
     /// <summary>
     /// ジオフェンスに侵入/退出した際の処理クラス
     /// </summary>
-    public class GeofenceTransitionsIntentService : BroadcastReceiver
+    public class GeofenceTransitionsBroadcastReceiver : BroadcastReceiver
     {
         private const string TAG = "GeofenceTransitionsIS";
 
         private Android.Content.Context mContext;
 
-        public GeofenceTransitionsIntentService()
+        public GeofenceTransitionsBroadcastReceiver()
         {
         }
 

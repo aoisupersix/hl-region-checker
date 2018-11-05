@@ -129,7 +129,7 @@ namespace HLRegionChecker.Droid.Geofences
             if (GeofencePendingIntent == null)
             {
                 //指定されてないのでとりあえずPendingIntentを作る
-                var intent = new Intent(_context, typeof(Geofences.GeofenceTransitionsIntentService));
+                var intent = new Intent(_context, typeof(Geofences.GeofenceTransitionsBroadcastReceiver));
                 intent.SetAction("org.hykwlab.hlregionchecker_droid.geofence.ACTION_RECEIVE_GEOFENCE");
                 _context.SendBroadcast(intent);
                 GeofencePendingIntent = PendingIntent.GetBroadcast(_context, 0, intent, PendingIntentFlags.UpdateCurrent);
