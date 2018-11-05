@@ -24,7 +24,7 @@ namespace HLRegionChecker.Regions
         /// </summary>
         public int Minor { get; set; }
 
-        public BeaconRegion(string identifier, string uuid, int major, int minor) : base(identifier, "ビーコン")
+        public BeaconRegion(string identifier, string uuid, int major, int minor) : base(identifier, "ビーコン領域")
         {
             Uuid = uuid;
             Major = major;
