@@ -164,9 +164,11 @@ namespace HLRegionChecker.iOS.Manager
             else
             {
                 //学内領域に侵入
-                var gregion = RegionList.CampusAllRegions.Where(r => r.Identifier.Equals(region.Identifier)).First();
-                var dbAdapter = new DbAdapter_iOS();
-                dbAdapter.UpdateGeofenceStatus(UserDataModel.Instance.DeviceId, gregion.DbIdentifierName, true);
+                var gregion = RegionList.CampusAllRegions
+                    .Where(r => r.Identifier.Equals(region.Identifier))
+                    .First();
+
+                adapter.UpdateGeofenceStatus(UserDataModel.Instance.DeviceId, gregion.DbIdentifierName, true);
                 adapter.AddDeviceLog("ジオフェンス状態を更新", $"領域[{gregion.Name}]に侵入");
                 AddLocationLog(manager.Location);
             }
@@ -191,8 +193,12 @@ namespace HLRegionChecker.iOS.Manager
             else
             {
                 //学内領域から退出
-                var gregion = RegionList.CampusAllRegions.Where(r => r.Identifier.Equals(region.Identifier)).First();
+                var gregion = RegionList.CampusAllRegions
+                    .Concat(new[] { RegionList.テスト })
+                    .Where(r => r.Identifier.Equals(region.Identifier))
+                    .First();
                 adapter.UpdateGeofenceStatus(UserDataModel.Instance.DeviceId, gregion.DbIdentifierName, false);
+
                 adapter.AddDeviceLog("ジオフェンス状態を更新", $"領域[{gregion.Name}]から退出");
                 AddLocationLog(manager.Location);
             }

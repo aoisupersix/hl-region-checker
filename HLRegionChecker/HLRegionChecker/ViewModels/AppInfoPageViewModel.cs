@@ -71,7 +71,7 @@ namespace HLRegionChecker.ViewModels
         /// <summary>
         /// ビーコン(研究室）識別子
         /// </summary>
-        public string BeaconIdentifier { get; } = Region.研究室.GetIdentifier();
+        public string BeaconIdentifier { get; } = Const.Region.研究室.GetIdentifier();
 
         /// <summary>
         /// キャンパス1領域名

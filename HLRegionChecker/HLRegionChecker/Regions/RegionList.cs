@@ -44,11 +44,16 @@ namespace HLRegionChecker.Regions
         public static GeofenceRegion キャンパス工学部棟 = new GeofenceRegion("org.hykwlab.hlregionchecker.region-campus-3", "工学部棟付近", 35.62561, 139.27954, 370);
 
         /// <summary>
+        /// 領域テスト用
+        /// </summary>
+        public static GeofenceRegion テスト = new GeofenceRegion("org.hykwlab.hlregionchecker.region-campus-4", "テスト領域", 35.817256, 139.424534, 100);
+
+        /// <summary>
         /// 学内領域
         /// </summary>
         public static IEnumerable<GeofenceRegion> CampusAllRegions
         {
-            get => new[] { キャンパス駐輪場, キャンパスグラウンド, キャンパス工学部棟 };
+            get => new[] { キャンパス駐輪場, キャンパスグラウンド, キャンパス工学部棟, テスト };
         }
     }
 }
