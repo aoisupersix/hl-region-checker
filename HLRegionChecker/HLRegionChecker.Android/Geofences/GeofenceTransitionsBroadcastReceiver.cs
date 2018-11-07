@@ -11,31 +11,28 @@ using HLRegionChecker.Droid.DependencyServices;
 
 namespace HLRegionChecker.Droid.Geofences
 {
-    [BroadcastReceiver(Enabled = true, Exported = true)]
-    [IntentFilter( new[]{ "org.hykwlab.hlregionchecker_droid.geofence.ACTION_RECEIVE_GEOFENCE" })]
+    [Service]
     /// <summary>
     /// ジオフェンスに侵入/退出した際の処理クラス
     /// </summary>
-    public class GeofenceTransitionsBroadcastReceiver : BroadcastReceiver
+    public class GeofenceTransitionsIntentService : IntentService
     {
         private const string TAG = "GeofenceTransitionsIS";
 
-        private Android.Content.Context mContext;
-
-        public GeofenceTransitionsBroadcastReceiver()
+        public GeofenceTransitionsIntentService()
         {
         }
 
-        public override void OnReceive(Context context, Intent intent)
+        protected override void OnHandleIntent(Intent intent)
         {
             var geofencingEvent = GeofencingEvent.FromIntent(intent);
             var dbAdapter = new DbAdapter_Droid();
-            mContext = context;
+
             if (geofencingEvent.HasError)
             {
-                var errorMessage = GeofenceErrorMessages.GetErrorString(context, geofencingEvent.ErrorCode);
+                var errorMessage = GeofenceErrorMessages.GetErrorString(this, geofencingEvent.ErrorCode);
                 dbAdapter.AddDeviceLog("ジオフェンスエラー", errorMessage);
-                NotificationUtil.Instance.SendNotification(context, NotificationUtil.STATUS_NOTIFICATION_CHANNEL_ID, "GeofenceError", "エラーです。", errorMessage);
+                NotificationUtil.Instance.SendNotification(this, NotificationUtil.STATUS_NOTIFICATION_CHANNEL_ID, "GeofenceError", "エラーです。", errorMessage);
                 return;
             }
 
@@ -47,7 +44,7 @@ namespace HLRegionChecker.Droid.Geofences
 
                 IList<IGeofence> triggeringGeofences = geofencingEvent.TriggeringGeofences;
                 var updateGeofenceStatus = geofenceTransition == Geofence.GeofenceTransitionEnter;
-                string geofenceTransitionDetails = GetGeofenceTransitionDetails(context, geofenceTransition, triggeringGeofences);
+                string geofenceTransitionDetails = GetGeofenceTransitionDetails(this, geofenceTransition, triggeringGeofences);
                 Log.Info(TAG, geofenceTransitionDetails);
 
                 var triggerRegions = triggeringGeofences
@@ -73,8 +70,8 @@ namespace HLRegionChecker.Droid.Geofences
             else
             {
                 // Log the error.
-                Log.Error(TAG, context.GetString(Resource.String.geofence_transition_invalid_type, new[] { new Java.Lang.Integer(geofenceTransition) }));
-                dbAdapter.AddDeviceLog("ジオフェンスエラー", context.GetString(Resource.String.geofence_transition_invalid_type, new[] { new Java.Lang.Integer(geofenceTransition) }));
+                Log.Error(TAG, this.GetString(Resource.String.geofence_transition_invalid_type, new[] { new Java.Lang.Integer(geofenceTransition) }));
+                dbAdapter.AddDeviceLog("ジオフェンスエラー", this.GetString(Resource.String.geofence_transition_invalid_type, new[] { new Java.Lang.Integer(geofenceTransition) }));
             }
         }
 
@@ -97,11 +94,11 @@ namespace HLRegionChecker.Droid.Geofences
             switch (transitionType)
             {
                 case Geofence.GeofenceTransitionEnter:
-                    return mContext.GetString(Resource.String.geofence_transition_entered);
+                    return this.GetString(Resource.String.geofence_transition_entered);
                 case Geofence.GeofenceTransitionExit:
-                    return mContext.GetString(Resource.String.geofence_transition_exited);
+                    return this.GetString(Resource.String.geofence_transition_exited);
                 default:
-                    return mContext.GetString(Resource.String.unknown_geofence_transition);
+                    return this.GetString(Resource.String.unknown_geofence_transition);
             }
         }
     }
