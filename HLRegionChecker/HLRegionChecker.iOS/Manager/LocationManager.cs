@@ -194,7 +194,6 @@ namespace HLRegionChecker.iOS.Manager
             {
                 //学内領域から退出
                 var gregion = RegionList.CampusAllRegions
-                    .Concat(new[] { RegionList.テスト })
                     .Where(r => r.Identifier.Equals(region.Identifier))
                     .First();
                 adapter.UpdateGeofenceStatus(UserDataModel.Instance.DeviceId, gregion.DbIdentifierName, false);

@@ -48,8 +48,6 @@ namespace HLRegionChecker.Droid
             _beaconManager.BeaconParsers.Add(new BeaconParser().SetBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
 
             // 以下フォアグラウンドサービス用
-            Android.App.Notification.Builder builder = new Android.App.Notification.Builder(this);
-
             var intent = new Intent(this, typeof(MainActivity));
             PendingIntent pendingIntent = PendingIntent.GetActivity(
                 this, 0, intent, PendingIntentFlags.UpdateCurrent
@@ -63,7 +61,7 @@ namespace HLRegionChecker.Droid
                 .SetContentTitle("Scanning for Beacons")
                 .SetContentIntent(pendingIntent);
 
-            _beaconManager.EnableForegroundServiceScanning(builder.Build(), 456);
+            _beaconManager.EnableForegroundServiceScanning(notificationBuilder.Build(), 456);
             //_beaconManager.BackgroundBetweenScanPeriod = 0;
             //_beaconManager.BackgroundScanPeriod = 1100;
             _beaconManager.SetEnableScheduledScanJobs(false);
