@@ -93,7 +93,7 @@ namespace HLRegionChecker.iOS.Manager
             formatter.DateFormat = "yyyy-MM-dd HH:mm:ss";
             formatter.TimeZone = NSTimeZone.SystemTimeZone;
             var dateString = formatter.StringFor(location.Timestamp);
-            adapter.AddDeviceLog($"位置情報取得：{dateString}", $"lat:{ location.Coordinate.Latitude},lng: { location.Coordinate.Longitude}");
+            adapter.AddDeviceLog($"位置情報取得：{dateString},精度：{location.VerticalAccuracy}", $"{location.Coordinate.Latitude},{location.Coordinate.Longitude}");
         }
 
         /// <summary>
@@ -170,7 +170,11 @@ namespace HLRegionChecker.iOS.Manager
 
                 adapter.UpdateGeofenceStatus(UserDataModel.Instance.DeviceId, gregion.DbIdentifierName, true);
                 adapter.AddDeviceLog("ジオフェンス状態を更新", $"領域[{gregion.Name}]に侵入");
-                AddLocationLog(manager.Location);
+
+                if (manager.Location != null)
+                    AddLocationLog(manager.Location);
+                else
+                    manager.RequestLocation();
             }
         }
 
@@ -198,8 +202,25 @@ namespace HLRegionChecker.iOS.Manager
                     .First();
                 adapter.UpdateGeofenceStatus(UserDataModel.Instance.DeviceId, gregion.DbIdentifierName, false);
 
-                adapter.AddDeviceLog("ジオフェンス状態を更新", $"領域[{gregion.Name}]から退出");
-                AddLocationLog(manager.Location);
+                adapter.AddDeviceLog($"領域[{gregion.Name}]から退出");
+
+                if (manager.Location != null)
+                    AddLocationLog(manager.Location);
+                else
+                    manager.RequestLocation();
+            }
+        }
+
+        /// <summary>
+        /// 位置情報取得時に緯度経度ログを送信します。
+        /// </summary>
+        /// <param name="manager"></param>
+        /// <param name="locations"></param>
+        public override void LocationsUpdated(CLLocationManager manager, CLLocation[] locations)
+        {
+            foreach (var location in locations)
+            {
+                AddLocationLog(location);
             }
         }
 
