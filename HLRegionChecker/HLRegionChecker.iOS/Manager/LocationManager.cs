@@ -85,7 +85,7 @@ namespace HLRegionChecker.iOS.Manager
         /// 位置情報のログを送信します。
         /// </summary>
         /// <param name="location"></param>
-        private void AddLocationLog(CLLocation location)
+        private void AddLocationLog(CLLocation location, string type)
         {
             var adapter = new DbAdapter_iOS();
 
@@ -93,7 +93,7 @@ namespace HLRegionChecker.iOS.Manager
             formatter.DateFormat = "yyyy-MM-dd HH:mm:ss";
             formatter.TimeZone = NSTimeZone.SystemTimeZone;
             var dateString = formatter.StringFor(location.Timestamp);
-            adapter.AddDeviceLog($"位置情報取得：{dateString},精度：{location.VerticalAccuracy}", $"{location.Coordinate.Latitude},{location.Coordinate.Longitude}");
+            adapter.AddDeviceLog($"位置情報取得：{dateString},精度：{location.VerticalAccuracy},種別：{type}", $"{location.Coordinate.Latitude},{location.Coordinate.Longitude}");
         }
 
         /// <summary>
@@ -172,7 +172,7 @@ namespace HLRegionChecker.iOS.Manager
                 adapter.AddDeviceLog("ジオフェンス状態を更新", $"領域[{gregion.Name}]に侵入");
 
                 if (manager.Location != null)
-                    AddLocationLog(manager.Location);
+                    AddLocationLog(manager.Location, "LastUpdate");
                 else
                     manager.RequestLocation();
             }
@@ -205,7 +205,7 @@ namespace HLRegionChecker.iOS.Manager
                 adapter.AddDeviceLog($"領域[{gregion.Name}]から退出");
 
                 if (manager.Location != null)
-                    AddLocationLog(manager.Location);
+                    AddLocationLog(manager.Location, "LastUpdate");
                 else
                     manager.RequestLocation();
             }
@@ -220,7 +220,7 @@ namespace HLRegionChecker.iOS.Manager
         {
             foreach (var location in locations)
             {
-                AddLocationLog(location);
+                AddLocationLog(location, "Request");
             }
         }
 
