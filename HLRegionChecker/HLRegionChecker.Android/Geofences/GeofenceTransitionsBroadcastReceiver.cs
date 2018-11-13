@@ -8,6 +8,7 @@ using Android.Util;
 using HLRegionChecker.Models;
 using HLRegionChecker.Droid.Notification;
 using HLRegionChecker.Droid.DependencyServices;
+using System;
 
 namespace HLRegionChecker.Droid.Geofences
 {
@@ -58,12 +59,13 @@ namespace HLRegionChecker.Droid.Geofences
                 var lat = geofencingEvent.TriggeringLocation.Latitude;
                 var lng = geofencingEvent.TriggeringLocation.Longitude;
                 var accuracy = geofencingEvent.TriggeringLocation.Accuracy;
+                var date = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
 
                 // 更新
                 foreach (var region in triggerRegions)
                 {
                     var statusText = geofenceTransition == Geofence.GeofenceTransitionEnter ? "侵入" : "退出";
-                    dbAdapter.AddDeviceLog($"ジオフェンス[{region.DbIdentifierName}]の状態を[{statusText}]に更新", $"Location:{lat},{lng}, accuracy:{accuracy}");
+                    dbAdapter.AddDeviceLog($"ジオフェンス[{region.DbIdentifierName}]の状態を[{statusText}]に更新", $"{date},Droid,{lat},{lng},{accuracy},{statusText}");
                     dbAdapter.UpdateGeofenceStatus(UserDataModel.Instance.DeviceId, region.DbIdentifierName, updateGeofenceStatus);
                 }
             }

@@ -84,16 +84,23 @@ namespace HLRegionChecker.iOS.Manager
         /// <summary>
         /// 位置情報のログを送信します。
         /// </summary>
-        /// <param name="location"></param>
-        private void AddLocationLog(CLLocation location, string type)
+        /// <param name="location">CLLocation</param>
+        /// <param name="type">位置情報の取得種別</param>
+        /// <param name="isEnter">侵入か？</param>
+        private void AddLocationLog(CLLocation location, string type, bool? isEnter = null)
         {
             var adapter = new DbAdapter_iOS();
 
             var formatter = new NSDateFormatter();
-            formatter.DateFormat = "yyyy-MM-dd HH:mm:ss";
+            formatter.DateFormat = "yyyy/MM/dd HH:mm:ss";
             formatter.TimeZone = NSTimeZone.SystemTimeZone;
             var dateString = formatter.StringFor(location.Timestamp);
-            adapter.AddDeviceLog($"位置情報取得：{dateString},精度：{location.VerticalAccuracy},種別：{type}", $"{location.Coordinate.Latitude},{location.Coordinate.Longitude}");
+            var detailString = $"{dateString},iOS,{location.Coordinate.Latitude},{location.Coordinate.Longitude},{location.VerticalAccuracy}";
+
+            if (isEnter.HasValue)
+                detailString += $",{(isEnter.Value ? "侵入" : "退出")}";
+
+            adapter.AddDeviceLog($"位置情報取得：{dateString},精度：{location.VerticalAccuracy},種別：{type}",detailString);
         }
 
         /// <summary>
@@ -172,7 +179,7 @@ namespace HLRegionChecker.iOS.Manager
                 adapter.AddDeviceLog("ジオフェンス状態を更新", $"領域[{gregion.Name}]に侵入");
 
                 if (manager.Location != null)
-                    AddLocationLog(manager.Location, "LastUpdate");
+                    AddLocationLog(manager.Location, "LastUpdate", true);
                 else
                     manager.RequestLocation();
             }
@@ -205,7 +212,7 @@ namespace HLRegionChecker.iOS.Manager
                 adapter.AddDeviceLog($"領域[{gregion.Name}]から退出");
 
                 if (manager.Location != null)
-                    AddLocationLog(manager.Location, "LastUpdate");
+                    AddLocationLog(manager.Location, "LastUpdate", false);
                 else
                     manager.RequestLocation();
             }
