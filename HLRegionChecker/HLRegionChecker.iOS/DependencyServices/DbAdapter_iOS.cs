@@ -217,9 +217,13 @@ namespace HLRegionChecker.iOS.DependencyServices
                 vals.Add(memberId);
             }
 
-            //OS情報
+            // OS情報
             keys.Add("os");
             vals.Add("iOS");
+
+            // バージョン情報
+            keys.Add("version");
+            vals.Add(new AssemblyService_iOS().GetVersionName());
 
             if (!keys.Any())
                 return;
