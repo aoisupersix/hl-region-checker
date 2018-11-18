@@ -53,7 +53,8 @@ namespace HLRegionChecker.Regions
         /// </summary>
         public static IEnumerable<GeofenceRegion> CampusAllRegions
         {
-            get => new[] { キャンパス駐輪場, キャンパスグラウンド, キャンパス工学部棟, テスト };
+            // get => new[] { キャンパス駐輪場, キャンパスグラウンド, キャンパス工学部棟, テスト };
+            get => new[] { キャンパス駐輪場, キャンパスグラウンド, キャンパス工学部棟 };
         }
     }
 }
