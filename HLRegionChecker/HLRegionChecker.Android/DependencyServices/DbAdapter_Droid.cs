@@ -215,7 +215,11 @@ namespace HLRegionChecker.Droid.DependencyServices
 
             // 更新
             var devRef = FirebaseDatabase.Instance.GetReference("devices");
-            devRef.Child(deviceIdentifier).Child("geofence_status").UpdateChildren(childDict);
+            devRef.Child(deviceIdentifier).Child("geofence_status").RunTransaction(new ActionTransaction((mutableData) =>
+            {
+                mutableData.Child(dbGeofenceIdentifier).Value = inTheArea;
+                return Transaction.Success(mutableData);
+            }));
         }
 
         /// <summary>
@@ -268,6 +272,43 @@ namespace HLRegionChecker.Droid.DependencyServices
             devRef.Child(devId).Child("Logs").Push().UpdateChildren(childDict);
         }
         #endregion インタフェース実装
+    }
+
+    /// <summary>
+    /// トランザクション処理をデリゲートで行うヘルパークラス
+    /// </summary>
+    class ActionTransaction : Java.Lang.Object, Transaction.IHandler
+    {
+        /// <summary>
+        /// トランザクショナルに行う更新処理デリゲート
+        /// </summary>
+        public Func<MutableData, Transaction.Result> TransactionAction { get; set; }
+
+        /// <summary>
+        /// トランザクション処理完了後に呼ばれる後処理デリゲート
+        /// </summary>
+        public Action<DatabaseError, bool, DataSnapshot> CompleteAction { get; set; }
+
+        public ActionTransaction(Func<MutableData, Transaction.Result> transactionAction)
+        {
+            TransactionAction = transactionAction;
+        }
+
+        public ActionTransaction(Func<MutableData, Transaction.Result> transactionAction, Action<DatabaseError, bool, DataSnapshot> completeAction)
+        {
+            TransactionAction = transactionAction;
+            CompleteAction = completeAction;
+        }
+
+        public Transaction.Result DoTransaction(MutableData currentData)
+        {
+            return TransactionAction(currentData);
+        }
+
+        public void OnComplete(DatabaseError error, bool committed, DataSnapshot currentData)
+        {
+            CompleteAction?.Invoke(error, committed, currentData);
+        }
     }
 
     /// <summary>
