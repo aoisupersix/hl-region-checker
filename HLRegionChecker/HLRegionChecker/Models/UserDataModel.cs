@@ -62,7 +62,7 @@ namespace HLRegionChecker.Models
         private const string PROPERTY_KEY_MEMBER_ID = "memberid";
 
         /// <summary>
-        /// メンバーID永続化用のキー
+        /// デバイスID永続化用のキー
         /// </summary>
         private const string PROPERTY_KEY_DEVICE_ID = "deviceid";
 

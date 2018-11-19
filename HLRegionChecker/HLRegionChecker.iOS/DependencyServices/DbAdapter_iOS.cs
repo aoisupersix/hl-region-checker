@@ -180,15 +180,17 @@ namespace HLRegionChecker.iOS.DependencyServices
         /// <param name="inTheArea">領域の範囲内かどうか（true: 領域内, false: 領域外)</param>
         public void UpdateGeofenceStatus(string deviceIdentifier, string dbGeofenceIdentifier, bool inTheArea)
         {
-            // 更新情報の用意
-            var keys = new[] { dbGeofenceIdentifier };
-            var vals = new[] { NSObject.FromObject(inTheArea) };
-            var childDict = NSDictionary.FromObjectsAndKeys(vals, keys, keys.Length);
-
             // 更新
             var rootRef = Database.DefaultInstance.GetRootReference();
             var devRef = rootRef.GetChild("devices");
-            devRef.GetChild(deviceIdentifier).GetChild("geofence_status").UpdateChildValues(childDict);
+
+            // 重要！
+            // 在室状況の更新は非同期に行われるためトランザクショナルにやる必要がある
+            devRef.GetChild(deviceIdentifier).GetChild("geofence_status").RunTransaction(mutableData =>
+            {
+                mutableData.GetChildData(dbGeofenceIdentifier).SetValue(NSObject.FromObject(inTheArea));
+                return TransactionResult.Success(mutableData);
+            });
         }
 
         /// <summary>
