@@ -96,7 +96,6 @@ namespace HLRegionChecker.Droid
         public override void OnCreate()
         {
             base.OnCreate();
-            Console.WriteLine("OnCreate!");
 
             //通知チャンネル登録
             NotificationUtil.Instance.CreateNotificationChannel((NotificationManager)GetSystemService(NotificationService), this);

@@ -7,7 +7,9 @@
   <ItemGroup>
     <None Remove="GoogleService-Info.plist" />
     <None Remove="Resources\Icon_AppIcon.png" />
+    <None Remove="Resources\Icon_DisableForegroundService.png" />
     <None Remove="Resources\Icon_Dog.png" />
+    <None Remove="Resources\Icon_EnableForegroundService.png" />
     <None Remove="Resources\Icon_IdentifierSelection.png" />
     <None Remove="Resources\Icon_Info.png" />
     <None Remove="Resources\Icon_Open.png" />
@@ -17,7 +19,9 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Resources\Icon_AppIcon.png" />
+    <EmbeddedResource Include="Resources\Icon_DisableForegroundService.png" />
     <EmbeddedResource Include="Resources\Icon_Dog.png" />
+    <EmbeddedResource Include="Resources\Icon_EnableForegroundService.png" />
     <EmbeddedResource Include="Resources\Icon_IdentifierSelection.png" />
     <EmbeddedResource Include="Resources\Icon_Info.png" />
     <EmbeddedResource Include="Resources\Icon_Open.png" />

@@ -150,7 +150,7 @@ namespace HLRegionChecker.ViewModels
                 return;
 
             UserDataModel.Instance.IsUseForegroundService = false;
-            await pageDialogService.DisplayAlertAsync("完了", "フォアグラウンドサービスを無効化しました。適用にはアプリを再起動する必要があります。", "OK");
+            await pageDialogService.DisplayAlertAsync("完了", "フォアグラウンドサービスを無効化しました。適用にはアプリを再起動する必要があります。設定＞アプリから強制停止を行い、もう一度起動して下さい。", "OK");
 
             RegisterBeaconServiceMenu(item, pageDialogService);
         }
@@ -159,14 +159,14 @@ namespace HLRegionChecker.ViewModels
         {
             var ret = await pageDialogService.DisplayAlertAsync(
                 "ビーコンフォアグラウンドサービス有効化",
-                "ビーコンのフォアグラウンドサービスを無効にし、スキャンジョブに切り替えます。「Scanning for beacons」の通知は表示されなくなりますが、ビーコンの検知に最大15分掛かります。よろしいですか？",
+                "ビーコンのスキャンジョブを無効にし、フォアグラウンドサービスに切り替えます。ビーコンの検知は即時に行われるようになりますが、「Scanning for beacons」の通知は表示されアプリがバックグラウンドで動作します。よろしいですか？",
                 "OK", "キャンセル");
 
             if (false == ret)
                 return;
 
             UserDataModel.Instance.IsUseForegroundService = true;
-            await pageDialogService.DisplayAlertAsync("完了", "フォアグラウンドサービスを無効化しました。適用にはアプリを再起動する必要があります。", "OK");
+            await pageDialogService.DisplayAlertAsync("完了", "フォアグラウンドサービスを有効化しました。適用にはアプリを再起動する必要があります。", "OK");
 
             RegisterBeaconServiceMenu(item, pageDialogService);
         }
@@ -176,14 +176,14 @@ namespace HLRegionChecker.ViewModels
             if (UserDataModel.Instance.IsUseForegroundService)
             {
                 // フォアグラウンドサービス無効化
-                item.Icon.Value = null;
+                item.Icon.Value = ImageSource.FromResource("HLRegionChecker.Resources.Icon_DisableForegroundService.png");
                 item.Title.Value = "ビーコンサービス無効化";
                 item.OnSelectedAction = () => DisableBeaconService(item, pageDialogService);
             }
             else
             {
                 // フォアグラウンドサービス有効化
-                item.Icon.Value = null;
+                item.Icon.Value = ImageSource.FromResource("HLRegionChecker.Resources.Icon_EnableForegroundService.png");
                 item.Title.Value = "ビーコンサービス有効化";
                 item.OnSelectedAction = () => EnableBeaconService(item, pageDialogService);
             }
