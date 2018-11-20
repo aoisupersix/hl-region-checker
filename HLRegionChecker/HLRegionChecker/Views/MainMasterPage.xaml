@@ -70,10 +70,10 @@
                                              HorizontalOptions="FillAndExpand">
                                     <Image HeightRequest="40"
                                            WidthRequest="40"
-                                           Source="{Binding Icon}" />
+                                           Source="{Binding Icon.Value}" />
                                     <Label VerticalOptions="FillAndExpand"
                                            VerticalTextAlignment="Center"
-                                           Text="{Binding Title}"
+                                           Text="{Binding Title.Value}"
                                            TextColor="Blue"
                                            FontSize="Large" />
                                 </StackLayout>

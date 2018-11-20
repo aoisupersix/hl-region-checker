@@ -66,10 +66,16 @@ namespace HLRegionChecker.Models
         /// </summary>
         private const string PROPERTY_KEY_DEVICE_ID = "deviceid";
 
+        /// <summary>
+        /// フォアグラウンドサービス利用フラグ永続化用のキー
+        /// </summary>
+        private const string PROPERTY_KEY_ISUSE_FOREGROUND_SERVICE = "isuseforegroundservice";
+
         public static readonly int DefaultMemberId = -1;
 
         private int _memberId;
         private string _deviceId;
+        private bool _isUseForegroundService;
 
         /// <summary>
         /// メンバーID
@@ -100,6 +106,21 @@ namespace HLRegionChecker.Models
                 _deviceId = value;
                 SetProperty(ref _deviceId, value);
                 DbModel.Instance.UpdateDeviceInfo();
+            }
+        }
+
+        /// <summary>
+        /// Androidの場合、フォアグラウンドサービスを利用するか？
+        /// デフォルトはtrue
+        /// </summary>
+        public bool IsUseForegroundService
+        {
+            get => AppSettings.GetValueOrDefault(PROPERTY_KEY_ISUSE_FOREGROUND_SERVICE, true);
+            set
+            {
+                AppSettings.AddOrUpdateValue(PROPERTY_KEY_ISUSE_FOREGROUND_SERVICE, value);
+                _isUseForegroundService = value;
+                SetProperty(ref _isUseForegroundService, value);
             }
         }
     }

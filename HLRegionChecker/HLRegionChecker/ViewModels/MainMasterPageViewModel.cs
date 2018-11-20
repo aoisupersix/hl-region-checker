@@ -32,7 +32,7 @@ namespace HLRegionChecker.ViewModels
         /// <summary>
         /// Masterのメニューアイテム
         /// </summary>
-        public List<MenuItem> MenuItems { get; private set; }
+        public ReactiveCollection<MenuItem> MenuItems { get; private set; }
         /// <summary>
         /// Masterのアプリアイコン
         /// </summary>
@@ -56,61 +56,60 @@ namespace HLRegionChecker.ViewModels
             MemberName = DbModel.Instance.ObserveProperty(x => x.MemberDisplayName).ToReactiveProperty().AddTo(Disposable);
 
             //メニューの初期化
-            MenuItems = new List<MenuItem>(new[]
-            {
-                new MenuItem
+            MenuItems = new ReactiveCollection<MenuItem>();
+            MenuItems.Add(new MenuItem
+            (
+                ImageSource.FromResource("HLRegionChecker.Resources.Icon_SelfUpdate.png"),
+                "ステータス更新",
+                () => { SelfUpdate(pageDialogService); }
+            ));
+            MenuItems.Add(new MenuItem
+            (
+                ImageSource.FromResource("HLRegionChecker.Resources.Icon_IdentifierSelection.png"),
+                "ユーザ識別子選択",
+                () =>
                 {
-                    Icon = ImageSource.FromResource("HLRegionChecker.Resources.Icon_SelfUpdate.png"),
-                    Title = "ステータス更新",
-                    OnSelectedAction = () =>
-                    {
-                        SelfUpdate(pageDialogService);
-                    }
-                },
-                new MenuItem
-                {
-                    Icon = ImageSource.FromResource("HLRegionChecker.Resources.Icon_IdentifierSelection.png"),
-                    Title = "ユーザ識別子選択",
-                    OnSelectedAction = () =>
-                    {
-                        NavigationService.NavigateAsync("NavigationPage/StatusListPage/IdentifierSelectPage", new NavigationParameters { { typeof(MainMasterPageViewModel).Name, this } });
-                    }
-                },
-                new MenuItem
-                {
-                    Icon = ImageSource.FromResource("HLRegionChecker.Resources.Icon_Open.png"),
-                    Title = "Webで確認する",
-                    OnSelectedAction = () =>
-                    {
-                        Uri uri = new Uri("https://hlmanager-32609.firebaseapp.com/");
-                        Xamarin.Forms.DependencyService.Get<IWebBrowserService>().Open(uri);
-                    }
-                },
-                new MenuItem
-                {
-                    Icon = ImageSource.FromResource("HLRegionChecker.Resources.Icon_Info.png"),
-                    Title = "アプリ情報",
-                    OnSelectedAction = () =>
-                    {
-                        NavigationService.NavigateAsync("NavigationPage/StatusListPage/AppInfoPage", new NavigationParameters { { typeof(MainMasterPageViewModel).Name, this } });
-                    }
+                    NavigationService.NavigateAsync("NavigationPage/StatusListPage/IdentifierSelectPage", new NavigationParameters { { typeof(MainMasterPageViewModel).Name, this } });
                 }
-            });
+            ));
+            MenuItems.Add(new MenuItem
+            (
+                ImageSource.FromResource("HLRegionChecker.Resources.Icon_Open.png"),
+                "Webで確認する",
+                () =>
+                {
+                    Uri uri = new Uri("https://hlmanager-32609.firebaseapp.com/");
+                    Xamarin.Forms.DependencyService.Get<IWebBrowserService>().Open(uri);
+                }
+            ));
+            MenuItems.Add(new MenuItem
+            (
+                ImageSource.FromResource("HLRegionChecker.Resources.Icon_Info.png"),
+                "アプリ情報",
+                () =>
+                {
+                    NavigationService.NavigateAsync("NavigationPage/StatusListPage/AppInfoPage", new NavigationParameters { { typeof(MainMasterPageViewModel).Name, this } });
+                }
+            ));
 
             if (Device.RuntimePlatform == Device.Android)
             {
                 // Droid専用メニュー
                 MenuItems.Add(new MenuItem
-                {
-                    Icon = ImageSource.FromResource("HLRegionChecker.Resources.Icon_RegisterGeofences.png"),
-                    Title = "ジオフェンス再登録",
-                    OnSelectedAction = () =>
+                (
+                    ImageSource.FromResource("HLRegionChecker.Resources.Icon_RegisterGeofences.png"),
+                    "ジオフェンス再登録",
+                    () =>
                     {
                         var rgAdapter = Xamarin.Forms.DependencyService.Get<IRegisterGeofences>();
                         rgAdapter.Register();
                         pageDialogService.DisplayAlertAsync("完了", "ジオフェンスの再登録処理を行いました。", "OK");
                     }
-                });
+                ));
+
+                var beaconServiceMenu = new MenuItem();
+                MenuItems.Add(beaconServiceMenu);
+                RegisterBeaconServiceMenu(beaconServiceMenu, pageDialogService);
             }
 
             //メニューが選択された際の処理
@@ -140,6 +139,56 @@ namespace HLRegionChecker.ViewModels
             }
         }
 
+        private async void DisableBeaconService(MenuItem item, IPageDialogService pageDialogService)
+        {
+            var ret = await pageDialogService.DisplayAlertAsync(
+                "ビーコンフォアグラウンドサービス無効化",
+                "ビーコンのフォアグラウンドサービスを無効にし、スキャンジョブに切り替えます。「Scanning for beacons」の通知は表示されなくなりますが、ビーコンの検知に最大15分掛かります。よろしいですか？",
+                "OK", "キャンセル");
+
+            if (false == ret)
+                return;
+
+            UserDataModel.Instance.IsUseForegroundService = false;
+            await pageDialogService.DisplayAlertAsync("完了", "フォアグラウンドサービスを無効化しました。適用にはアプリを再起動する必要があります。", "OK");
+
+            RegisterBeaconServiceMenu(item, pageDialogService);
+        }
+
+        private async void EnableBeaconService(MenuItem item, IPageDialogService pageDialogService)
+        {
+            var ret = await pageDialogService.DisplayAlertAsync(
+                "ビーコンフォアグラウンドサービス有効化",
+                "ビーコンのフォアグラウンドサービスを無効にし、スキャンジョブに切り替えます。「Scanning for beacons」の通知は表示されなくなりますが、ビーコンの検知に最大15分掛かります。よろしいですか？",
+                "OK", "キャンセル");
+
+            if (false == ret)
+                return;
+
+            UserDataModel.Instance.IsUseForegroundService = true;
+            await pageDialogService.DisplayAlertAsync("完了", "フォアグラウンドサービスを無効化しました。適用にはアプリを再起動する必要があります。", "OK");
+
+            RegisterBeaconServiceMenu(item, pageDialogService);
+        }
+
+        private void RegisterBeaconServiceMenu(MenuItem item, IPageDialogService pageDialogService)
+        {
+            if (UserDataModel.Instance.IsUseForegroundService)
+            {
+                // フォアグラウンドサービス無効化
+                item.Icon.Value = null;
+                item.Title.Value = "ビーコンサービス無効化";
+                item.OnSelectedAction = () => DisableBeaconService(item, pageDialogService);
+            }
+            else
+            {
+                // フォアグラウンドサービス有効化
+                item.Icon.Value = null;
+                item.Title.Value = "ビーコンサービス有効化";
+                item.OnSelectedAction = () => EnableBeaconService(item, pageDialogService);
+            }
+        }
+
         public override void Destroy()
         {
             Dispose();
@@ -160,15 +209,22 @@ namespace HLRegionChecker.ViewModels
     /// </summary>
     public class MenuItem
     {
+        public MenuItem(ImageSource icon = null, string title = null, Action selectedAction = null)
+        {
+            Icon.Value = icon;
+            Title.Value = title;
+            OnSelectedAction = selectedAction;
+        }
+
         /// <summary>
         /// メニューアイテムのアイコン
         /// </summary>
-        public ImageSource Icon { get; set; }
+        public ReactiveProperty<ImageSource> Icon { get; set; } = new ReactiveProperty<ImageSource>();
 
         /// <summary>
         /// メニューアイテムのタイトル
         /// </summary>
-        public string Title { get; set; }
+        public ReactiveProperty<string> Title { get; set; } = new ReactiveProperty<string>();
 
         public Action OnSelectedAction { get; set; }
     }

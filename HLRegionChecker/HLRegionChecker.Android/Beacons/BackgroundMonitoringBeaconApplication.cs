@@ -47,27 +47,30 @@ namespace HLRegionChecker.Droid
             _beaconManager.BeaconParsers.Clear();
             _beaconManager.BeaconParsers.Add(new BeaconParser().SetBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
 
-            // 以下フォアグラウンドサービス用
-            var intent = new Intent(this, typeof(MainActivity));
-            PendingIntent pendingIntent = PendingIntent.GetActivity(
-                this, 0, intent, PendingIntentFlags.UpdateCurrent
-            );
+            if (UserDataModel.Instance.IsUseForegroundService) /* フォアグラウンドサービス */
+            {
+                var intent = new Intent(this, typeof(MainActivity));
+                PendingIntent pendingIntent = PendingIntent.GetActivity(
+                    this, 0, intent, PendingIntentFlags.UpdateCurrent
+                );
 
-            var notificationBuilder = new NotificationCompat.Builder(this, NotificationUtil.SERVICE_NOTIFICATION_CHANNEL_ID);
-            notificationBuilder.SetAutoCancel(true)
-                .SetDefaults(1)
-                .SetWhen((long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalMilliseconds) //タイムスタンプ
-                .SetSmallIcon(Resource.Mipmap.appicon)
-                .SetContentTitle("Scanning for Beacons")
-                .SetContentIntent(pendingIntent);
+                var notificationBuilder = new NotificationCompat.Builder(this, NotificationUtil.SERVICE_NOTIFICATION_CHANNEL_ID);
+                notificationBuilder.SetAutoCancel(true)
+                    .SetDefaults(1)
+                    .SetWhen((long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalMilliseconds) //タイムスタンプ
+                    .SetSmallIcon(Resource.Mipmap.appicon)
+                    .SetContentTitle("Scanning for Beacons")
+                    .SetContentIntent(pendingIntent);
 
-            _beaconManager.EnableForegroundServiceScanning(notificationBuilder.Build(), 456);
-            //_beaconManager.BackgroundBetweenScanPeriod = 0;
-            //_beaconManager.BackgroundScanPeriod = 1100;
-            _beaconManager.SetEnableScheduledScanJobs(false);
-
-            // スケジューラ用
-            //_beaconManager.SetEnableScheduledScanJobs(true);
+                _beaconManager.EnableForegroundServiceScanning(notificationBuilder.Build(), 456);
+                //_beaconManager.BackgroundBetweenScanPeriod = 0;
+                //_beaconManager.BackgroundScanPeriod = 1100;
+                _beaconManager.SetEnableScheduledScanJobs(false);
+            }
+            else /* スキャンジョブ */
+            {
+                _beaconManager.SetEnableScheduledScanJobs(true);
+            }
         }
 
         /// <summary>
@@ -93,6 +96,7 @@ namespace HLRegionChecker.Droid
         public override void OnCreate()
         {
             base.OnCreate();
+            Console.WriteLine("OnCreate!");
 
             //通知チャンネル登録
             NotificationUtil.Instance.CreateNotificationChannel((NotificationManager)GetSystemService(NotificationService), this);
