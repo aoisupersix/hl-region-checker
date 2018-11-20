@@ -8,8 +8,9 @@ using System.Collections.Generic;
 using Android;
 using Android.Arch.Lifecycle;
 using Android.Content.PM;
-using Android.Gms.Location;
-using Android.Gms.Tasks;
+using Microsoft.AppCenter;
+using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
 using Prism;
 using Prism.Ioc;
 using Android.Provider;
@@ -53,6 +54,8 @@ namespace HLRegionChecker.Droid
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
             LoadApplication(new App(new AndroidInitializer()));
+
+            AppCenter.Start("1bcf60ce-7dc3-4084-b04f-8227131443f1", typeof(Analytics), typeof(Crashes));
 
             // デバイスID登録
             // この処理はDependencyServiceを使うのでForms.Initの前に呼び出してはいけない
