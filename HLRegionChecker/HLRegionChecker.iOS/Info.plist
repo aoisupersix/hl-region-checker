@@ -27,9 +27,9 @@
     <key>CFBundleIdentifier</key>
     <string>org.hykwlab.hlregionchecker-ios</string>
     <key>CFBundleVersion</key>
-    <string>0.3.3</string>
+    <string>0.4.0</string>
     <key>CFBundleShortVersionString</key>
-    <string>220</string>
+    <string>230</string>
     <key>CFBundleIconFiles</key>
     <array>
       <string>Icon-60@2x</string>
