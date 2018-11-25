@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Xamarin.Forms;
 
 namespace HLRegionChecker.ViewModels
 {
@@ -29,7 +30,7 @@ namespace HLRegionChecker.ViewModels
         /// <summary>
         /// 表示するメンバー情報
         /// </summary>
-        public ReactiveProperty<MemberModel> SelectedMemberModel { get; private set; }
+        public ReactiveProperty<string> StatusDetailSource { get; private set; } = new ReactiveProperty<string>();
 
         #endregion
 
@@ -37,7 +38,6 @@ namespace HLRegionChecker.ViewModels
         {
             this.navigationService = navigationService;
             this.dialogService = pageDialogService;
-            SelectedMemberModel = new ReactiveProperty<MemberModel>();
         }
 
         public override void OnNavigatingTo(NavigationParameters parameters)
@@ -47,7 +47,7 @@ namespace HLRegionChecker.ViewModels
             if (parameters.Any(x => x.Key.Equals(keyName)))
             {
                 var memberId = (int)parameters[keyName];
-                SelectedMemberModel.Value = DbModel.Instance.Members.Where(x => x.Id == memberId).First();
+                StatusDetailSource.Value = $"https://hlmanager-32609.firebaseapp.com/#/statusMobile/{memberId}";
             }
         }
     }

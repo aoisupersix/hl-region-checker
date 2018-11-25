@@ -63,8 +63,8 @@ namespace HLRegionChecker.Droid
                     .SetContentIntent(pendingIntent);
 
                 _beaconManager.EnableForegroundServiceScanning(notificationBuilder.Build(), 456);
-                //_beaconManager.BackgroundBetweenScanPeriod = 0;
-                //_beaconManager.BackgroundScanPeriod = 1100;
+                _beaconManager.BackgroundBetweenScanPeriod = 1000;
+                _beaconManager.BackgroundScanPeriod = 1100;
                 _beaconManager.SetEnableScheduledScanJobs(false);
             }
             else /* スキャンジョブ */
