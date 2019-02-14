@@ -51,10 +51,3 @@ Hayakawa Laboratory's Region Checker is using the following library.
 >Copyright (c) .NET Foundation Contributors
 
 * **ライセンス全文 :** [GooglePlayServicesComponents](https://github.com/xamarin/GooglePlayServicesComponents/blob/master/LICENSE.md)
-
-## LICENSE
-The MIT License(MIT)
-
-Copyright(c) 2018 aoisupersix
-
-[License.md](License.md)

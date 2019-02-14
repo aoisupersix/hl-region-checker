@@ -11,6 +11,7 @@ namespace HLRegionChecker.Models
 {
     /// <summary>
     /// メンバー情報とステータス情報のモデルクラスです。
+    /// 最初期に書いたコードで自分でも全然覚えてないので、いち早く修正したいです。
     /// </summary>
     public class DbModel : BindableBase
     {
